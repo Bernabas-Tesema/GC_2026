@@ -1,0 +1,110 @@
+"use client";
+
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { Camera, ImageIcon, Loader2 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import IconLabel from "@/components/IconLabel";
+
+interface PhotoUploadProps {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+  aspect?: "square" | "portrait";
+}
+
+export default function PhotoUpload({
+  label,
+  value,
+  onChange,
+  aspect = "portrait",
+}: PhotoUploadProps) {
+  const { t } = useLanguage();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    setError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+      onChange(data.url);
+    } catch {
+      setError(t.common.error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const aspectClass =
+    aspect === "square" ? "aspect-square max-w-[160px]" : "aspect-[3/4] max-w-[200px]";
+
+  const LabelIcon = aspect === "square" ? Camera : ImageIcon;
+
+  return (
+    <div className="space-y-2">
+      <IconLabel icon={LabelIcon}>{label}</IconLabel>
+      <div
+        className={`relative overflow-hidden rounded-xl border-2 border-dashed border-gold/40 bg-white ${aspectClass}`}
+      >
+        {value ? (
+          <Image
+            src={value}
+            alt={label}
+            fill
+            className="object-cover"
+            sizes="200px"
+          />
+        ) : (
+          <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 p-4 text-navy/40">
+            <Camera className="h-8 w-8" />
+            <span className="text-xs text-center">{t.profile.uploadPhoto}</span>
+          </div>
+        )}
+
+        {uploading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+            <Loader2 className="h-8 w-8 animate-spin text-gold" />
+          </div>
+        )}
+      </div>
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) handleUpload(file);
+        }}
+      />
+
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        disabled={uploading}
+        className="inline-flex items-center gap-2 rounded-lg border border-gold/40 px-4 py-2 text-sm font-medium text-navy transition-colors hover:bg-gold/10 disabled:opacity-50"
+      >
+        <Camera className="h-4 w-4 text-gold" />
+        {value ? t.profile.changePhoto : t.profile.uploadPhoto}
+      </button>
+
+      {error && <p className="text-sm text-red-600">{error}</p>}
+    </div>
+  );
+}
