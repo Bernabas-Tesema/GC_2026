@@ -9,7 +9,6 @@ import {
   LogIn,
   LogOut,
   Menu,
-  MessageSquare,
   User,
   UserPlus,
   Users,
@@ -27,7 +26,6 @@ interface NavbarProps {
 
 const bookLinks = [
   { href: "/book", icon: Home, labelKey: "home" as const, exact: true },
-  { href: "/book/gc-speech", icon: MessageSquare, labelKey: "gcSpeech" as const },
   { href: "/book/gallery", icon: Users, labelKey: "gallery" as const },
   { href: "/book/departments", icon: Building2, labelKey: "departments" as const },
 ];
@@ -71,7 +69,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
 
   return (
     <nav className={`fixed top-0 right-0 left-0 z-50 border-b ${navBg}`}>
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 md:px-8">
+      <div className="flex w-full items-center gap-3 px-4 py-3 md:px-8 lg:px-10">
         <Link
           href="/"
           className={`shrink-0 font-serif text-sm font-bold md:text-base ${textClass}`}
@@ -130,13 +128,13 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
               } ${
                 isCover
                   ? "border-white/20 bg-navy text-white"
-                  : "border-paper-edge bg-paper text-navy"
+                  : "border-navy/15 bg-white text-navy"
               }`}
             >
               {isDepartmentsPage && (
                 <div
                   className={`border-b py-2 ${
-                    isCover ? "border-white/15" : "border-paper-edge"
+                    isCover ? "border-white/15" : "border-navy/10"
                   }`}
                 >
                   <p

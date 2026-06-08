@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getAllStudents } from "@/lib/students";
 import {
@@ -23,6 +23,7 @@ export default function GalleryPage() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [fellowshipFilter, setFellowshipFilter] = useState("");
   const [academicFilter, setAcademicFilter] = useState("");
+  const [nameQuery, setNameQuery] = useState("");
   const [page, setPage] = useState(0);
 
   useEffect(() => {
@@ -33,14 +34,17 @@ export default function GalleryPage() {
   }, []);
 
   const filteredStudents = useMemo(() => {
+    const query = nameQuery.trim().toLowerCase();
+
     return students.filter((s) => {
+      if (query && !s.fullName?.toLowerCase().includes(query)) return false;
       if (fellowshipFilter && s.fellowshipDepartment !== fellowshipFilter)
         return false;
       if (academicFilter && s.academicDepartment !== academicFilter)
         return false;
       return true;
     });
-  }, [students, fellowshipFilter, academicFilter]);
+  }, [students, fellowshipFilter, academicFilter, nameQuery]);
 
   const totalPages = Math.max(
     1,
@@ -54,7 +58,7 @@ export default function GalleryPage() {
 
   useEffect(() => {
     setPage(0);
-  }, [fellowshipFilter, academicFilter]);
+  }, [fellowshipFilter, academicFilter, nameQuery]);
 
   useEffect(() => {
     if (page > totalPages - 1) {
@@ -64,66 +68,67 @@ export default function GalleryPage() {
 
   return (
     <div className="space-y-2">
-      <motion.header
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center"
-      >
-        <h1 className="font-serif text-base font-bold text-navy md:text-lg">
-          {t.gallery.title}
-        </h1>
-        <p className="text-[11px] text-navy/60 md:text-xs">
-          {t.gallery.subtitle}
-        </p>
-      </motion.header>
-
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.03 }}
-        className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1"
+        className="sticky top-16 z-20 -mx-4 space-y-2 border-b border-gold/20 bg-paper/95 px-4 py-3 backdrop-blur-sm md:-mx-8 md:px-8 lg:-mx-10 lg:px-10"
       >
-        <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
-          <span className="shrink-0 font-medium text-navy/70">
-            {t.gallery.filterFellowship}:
-          </span>
-          <select
-            value={fellowshipFilter}
-            onChange={(e) => setFellowshipFilter(e.target.value)}
-            className="min-w-0 flex-1 rounded-md border border-navy/15 bg-paper px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
-          >
-            <option value="">{t.gallery.all}</option>
-            {FELLOWSHIP_DEPARTMENTS.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
+        <label className="flex w-full items-center gap-2 text-[11px] text-navy md:text-xs">
+          <span className="sr-only">{t.gallery.searchName}</span>
+          <Search className="h-4 w-4 shrink-0 text-gold" aria-hidden />
+          <input
+            type="search"
+            value={nameQuery}
+            onChange={(e) => setNameQuery(e.target.value)}
+            placeholder={t.gallery.searchPlaceholder}
+            className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-3 py-1.5 text-[11px] text-navy outline-none placeholder:text-navy/40 focus:border-gold md:text-xs"
+          />
         </label>
 
-        <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
-          <span className="shrink-0 font-medium text-navy/70">
-            {t.gallery.filterAcademic}:
-          </span>
-          <select
-            value={academicFilter}
-            onChange={(e) => setAcademicFilter(e.target.value)}
-            className="min-w-0 flex-1 rounded-md border border-navy/15 bg-paper px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
-          >
-            <option value="">{t.gallery.all}</option>
-            {ACADEMIC_DEPARTMENTS.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
+          <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
+            <span className="shrink-0 font-medium text-navy/70">
+              {t.gallery.filterFellowship}:
+            </span>
+            <select
+              value={fellowshipFilter}
+              onChange={(e) => setFellowshipFilter(e.target.value)}
+              className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
+            >
+              <option value="">{t.gallery.all}</option>
+              {FELLOWSHIP_DEPARTMENTS.map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <span className="text-[11px] text-navy/50 md:text-xs">
-          {filteredStudents.length} {t.gallery.title.toLowerCase()}
-        </span>
+          <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
+            <span className="shrink-0 font-medium text-navy/70">
+              {t.gallery.filterAcademic}:
+            </span>
+            <select
+              value={academicFilter}
+              onChange={(e) => setAcademicFilter(e.target.value)}
+              className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
+            >
+              <option value="">{t.gallery.all}</option>
+              {ACADEMIC_DEPARTMENTS.map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <span className="text-[11px] text-navy/50 md:text-xs">
+            {filteredStudents.length} {t.gallery.title.toLowerCase()}
+          </span>
+        </div>
       </motion.div>
 
+      <div className="pt-2">
       {loading ? (
         <div className="flex justify-center py-8">
           <div className="h-7 w-7 animate-spin rounded-full border-4 border-gold border-t-transparent" />
@@ -179,6 +184,7 @@ export default function GalleryPage() {
       />
 
       <BookFooter />
+      </div>
     </div>
   );
 }

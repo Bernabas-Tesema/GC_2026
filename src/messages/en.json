@@ -69,6 +69,8 @@
     "subtitle": "Meet the Class of 2026",
     "filterFellowship": "Fellowship Department",
     "filterAcademic": "Academic Department",
+    "searchName": "Search by name",
+    "searchPlaceholder": "Type a graduate's name…",
     "all": "All",
     "noResults": "No students found",
     "viewProfile": "View Profile",

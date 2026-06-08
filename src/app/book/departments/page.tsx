@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getAllStudents } from "@/lib/students";
+import { getAllStudents, getStudentPrimaryPhoto, getStudentSecondaryPhoto } from "@/lib/students";
 import { FELLOWSHIP_DEPARTMENTS } from "@/lib/constants";
 import type { Student } from "@/lib/types";
 import BookFooter from "@/components/BookFooter";
@@ -32,13 +32,16 @@ function DepartmentsContent() {
     [students, activeDept]
   );
 
-  const departmentPhotos = useMemo(
-    () =>
-      departmentStudents
-        .flatMap((s) => [s.largePhotoUrl, s.smallPhotoUrl])
-        .filter(Boolean),
-    [departmentStudents]
-  );
+  const departmentMemories = useMemo(() => {
+    return departmentStudents
+      .map((student) => ({
+        id: student.id,
+        name: student.fullName || "Student",
+        primaryPhoto: getStudentPrimaryPhoto(student),
+        secondaryPhoto: getStudentSecondaryPhoto(student),
+      }))
+      .filter((entry) => entry.primaryPhoto);
+  }, [departmentStudents]);
 
   return (
     <div className="space-y-6">
@@ -69,24 +72,44 @@ function DepartmentsContent() {
           <h3 className="mb-4 text-center font-serif text-lg font-bold text-navy">
             {t.departments.memories}
           </h3>
-          {departmentPhotos.length > 0 ? (
+          {departmentMemories.length > 0 ? (
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-              {departmentPhotos.map((url, i) => (
-                <motion.div
-                  key={`${url}-${i}`}
+              {departmentMemories.map(({ id, name, primaryPhoto, secondaryPhoto }, i) => (
+                <motion.figure
+                  key={id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.05 }}
-                  className="relative aspect-square overflow-hidden rounded-xl border border-gold/20"
+                  className="overflow-hidden rounded-xl border border-gold/20 bg-white"
                 >
-                  <Image
-                    src={url}
-                    alt={`${activeDept} memory`}
-                    fill
-                    className="object-cover transition-transform hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                  />
-                </motion.div>
+                  <div className="relative aspect-square overflow-hidden">
+                    <Image
+                      src={primaryPhoto}
+                      alt={name}
+                      fill
+                      className="object-cover object-center transition-transform hover:scale-105"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+
+                    {secondaryPhoto && (
+                      <div className="absolute right-2 bottom-10 z-10 h-14 w-14 overflow-hidden rounded-full border-2 border-gold bg-white shadow-md md:bottom-12 md:h-16 md:w-16">
+                        <Image
+                          src={secondaryPhoto}
+                          alt={`${name} — ${t.profile.smallPhoto}`}
+                          fill
+                          className="object-cover object-center"
+                          sizes="64px"
+                        />
+                      </div>
+                    )}
+
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/85 via-navy/50 to-transparent px-2 pt-8 pb-2">
+                      <figcaption className="line-clamp-2 text-center font-serif text-xs font-bold text-white md:text-sm">
+                        {name}
+                      </figcaption>
+                    </div>
+                  </div>
+                </motion.figure>
               ))}
             </div>
           ) : (

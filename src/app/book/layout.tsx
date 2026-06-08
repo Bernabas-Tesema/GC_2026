@@ -8,9 +8,9 @@ export default function BookLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-white pt-16">
+      <div className="book-page min-h-screen pt-16">
         <Navbar variant="light" />
-        <div className="mx-auto max-w-6xl px-3 py-2 md:px-4">
+        <div className="w-full px-4 py-4 md:px-8 md:py-6 lg:px-10">
           {children}
         </div>
       </div>

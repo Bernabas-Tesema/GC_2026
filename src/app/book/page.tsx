@@ -3,59 +3,74 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Facebook,
-  Instagram,
-  MessageCircle,
+  Quote,
   Sparkles,
-  Youtube,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import BookFooter from "@/components/BookFooter";
 
-const socialLinks = [
-  { icon: Facebook, label: "Facebook", href: "#" },
-  { icon: Instagram, label: "Instagram", href: "#" },
-  { icon: Youtube, label: "YouTube", href: "#" },
-  { icon: MessageCircle, label: "Telegram", href: "#" },
+const LEADERS = [
+  {
+    titleKey: "gcCommitteeTitle" as const,
+    nameKey: "berketName" as const,
+    roleKey: "berketRole" as const,
+    speechKey: "berketSpeech" as const,
+    photo: "/leaders/berket.jpg",
+    initials: "EB",
+    accent: "burgundy" as const,
+    photoSide: "left" as const,
+    delay: 0.04,
+  },
+  {
+    titleKey: "leaderTitle" as const,
+    nameKey: "semagagnName" as const,
+    roleKey: "semagagnRole" as const,
+    speechKey: "semagagnSpeech" as const,
+    photo: "/leaders/semagegn.jpg",
+    initials: "S",
+    accent: "navy" as const,
+    photoSide: "right" as const,
+    delay: 0.1,
+  },
 ];
 
 export default function BookHomePage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-full bg-white px-2 py-4 md:px-4 md:py-5">
-      <div className="mx-auto max-w-4xl space-y-8 bg-white">
-        <SpeechSection
-          title={t.home.gcCommitteeTitle}
-          name={t.home.berketName}
-          role={t.home.berketRole}
-          speech={t.home.berketSpeech}
-          delay={0.04}
-        />
-        <SpeechSection
-          title={t.home.leaderTitle}
-          name={t.home.semagagnName}
-          role={t.home.semagagnRole}
-          speech={t.home.semagagnSpeech}
-          delay={0.08}
-        />
+    <div className="min-h-full w-full py-2 md:py-4">
+      <div className="w-full space-y-10">
+        <div className="space-y-8">
+          {LEADERS.map((leader) => (
+            <LeaderMessageCard
+              key={leader.nameKey}
+              title={t.home[leader.titleKey]}
+              name={t.home[leader.nameKey]}
+              role={t.home[leader.roleKey]}
+              speech={t.home[leader.speechKey]}
+              photo={leader.photo}
+              initials={leader.initials}
+              accent={leader.accent}
+              photoSide={leader.photoSide}
+              delay={leader.delay}
+            />
+          ))}
+        </div>
 
         <motion.section
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12 }}
-          className="border-t border-navy/10 pt-8"
+          transition={{ delay: 0.16 }}
+          className="section-card w-full"
         >
-          <div className="mb-5 flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-gold" />
+          <div className="section-header flex items-center gap-3">
+            <Sparkles className="h-5 w-5 shrink-0 text-gold" />
             <div>
-              <h2 className="font-serif text-lg font-bold text-navy">
-                {t.home.programsTitle}
-              </h2>
-              <p className="text-xs text-navy/55">{t.home.programsSubtitle}</p>
+              <h2 className="font-serif text-lg font-bold">{t.home.programsTitle}</h2>
+              <p className="text-xs text-white/70">{t.home.programsSubtitle}</p>
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="section-body grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {t.home.programs.map((program, i) => (
               <ProgramPhotoCard key={i} program={program} index={i} />
             ))}
@@ -63,85 +78,146 @@ export default function BookHomePage() {
         </motion.section>
 
         <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
-          className="border-t border-navy/10 pt-8 text-center"
-        >
-          <h2 className="font-serif text-lg font-bold text-navy">
-            {t.home.socialsTitle}
-          </h2>
-          <p className="mt-1 text-xs text-navy/55">{t.home.socialsSubtitle}</p>
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
-            {socialLinks.map(({ icon: Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nav-btn-hover inline-flex items-center gap-2 rounded-full border border-gold/40 px-5 py-2.5 text-sm font-medium text-navy hover:bg-gold/10"
-              >
-                <Icon className="h-4 w-4 text-gold" />
-                {label}
-              </a>
-            ))}
-          </div>
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="border-t border-navy/10 pt-8"
+          className="section-card w-full overflow-hidden"
         >
-          <h2 className="mb-4 text-center font-serif text-lg font-bold text-navy">
-            {t.home.gcCommitteePhotoTitle}
-          </h2>
+          <div className="section-header bg-gradient-to-r from-burgundy to-navy text-center">
+            <h2 className="font-serif text-lg font-bold">
+              {t.home.gcCommitteePhotoTitle}
+            </h2>
+          </div>
           <GcCommitteePhoto
             label={t.home.gcCommitteePhotoTitle}
             imageSrc="/gc-committee.jpg"
           />
         </motion.section>
 
-        <BookFooter />
+        <BookFooter includeSocials />
       </div>
     </div>
   );
 }
 
-function SpeechSection({
+function LeaderMessageCard({
   title,
   name,
   role,
   speech,
+  photo,
+  initials,
+  accent,
+  photoSide,
   delay,
 }: {
   title: string;
   name: string;
   role: string;
   speech: string;
+  photo: string;
+  initials: string;
+  accent: "navy" | "burgundy";
+  photoSide: "left" | "right";
   delay: number;
 }) {
+  const headerGradient =
+    accent === "burgundy"
+      ? "from-burgundy via-burgundy/90 to-navy"
+      : "from-navy via-navy-light to-burgundy/80";
+
+  const photoFirst = photoSide === "left";
+
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 12 }}
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
-      className="border-b border-navy/10 pb-8"
+      transition={{ delay, duration: 0.45 }}
+      className="section-card w-full overflow-hidden"
     >
-      <p className="text-[10px] font-semibold tracking-wider text-gold uppercase">
-        {title}
-      </p>
-      <h2 className="mt-1 font-serif text-xl font-bold text-navy">{name}</h2>
-      <p className="text-sm text-navy/55">{role}</p>
-      <div className="mt-4 space-y-3">
-        {speech.split("\n\n").map((paragraph, i) => (
-          <p key={i} className="text-sm leading-relaxed text-navy/75">
-            {paragraph}
+      <div className={`section-header bg-gradient-to-r ${headerGradient}`}>
+        <div className="flex items-center gap-2">
+          <Quote className="h-4 w-4 shrink-0 text-gold-light" />
+          <p className="text-[11px] font-semibold tracking-[0.18em] text-gold-light uppercase">
+            {title}
           </p>
-        ))}
+        </div>
       </div>
-    </motion.section>
+
+      <div
+        className={`section-body flex w-full flex-col gap-4 py-4 ${
+          photoFirst ? "md:flex-row" : "md:flex-row-reverse"
+        } md:items-start md:gap-6`}
+      >
+        <LeaderPhoto
+          name={name}
+          role={role}
+          photo={photo}
+          initials={initials}
+        />
+
+        <div className="min-w-0 flex-1">
+          <h2 className="font-serif text-2xl font-bold text-navy">{name}</h2>
+          <p className="mt-0.5 text-sm font-medium text-gold">{role}</p>
+          <div className="mt-1 h-px w-12 bg-gold/60" />
+          <div className="mt-5 space-y-4">
+            {speech.split("\n\n").map((paragraph, i) => (
+              <p
+                key={i}
+                className="text-sm leading-[1.75] text-navy/75 md:text-[15px]"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+function LeaderPhoto({
+  name,
+  role,
+  photo,
+  initials,
+}: {
+  name: string;
+  role: string;
+  photo: string;
+  initials: string;
+}) {
+  const [error, setError] = useState(false);
+
+  return (
+    <div className="mx-auto shrink-0 md:mx-0">
+      <div className="relative">
+        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-gold/60 via-gold/30 to-gold/10" />
+        <div className="relative h-32 w-32 overflow-hidden rounded-2xl border-2 border-white shadow-lg sm:h-36 sm:w-36 md:h-40 md:w-40">
+          {!error ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photo}
+              alt={name}
+              className="h-full w-full object-contain object-top"
+              onError={() => setError(true)}
+            />
+          ) : (
+            <div className="flex h-full w-full flex-col items-center justify-center border border-dashed border-gold/30 bg-white p-4 text-center">
+              <span className="font-serif text-4xl font-bold text-navy/25">
+                {initials}
+              </span>
+              <p className="mt-2 text-[10px] leading-tight text-navy/45">
+                Add photo:
+                <br />
+                <span className="font-mono text-navy/35">{photo}</span>
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+      <p className="mt-3 text-center text-xs text-navy/45 md:hidden">{role}</p>
+    </div>
   );
 }
 
@@ -167,35 +243,35 @@ function ProgramPhotoCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.04 * index }}
-      className="group overflow-hidden rounded-lg"
+      className="group overflow-hidden rounded-xl border border-gold/20 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+      <div className="relative aspect-[2/1] overflow-hidden bg-white">
         {!imgError ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={program.image}
             alt={program.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-contain object-top transition-transform duration-500 group-hover:scale-[1.02]"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div
-            className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${program.color}`}
-          >
-            <span className="font-serif text-2xl font-bold text-white/90">
+          <div className="flex h-full w-full flex-col items-center justify-center border border-dashed border-gold/30 bg-white">
+            <span className="font-serif text-2xl font-bold text-navy/30">
               {program.season}
             </span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent" />
-        <span className="absolute top-3 left-3 rounded-full bg-gold px-3 py-1 text-xs font-bold text-navy">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/85 via-navy/40 to-transparent pt-10" />
+        <span className="absolute top-3 left-3 rounded-full bg-gold px-3 py-1 text-xs font-bold text-navy shadow">
           {program.season}
         </span>
-        <h3 className="absolute right-3 bottom-3 left-3 font-serif text-base font-bold text-white">
+        <h3 className="absolute right-3 bottom-3 left-3 font-serif text-base font-bold text-white drop-shadow-sm">
           {program.name}
         </h3>
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-navy/65">{program.desc}</p>
+      <p className="px-3 py-2 text-xs leading-relaxed text-navy/65">
+        {program.desc}
+      </p>
     </motion.article>
   );
 }
@@ -210,19 +286,22 @@ function GcCommitteePhoto({
   const [error, setError] = useState(false);
 
   return (
-    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-navy/5">
+    <div className="relative aspect-[32/9] w-full overflow-hidden bg-white">
       {!error ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={imageSrc}
           alt={label}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-[center_25%]"
           onError={() => setError(true)}
         />
       ) : (
-        <div className="flex h-full flex-col items-center justify-center gap-2 bg-navy/5 p-8 text-center">
-          <span className="font-serif text-2xl font-bold text-navy/30">GC</span>
-          <p className="text-sm text-navy/45">{label}</p>
+        <div className="flex h-full w-full flex-col items-center justify-center gap-3 border border-dashed border-gold/30 bg-white p-6 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-gold/40 bg-white">
+            <span className="font-serif text-2xl font-bold text-navy/25">GC</span>
+          </div>
+          <p className="text-sm font-medium text-navy/50">{label}</p>
+          <p className="text-xs text-navy/35">Add photo: public/gc-committee.jpg</p>
         </div>
       )}
     </div>

@@ -17,6 +17,20 @@ export function getStudentInitial(fullName?: string): string {
   return name ? name.charAt(0).toUpperCase() : "?";
 }
 
+/** Main gallery/department photo — large first, then small. */
+export function getStudentPrimaryPhoto(student: Pick<Student, "largePhotoUrl" | "smallPhotoUrl">): string {
+  return student.largePhotoUrl || student.smallPhotoUrl || "";
+}
+
+/** Second photo when both uploads differ (e.g. small inset on card). */
+export function getStudentSecondaryPhoto(student: Pick<Student, "largePhotoUrl" | "smallPhotoUrl">): string {
+  const { largePhotoUrl, smallPhotoUrl } = student;
+  if (largePhotoUrl && smallPhotoUrl && largePhotoUrl !== smallPhotoUrl) {
+    return smallPhotoUrl;
+  }
+  return "";
+}
+
 export function isCompleteStudent(student: Student): boolean {
   return Boolean(student.fullName?.trim());
 }
