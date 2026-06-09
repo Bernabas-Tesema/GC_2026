@@ -12,7 +12,7 @@ import {
   Youtube,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SITE_BRAND_NAME } from "@/lib/constants";
+import { SITE_BRAND_NAME, TELEGRAM_GROUP_URL } from "@/lib/constants";
 
 const footerLinks = [
   { href: "/book", icon: Home, labelKey: "home" as const },
@@ -25,7 +25,7 @@ const socialLinks = [
   { icon: Facebook, label: "Facebook", href: "#" },
   { icon: Instagram, label: "Instagram", href: "#" },
   { icon: Youtube, label: "YouTube", href: "#" },
-  { icon: MessageCircle, label: "Telegram", href: "#" },
+  { icon: MessageCircle, label: "Telegram", href: TELEGRAM_GROUP_URL },
 ];
 
 type BookFooterProps = {
@@ -44,19 +44,30 @@ export default function BookFooter({ includeSocials = false }: BookFooterProps) 
               {t.home.socialsTitle}
             </h2>
             <p className="mt-1 text-sm text-navy/55">{t.home.socialsSubtitle}</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-3">
-              {socialLinks.map(({ icon: Icon, label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="nav-btn-hover inline-flex items-center gap-2 rounded-full border border-gold/50 bg-cream/50 px-5 py-2.5 text-sm font-medium text-navy shadow-sm hover:border-gold hover:bg-gold/15"
-                >
-                  <Icon className="h-4 w-4 text-gold" />
-                  {label}
-                </a>
-              ))}
+            <div className="mt-4 flex flex-col items-center gap-3">
+              <a
+                href={TELEGRAM_GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-btn-hover inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full border-2 border-gold bg-navy px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-navy-light sm:text-base"
+              >
+                <MessageCircle className="h-5 w-5 text-gold" />
+                {t.common.chatWithBenhanan}
+              </a>
+              <div className="flex flex-wrap justify-center gap-3">
+                {socialLinks.map(({ icon: Icon, label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="nav-btn-hover inline-flex items-center gap-2 rounded-full border border-gold/50 bg-cream/50 px-4 py-2 text-sm font-medium text-navy shadow-sm hover:border-gold hover:bg-gold/15 sm:px-5 sm:py-2.5"
+                  >
+                    <Icon className="h-4 w-4 text-gold" />
+                    {label}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 

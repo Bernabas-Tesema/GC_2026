@@ -5,10 +5,12 @@ import type { Language } from "@/lib/types";
 
 interface LanguageSwitcherProps {
   variant?: "cover" | "light";
+  className?: string;
 }
 
 export default function LanguageSwitcher({
   variant = "cover",
+  className = "",
 }: LanguageSwitcherProps) {
   const { language, setLanguage } = useLanguage();
   const isCover = variant === "cover";
@@ -17,11 +19,11 @@ export default function LanguageSwitcher({
 
   return (
     <div
-      className={`flex w-full items-center justify-center rounded-full border p-0.5 ${
+      className={`flex items-center justify-center rounded-full border p-0.5 ${
         isCover
           ? "border-gold/30 bg-white/10"
           : "border-paper-edge bg-white shadow-sm"
-      }`}
+      } ${className || "w-full"}`}
     >
       <button
         onClick={() => toggle("en")}

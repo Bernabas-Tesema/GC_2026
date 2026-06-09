@@ -11,7 +11,6 @@ import PasswordInput from "@/components/PasswordInput";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getAuthErrorKey } from "@/lib/authErrors";
 import Navbar from "@/components/Navbar";
-import { SITE_BRAND_NAME } from "@/lib/constants";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -49,12 +48,9 @@ export default function LoginPage() {
           className="w-full max-w-md"
         >
           <div className="book-page rounded-2xl border border-gold/20 p-8 book-shadow">
-            <h1 className="mb-2 text-center font-serif text-3xl font-bold text-navy">
+            <h1 className="mb-8 text-center font-serif text-3xl font-bold text-navy">
               {t.auth.loginTitle}
             </h1>
-            <p className="mb-8 text-center text-sm text-navy/60">
-              {SITE_BRAND_NAME}
-            </p>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>

@@ -18,7 +18,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FELLOWSHIP_DEPARTMENTS } from "@/lib/constants";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { SITE_BRAND_NAME } from "@/lib/constants";
+import BrandTitle from "./BrandTitle";
+import TelegramChatButton from "./TelegramChatButton";
 
 interface NavbarProps {
   variant?: "cover" | "light";
@@ -44,9 +45,8 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
   const activeDepartment =
     FELLOWSHIP_DEPARTMENTS.find((d) => d === searchParams.get("dept")) ??
     FELLOWSHIP_DEPARTMENTS[0];
-  const textClass = isCover ? "text-white" : "text-navy";
   const navBg = isCover
-    ? "border-white/10 bg-navy/40 backdrop-blur-md"
+    ? "border-white/10 bg-navy/40 backdrop-blur-md lg:border-transparent lg:bg-transparent lg:backdrop-blur-none"
     : "border-paper-edge/80 bg-paper/95 backdrop-blur-md shadow-sm";
 
   useEffect(() => {
@@ -70,15 +70,60 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
   return (
     <nav className={`fixed top-0 right-0 left-0 z-50 border-b ${navBg}`}>
       <div className="flex w-full items-center gap-3 px-4 py-3 md:px-8 lg:px-10">
-        <Link
-          href="/"
-          className={`shrink-0 font-serif text-sm font-bold md:text-base ${textClass}`}
-        >
-          {SITE_BRAND_NAME}
-        </Link>
+        <BrandTitle variant={variant} asLink />
+
+        {isCover && (
+          <div className="ml-auto hidden items-center gap-2 lg:flex lg:gap-3">
+            {user ? (
+              <>
+                <Link
+                  href="/book"
+                  className="nav-btn-hover inline-flex items-center gap-1.5 rounded-full border border-white/30 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  <Home className="h-4 w-4 text-gold" />
+                  {t.nav.openBook}
+                </Link>
+                <Link
+                  href="/profile"
+                  className="nav-btn-hover inline-flex items-center gap-1.5 rounded-full border border-white/30 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  <User className="h-4 w-4 text-gold" />
+                  {t.nav.myProfile}
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  className="nav-btn-hover inline-flex items-center gap-1.5 rounded-full border border-white/30 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  <LogOut className="h-4 w-4 text-gold" />
+                  {t.nav.logout}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="nav-btn-hover inline-flex items-center gap-1.5 rounded-full border border-white/40 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  <LogIn className="h-4 w-4 text-gold" />
+                  {t.nav.login}
+                </Link>
+                <Link
+                  href="/signup"
+                  className="nav-btn-hover inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-sm font-semibold text-navy shadow-md transition-colors hover:bg-gold-light"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  {t.nav.signup}
+                </Link>
+              </>
+            )}
+            <TelegramChatButton variant="cover" />
+            <LanguageSwitcher variant="cover" className="w-auto shrink-0" />
+          </div>
+        )}
 
         {showBookLinks && (
-          <div className="flex flex-1 items-center justify-center gap-1 overflow-x-auto md:gap-2">
+          <div className="hidden flex-1 items-center justify-center gap-1 overflow-x-auto lg:flex lg:gap-2">
             {bookLinks.map(({ href, icon: Icon, labelKey, exact }) => {
               const isActive = exact
                 ? pathname === href
@@ -106,7 +151,11 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
           </div>
         )}
 
-        <div className="relative ml-auto shrink-0" ref={menuRef}>
+        <div
+          className={`ml-auto flex shrink-0 items-center gap-2 ${isCover ? "lg:hidden" : ""}`}
+        >
+          <TelegramChatButton variant={variant} />
+          <div className="relative" ref={menuRef}>
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
@@ -131,6 +180,40 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   : "border-navy/15 bg-white text-navy"
               }`}
             >
+              {showBookLinks && (
+                <div
+                  className={`border-b py-2 lg:hidden ${
+                    isCover ? "border-white/15" : "border-navy/10"
+                  }`}
+                >
+                  {bookLinks.map(({ href, icon: Icon, labelKey, exact }) => {
+                    const isActive = exact
+                      ? pathname === href
+                      : pathname.startsWith(href);
+
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${
+                          isActive
+                            ? isCover
+                              ? "bg-gold/20 font-medium text-gold-light"
+                              : "bg-gold/15 font-medium text-navy"
+                            : isCover
+                              ? "hover:bg-white/10"
+                              : "hover:bg-navy/5"
+                        }`}
+                      >
+                        <Icon className="h-4 w-4 text-gold" />
+                        {t.nav[labelKey]}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+
               {isDepartmentsPage && (
                 <div
                   className={`border-b py-2 ${
@@ -171,10 +254,19 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
 
               {user ? (
                 <>
+                  {isCover && (
+                    <Link
+                      href="/book"
+                      className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors hover:bg-white/10 lg:hidden"
+                    >
+                      <Home className="h-4 w-4 text-gold" />
+                      {t.nav.openBook}
+                    </Link>
+                  )}
                   <Link
                     href="/profile"
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
+                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
                     }`}
                   >
                     <User className="h-4 w-4 text-gold" />
@@ -187,7 +279,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                       setMenuOpen(false);
                     }}
                     className={`flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
+                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
                     }`}
                   >
                     <LogOut className="h-4 w-4 text-gold" />
@@ -199,7 +291,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   <Link
                     href="/login"
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
+                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
                     }`}
                   >
                     <LogIn className="h-4 w-4 text-gold" />
@@ -208,7 +300,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   <Link
                     href="/signup"
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
+                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
                     }`}
                   >
                     <UserPlus className="h-4 w-4 text-gold" />
@@ -219,13 +311,14 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
 
               <div
                 className={`border-t px-4 py-3 ${
-                  isCover ? "border-white/15" : "border-paper-edge"
+                  isCover ? "border-white/15 lg:hidden" : "border-paper-edge"
                 }`}
               >
                 <LanguageSwitcher variant={variant} />
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </nav>

@@ -62,6 +62,8 @@
     "save": "መገለጫ አስቀምጥ",
     "saving": "በማስቀመጥ ላይ...",
     "selectDepartment": "ክፍል ይምረጡ",
+    "otherDepartment": "ሌላ",
+    "otherDepartmentPlaceholder": "የክፍልዎን ስም ይፃፉ…",
     "required": "ይህ መስክ ያስፈልጋል"
   },
   "gallery": {
@@ -96,15 +98,15 @@
     "semagagnName": "ሰማገን",
     "semagagnRole": "የፌሎውሺፕ መሪ",
     "semagagnSpeech": "ውድ ወንድሞችና እህቶች፣\n\nበዚህ የፌሎውሺፕ ቤተሰብ አገልግሎት ውስጥ ከእናንተ ጋር መሆን ደስታ ነበረኝ። በአምልኮ፣ በጸሎት እና በአገልግሎት በእምነትና በጓደኝነት አድገናል።\n\nሲመረቁ የዚህ ማህበረሰብ ፍቅርን እና የክርስቶስ ብርሃን ይዘው ይሂዱ።\n\nበክርስቶስ፣\nሰማገን",
-    "programsTitle": "የ GC ዓመታዊ ፕሮግራሞች",
-    "programsSubtitle": "ለሁሉም ተመራቂ ክፍል የጋራ የፌሎውሺፕ ፕሮግራሞች",
-    "programs": [
-      { "season": "ጥር", "name": "የ GC መክፈቻ እና መሰዋዕት", "desc": "የተመራቂ ክፍሉ ዓመት በጸሎት እና በቁርጠትመክፈቻ", "image": "/programs/opening.jpg", "color": "from-navy to-navy-light" },
-      { "season": "መጋ", "name": "የ GC መንፈሳዊ ሪትሪት", "desc": "ለሁሉም የፌሎውሺፕ ቤተሰብ የጋራ መንፈሳዊ ሪትሪት", "image": "/programs/retreat.jpg", "color": "from-burgundy to-navy" },
-      { "season": "ግን", "name": "የ GC ወንጌል ማስተላለፍ", "desc": "በተመራቂ ኮሚቴ የሚመራ የካምፓስ ወንጌል ማስተላለፍ", "image": "/programs/evangelism.jpg", "color": "from-navy-light to-burgundy" },
-      { "season": "ሐም", "name": "የ GC ፍቅር መጋራት ቀን", "desc": "የመጋራት፣ የአብረኝነት ግብራ እና እንክብካቤ ቀን", "image": "/programs/love-sharing.jpg", "color": "from-gold to-gold-light" },
-      { "season": "መስ", "name": "የ GC የአምልኮ ምሽት", "desc": "የምስጋና፣ ምስክርነት እና ጸሎት ምሽት", "image": "/programs/worship.jpg", "color": "from-navy to-burgundy" },
-      { "season": "ህዳ", "name": "የ GC ምረቃ በረከት", "desc": "ለ 2026 ተመራቂ ክፍል ሰላምታ እና በረከት ስነ ስርዓት", "image": "/programs/graduation.jpg", "color": "from-burgundy to-navy-light" }
+    "eventsTitle": "የ GC ዝግጅቶች",
+    "eventsSubtitle": "ከተመራቂ ክፍል የፌሎውሺፕ ዓመት ትዝታዎች",
+    "events": [
+      { "slug": "worship-wudase", "name": "የአምልኮ ምሽት (ውዳሴ)", "desc": "ከውዳሴ ኮራስ ጋር የአምልኮ እና የምስጋና ምሽት", "image": "/events/worship-wudase/cover.jpg" },
+      { "slug": "worship-maranata", "name": "የአምልኮ ምሽት (ማራናታ)", "desc": "ከማራናታ ኮራስ ጋር የአምልኮ እና የምስጋና ምሽት", "image": "/events/worship-maranata/cover.jpg" },
+      { "slug": "ajora-trip", "name": "አጆራ ጉዞ", "desc": "ከአጆራ ጉዞ የፌሎውሺፕ ትዝታዎች", "image": "/events/ajora-trip/cover.jpg" },
+      { "slug": "graduates-training", "name": "የተመራቂዎች ስልጠና", "desc": "ለተመራቂ ክፍል የዝግጅት እና ስልጠና ጊዜያት", "image": "/events/graduates-training/cover.jpg" },
+      { "slug": "gc-conference", "name": "የ GC ኮንፈሪሪንስ", "desc": "የተመራቂ ክፍል የፌሎውሺፕ ኮንፈሪሪንስ", "image": "/events/gc-conference/cover.jpg" },
+      { "slug": "gc-dinner", "name": "የ GC ድርኢት", "desc": "ከተመራቂ ክፍል ጋር የፌሎውሺፕ ድርኢት እና በዓል", "image": "/events/gc-dinner/cover.jpg" }
     ],
     "gcCommitteePhotoTitle": "የ GC ኮሚቴ 2026",
     "selihomTitle": "የሰሊሆም ኮሚቴ",
@@ -114,6 +116,13 @@
     "socialsSubtitle": "ፌሎውሺፑን በማህበራዊ ሚዲያ ይከተሉን",
     "explorePages": "የዓመት መጽሐፉን ያስሱ",
     "footerTagline": "የክርስትያን ፌሎውሺፕ የዓመት መጽሐፍ"
+  },
+  "events": {
+    "backToHome": "ወደ መነሻ ተመለስ",
+    "galleryTitle": "የፎቶ ጋሌሪ",
+    "noPhotos": "ለዚህ ዝግጅት ተጨማሪ ፎቶዎች በቅርቡ ይጨመራሉ።",
+    "addPhotosHint": "ፎቶዎችን ወደ public/events/{slug}/ ያክሉ",
+    "viewGallery": "ጋሌሪ ይመልከቱ"
   },
   "departments": {
     "title": "የፌሎውሺፕ ክፍሎች",
@@ -128,6 +137,7 @@
     "back": "ተመለስ",
     "next": "ቀጣይ",
     "previous": "ቀዳሚ",
-    "close": "ዝጋ"
+    "close": "ዝጋ",
+    "chatWithBenhanan": "ከ GC ቤንሃናን ጋር ይወያዩ"
   }
 }

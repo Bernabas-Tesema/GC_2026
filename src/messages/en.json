@@ -62,6 +62,8 @@
     "save": "Save Profile",
     "saving": "Saving...",
     "selectDepartment": "Select a department",
+    "otherDepartment": "Other",
+    "otherDepartmentPlaceholder": "Type your department name…",
     "required": "This field is required"
   },
   "gallery": {
@@ -96,15 +98,15 @@
     "semagagnName": "Semagegn",
     "semagagnRole": "Fellowship Leader",
     "semagagnSpeech": "Beloved brothers and sisters,\n\nIt has been a joy to serve alongside you in this fellowship family. Through worship, prayer, and ministry, we have grown together in faith and friendship.\n\nAs you graduate, carry the love of this community and the light of Christ wherever you go.\n\nIn Christ,\nSemagegn",
-    "programsTitle": "GC Programs of the Year",
-    "programsSubtitle": "General fellowship programs for the whole graduating class",
-    "programs": [
-      { "season": "January", "name": "GC Opening & Dedication", "desc": "Official opening of the graduating class year with prayer and commitment", "image": "/programs/opening.jpg", "color": "from-navy to-navy-light" },
-      { "season": "March", "name": "GC Spiritual Retreat", "desc": "A fellowship-wide retreat for worship, teaching, and spiritual renewal", "image": "/programs/retreat.jpg", "color": "from-burgundy to-navy" },
-      { "season": "May", "name": "GC Evangelism Outreach", "desc": "United campus evangelism led by the graduating class committee", "image": "/programs/evangelism.jpg", "color": "from-navy-light to-burgundy" },
-      { "season": "July", "name": "GC Love Sharing Day", "desc": "A day of giving, fellowship meals, and caring for one another", "image": "/programs/love-sharing.jpg", "color": "from-gold to-gold-light" },
-      { "season": "September", "name": "GC Worship Night", "desc": "An evening of praise, testimony, and prayer for the graduating class", "image": "/programs/worship.jpg", "color": "from-navy to-burgundy" },
-      { "season": "November", "name": "GC Graduation Blessing", "desc": "Farewell ceremony and blessing for the Class of 2026", "image": "/programs/graduation.jpg", "color": "from-burgundy to-navy-light" }
+    "eventsTitle": "GC Events",
+    "eventsSubtitle": "Memories from our graduating class fellowship year",
+    "events": [
+      { "slug": "worship-wudase", "name": "Worship Night (Wudase)", "desc": "An evening of praise and worship with the Wudase choir", "image": "/events/worship-wudase/cover.jpg" },
+      { "slug": "worship-maranata", "name": "Worship Night (Maranata)", "desc": "An evening of praise and worship with the Maranata choir", "image": "/events/worship-maranata/cover.jpg" },
+      { "slug": "ajora-trip", "name": "Ajora Trip", "desc": "Fellowship outing and memories from the Ajora trip", "image": "/events/ajora-trip/cover.jpg" },
+      { "slug": "graduates-training", "name": "Graduates Training", "desc": "Training and preparation sessions for the graduating class", "image": "/events/graduates-training/cover.jpg" },
+      { "slug": "gc-conference", "name": "GC Conference", "desc": "The graduating class fellowship conference", "image": "/events/gc-conference/cover.jpg" },
+      { "slug": "gc-dinner", "name": "GC Dinner", "desc": "Fellowship dinner and celebration with the graduating class", "image": "/events/gc-dinner/cover.jpg" }
     ],
     "gcCommitteePhotoTitle": "GC Committee 2026",
     "selihomTitle": "Selihom Committee",
@@ -114,6 +116,13 @@
     "socialsSubtitle": "Follow the fellowship on social media",
     "explorePages": "Explore the Yearbook",
     "footerTagline": "Christian Fellowship Yearbook"
+  },
+  "events": {
+    "backToHome": "Back to home",
+    "galleryTitle": "Photo Gallery",
+    "noPhotos": "More photos coming soon for this event.",
+    "addPhotosHint": "Add photos to public/events/{slug}/",
+    "viewGallery": "View gallery"
   },
   "departments": {
     "title": "Fellowship Departments",
@@ -128,6 +137,7 @@
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
-    "close": "Close"
+    "close": "Close",
+    "chatWithBenhanan": "Chat with GC ቤንሃናን"
   }
 }

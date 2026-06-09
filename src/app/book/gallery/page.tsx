@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getAllStudents } from "@/lib/students";
 import {
   ACADEMIC_DEPARTMENTS,
+  DEPARTMENT_OTHER,
   FELLOWSHIP_DEPARTMENTS,
 } from "@/lib/constants";
 import type { Student } from "@/lib/types";
@@ -38,10 +39,32 @@ export default function GalleryPage() {
 
     return students.filter((s) => {
       if (query && !s.fullName?.toLowerCase().includes(query)) return false;
-      if (fellowshipFilter && s.fellowshipDepartment !== fellowshipFilter)
-        return false;
-      if (academicFilter && s.academicDepartment !== academicFilter)
-        return false;
+      if (fellowshipFilter) {
+        if (fellowshipFilter === DEPARTMENT_OTHER) {
+          if (
+            FELLOWSHIP_DEPARTMENTS.includes(
+              s.fellowshipDepartment as (typeof FELLOWSHIP_DEPARTMENTS)[number]
+            )
+          ) {
+            return false;
+          }
+        } else if (s.fellowshipDepartment !== fellowshipFilter) {
+          return false;
+        }
+      }
+      if (academicFilter) {
+        if (academicFilter === DEPARTMENT_OTHER) {
+          if (
+            ACADEMIC_DEPARTMENTS.includes(
+              s.academicDepartment as (typeof ACADEMIC_DEPARTMENTS)[number]
+            )
+          ) {
+            return false;
+          }
+        } else if (s.academicDepartment !== academicFilter) {
+          return false;
+        }
+      }
       return true;
     });
   }, [students, fellowshipFilter, academicFilter, nameQuery]);
@@ -96,12 +119,13 @@ export default function GalleryPage() {
               className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
             >
               <option value="">{t.gallery.all}</option>
-              {FELLOWSHIP_DEPARTMENTS.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
+            {FELLOWSHIP_DEPARTMENTS.map((dept) => (
+              <option key={dept} value={dept}>
+                {dept}
+              </option>
+            ))}
+            <option value={DEPARTMENT_OTHER}>{t.profile.otherDepartment}</option>
+          </select>
           </label>
 
           <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
@@ -114,12 +138,13 @@ export default function GalleryPage() {
               className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
             >
               <option value="">{t.gallery.all}</option>
-              {ACADEMIC_DEPARTMENTS.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
+            {ACADEMIC_DEPARTMENTS.map((dept) => (
+              <option key={dept} value={dept}>
+                {dept}
+              </option>
+            ))}
+            <option value={DEPARTMENT_OTHER}>{t.profile.otherDepartment}</option>
+          </select>
           </label>
 
           <span className="text-[11px] text-navy/50 md:text-xs">
@@ -138,18 +163,8 @@ export default function GalleryPage() {
           {t.gallery.noResults}
         </div>
       ) : (
-        <div className="flex items-center gap-2 md:gap-3">
-          <button
-            type="button"
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
-            aria-label={t.common.previous}
-            className="nav-btn-hover flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-white text-navy shadow-sm transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
-          >
-            <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
-          </button>
-
-          <div className="grid min-h-0 flex-1 grid-cols-3 gap-3 md:gap-4">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-4">
             {pagedStudents.map((student, index) => (
               <StudentCard
                 key={student.id}
@@ -160,22 +175,32 @@ export default function GalleryPage() {
             ))}
           </div>
 
-          <button
-            type="button"
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
-            aria-label={t.common.next}
-            className="nav-btn-hover flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-white text-navy shadow-sm transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
-          >
-            <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
-          </button>
-        </div>
-      )}
+          <div className="flex items-center justify-center gap-4 sm:gap-6">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              aria-label={t.common.previous}
+              className="nav-btn-hover flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-white text-navy shadow-sm transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
+            >
+              <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
+            </button>
 
-      {!loading && filteredStudents.length > 0 && (
-        <p className="text-center text-[11px] text-navy/45">
-          {page + 1} / {totalPages}
-        </p>
+            <p className="min-w-[4rem] text-center text-sm text-navy/55">
+              {page + 1} / {totalPages}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page >= totalPages - 1}
+              aria-label={t.common.next}
+              className="nav-btn-hover flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-white text-navy shadow-sm transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
+            >
+              <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
+            </button>
+          </div>
+        </div>
       )}
 
       <StudentModal

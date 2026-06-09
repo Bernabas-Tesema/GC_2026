@@ -15,10 +15,12 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import IconLabel from "@/components/IconLabel";
+import DepartmentSelect from "@/components/DepartmentSelect";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { saveStudent } from "@/lib/students";
 import {
   ACADEMIC_DEPARTMENTS,
+  DEPARTMENT_OTHER,
   FELLOWSHIP_DEPARTMENTS,
 } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
@@ -67,7 +69,9 @@ export default function ProfilePage() {
       !fullName ||
       !phone ||
       !academicDepartment ||
+      academicDepartment === DEPARTMENT_OTHER ||
       !fellowshipDepartment ||
+      fellowshipDepartment === DEPARTMENT_OTHER ||
       !largePhotoUrl ||
       !smallPhotoUrl
     ) {
@@ -110,13 +114,13 @@ export default function ProfilePage() {
     <main className="book-surface min-h-screen pt-16">
       <Navbar variant="light" />
 
-      <div className="mx-auto max-w-3xl px-4 py-12">
+      <div className="mx-auto max-w-3xl px-3 py-8 sm:px-4 sm:py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="mb-8 text-center">
-            <h1 className="font-serif text-3xl font-bold text-navy">
+            <h1 className="font-serif text-2xl font-bold text-navy sm:text-3xl">
               {t.profile.title}
             </h1>
             <p className="mt-2 text-navy/60">{t.profile.subtitle}</p>
@@ -124,9 +128,9 @@ export default function ProfilePage() {
 
           <form
             onSubmit={handleSubmit}
-            className="book-page space-y-6 rounded-2xl border border-gold/20 p-6 md:p-8 book-shadow"
+            className="book-page space-y-6 rounded-2xl border border-gold/20 p-4 sm:p-6 md:p-8 book-shadow"
           >
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 sm:grid-cols-2">
               <PhotoUpload
                 label={t.profile.largePhoto}
                 value={largePhotoUrl}
@@ -141,7 +145,7 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <IconLabel icon={User}>{t.profile.fullName} *</IconLabel>
                 <input
@@ -174,45 +178,29 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div>
-                <IconLabel icon={GraduationCap}>
-                  {t.profile.academicDept} *
-                </IconLabel>
-                <select
-                  required
+              <div className="sm:col-span-2">
+                <DepartmentSelect
+                  label={t.profile.academicDept}
+                  icon={GraduationCap}
+                  options={ACADEMIC_DEPARTMENTS}
                   value={academicDepartment}
-                  onChange={(e) => setAcademicDepartment(e.target.value)}
-                  className="w-full rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/20"
-                >
-                  <option value="">{t.profile.selectDepartment}</option>
-                  {ACADEMIC_DEPARTMENTS.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="md:col-span-2">
-                <IconLabel icon={HandHeart}>
-                  {t.profile.fellowshipDept} *
-                </IconLabel>
-                <select
+                  onChange={setAcademicDepartment}
                   required
-                  value={fellowshipDepartment}
-                  onChange={(e) => setFellowshipDepartment(e.target.value)}
-                  className="w-full rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/20"
-                >
-                  <option value="">{t.profile.selectDepartment}</option>
-                  {FELLOWSHIP_DEPARTMENTS.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
 
-              <div className="md:col-span-2">
+              <div className="sm:col-span-2">
+                <DepartmentSelect
+                  label={t.profile.fellowshipDept}
+                  icon={HandHeart}
+                  options={FELLOWSHIP_DEPARTMENTS}
+                  value={fellowshipDepartment}
+                  onChange={setFellowshipDepartment}
+                  required
+                />
+              </div>
+
+              <div className="sm:col-span-2">
                 <IconLabel icon={MessageSquareQuote}>
                   {t.profile.lastWords}
                 </IconLabel>

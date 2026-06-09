@@ -113,7 +113,7 @@ export default function CoverPage() {
             className="flex w-full max-w-md flex-col items-center gap-4"
           >
             {user ? (
-              <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
+              <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center lg:hidden">
                 <Link
                   href="/book"
                   className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gold px-8 py-3.5 font-semibold text-navy shadow-lg transition-all hover:bg-gold-light hover:shadow-xl sm:flex-none"
@@ -130,7 +130,7 @@ export default function CoverPage() {
                 </Link>
               </div>
             ) : (
-              <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
+              <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center lg:hidden">
                 <Link
                   href="/login"
                   className="nav-btn-hover inline-flex flex-1 items-center justify-center gap-2 rounded-full border-2 border-white/50 px-8 py-3.5 font-semibold text-white hover:bg-white/10 sm:flex-none"
