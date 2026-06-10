@@ -15,7 +15,7 @@ import StudentCard from "@/components/StudentCard";
 import StudentModal from "@/components/StudentModal";
 import BookFooter from "@/components/BookFooter";
 
-const STUDENTS_PER_PAGE = 3;
+const STUDENTS_PER_PAGE = 4;
 
 export default function GalleryPage() {
   const { t } = useLanguage();
@@ -90,11 +90,11 @@ export default function GalleryPage() {
   }, [page, totalPages]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="sticky top-16 z-20 -mx-4 space-y-2 border-b border-gold/20 bg-paper/95 px-4 py-3 backdrop-blur-sm md:-mx-8 md:px-8 lg:-mx-10 lg:px-10"
+        className="sticky top-16 z-20 -mx-4 space-y-3 border-b border-gold/20 bg-paper/95 px-4 py-4 backdrop-blur-sm md:-mx-10 md:px-10 lg:-mx-14 lg:px-14"
       >
         <label className="flex w-full items-center gap-2 text-[11px] text-navy md:text-xs">
           <span className="sr-only">{t.gallery.searchName}</span>
@@ -104,19 +104,19 @@ export default function GalleryPage() {
             value={nameQuery}
             onChange={(e) => setNameQuery(e.target.value)}
             placeholder={t.gallery.searchPlaceholder}
-            className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-3 py-1.5 text-[11px] text-navy outline-none placeholder:text-navy/40 focus:border-gold md:text-xs"
+            className="min-w-0 flex-1 rounded-xl border border-navy/15 bg-white px-3 py-2 text-[11px] text-navy outline-none placeholder:text-navy/35 focus:border-gold focus:ring-2 focus:ring-gold/15 md:text-xs"
           />
         </label>
 
         <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
           <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
-            <span className="shrink-0 font-medium text-navy/70">
+            <span className="shrink-0 font-medium text-navy/65">
               {t.gallery.filterFellowship}:
             </span>
             <select
               value={fellowshipFilter}
               onChange={(e) => setFellowshipFilter(e.target.value)}
-              className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
+              className="min-w-0 flex-1 rounded-lg border border-navy/15 bg-white px-2 py-1.5 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
             >
               <option value="">{t.gallery.all}</option>
             {FELLOWSHIP_DEPARTMENTS.map((dept) => (
@@ -129,13 +129,13 @@ export default function GalleryPage() {
           </label>
 
           <label className="flex items-center gap-1.5 text-[11px] text-navy md:text-xs">
-            <span className="shrink-0 font-medium text-navy/70">
+            <span className="shrink-0 font-medium text-navy/65">
               {t.gallery.filterAcademic}:
             </span>
             <select
               value={academicFilter}
               onChange={(e) => setAcademicFilter(e.target.value)}
-              className="min-w-0 flex-1 rounded-md border border-navy/15 bg-white px-2 py-1 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
+              className="min-w-0 flex-1 rounded-lg border border-navy/15 bg-white px-2 py-1.5 text-[11px] text-navy outline-none focus:border-gold sm:flex-none sm:min-w-[140px] md:text-xs"
             >
               <option value="">{t.gallery.all}</option>
             {ACADEMIC_DEPARTMENTS.map((dept) => (
@@ -147,24 +147,24 @@ export default function GalleryPage() {
           </select>
           </label>
 
-          <span className="text-[11px] text-navy/50 md:text-xs">
+          <span className="text-[11px] font-medium text-navy/45 md:text-xs">
             {filteredStudents.length} {t.gallery.title.toLowerCase()}
           </span>
         </div>
       </motion.div>
 
-      <div className="pt-2">
+      <div className="pt-6">
       {loading ? (
-        <div className="flex justify-center py-8">
-          <div className="h-7 w-7 animate-spin rounded-full border-4 border-gold border-t-transparent" />
+        <div className="flex justify-center py-16">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold border-t-transparent" />
         </div>
       ) : filteredStudents.length === 0 ? (
-        <div className="py-8 text-center text-sm text-navy/50">
-          {t.gallery.noResults}
+        <div className="py-16 text-center">
+          <p className="font-serif text-lg text-navy/40">{t.gallery.noResults}</p>
         </div>
       ) : (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-4">
+        <div className="space-y-8">
+          <div className="grid grid-cols-2 gap-5 md:gap-6 lg:grid-cols-4 lg:gap-8">
             {pagedStudents.map((student, index) => (
               <StudentCard
                 key={student.id}
@@ -175,18 +175,19 @@ export default function GalleryPage() {
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-4 sm:gap-6">
+          {/* Pagination */}
+          <div className="flex items-center justify-center gap-5 py-2 sm:gap-8">
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
               aria-label={t.common.previous}
-              className="nav-btn-hover flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-white text-navy shadow-sm transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
+              className="nav-btn-hover flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-gold/40 bg-white text-navy shadow-sm transition-all hover:border-gold hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
             >
-              <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
+              <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
             </button>
 
-            <p className="min-w-[4rem] text-center text-sm text-navy/55">
+            <p className="min-w-[5rem] text-center text-sm font-medium text-navy/55">
               {page + 1} / {totalPages}
             </p>
 
@@ -195,9 +196,9 @@ export default function GalleryPage() {
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
               aria-label={t.common.next}
-              className="nav-btn-hover flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-white text-navy shadow-sm transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
+              className="nav-btn-hover flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-gold/40 bg-white text-navy shadow-sm transition-all hover:border-gold hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-30 md:h-12 md:w-12"
             >
-              <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
+              <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
             </button>
           </div>
         </div>

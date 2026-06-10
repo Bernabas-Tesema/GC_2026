@@ -19,7 +19,7 @@ export default function BrandTitle({
   const logoFrameClass =
     variant === "cover"
       ? "bg-paper shadow-md ring-1 ring-gold/40"
-      : "bg-paper ring-1 ring-gold/25";
+      : "bg-white shadow-sm ring-1 ring-gold/30";
 
   const wrapperClass = [
     "inline-flex items-center gap-2.5 sm:gap-3",

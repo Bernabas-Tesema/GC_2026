@@ -18,6 +18,7 @@ import {
 } from "firebase/auth";
 import { getClientAuth } from "@/lib/firebase";
 import { getStudentByUid } from "@/lib/students";
+import { isAdmin, addAdmin } from "@/lib/admin";
 import type { Student } from "@/lib/types";
 
 interface AuthContextValue {
@@ -55,9 +56,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const auth = getClientAuth();
+    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
+        // Auto-promote if email is in the admin list
+        if (firebaseUser.email && adminEmails.includes(firebaseUser.email.toLowerCase())) {
+          const already = await isAdmin(firebaseUser.uid).catch(() => false);
+          if (!already) {
+            await addAdmin(firebaseUser.uid, "env-bootstrap").catch(() => {});
+          }
+        }
         try {
           const profile = await getStudentByUid(firebaseUser.uid);
           setStudent(profile);

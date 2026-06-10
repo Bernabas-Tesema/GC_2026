@@ -3,15 +3,24 @@
 @theme {
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
-  --color-gold: #c9a227;
-  --color-gold-light: #e8d48b;
-  --color-navy: #1a1f3a;
-  --color-navy-light: #2d3561;
-  --color-cream: #faf6f0;
-  --color-paper: #f4ecd8;
-  --color-paper-warm: #efe4cc;
-  --color-paper-edge: #d9cbb0;
-  --color-burgundy: #6b1d2a;
+
+  /* ── Core brand palette — Blue & White ── */
+  --color-gold:         #2563eb;   /* primary blue — replaces gold */
+  --color-gold-light:   #60a5fa;   /* sky blue — hover / light accent */
+  --color-gold-dark:    #1d4ed8;   /* deeper blue — text on light bg */
+
+  --color-navy:         #0f172a;   /* near-black blue — primary text/dark */
+  --color-navy-light:   #1e3a8a;   /* deep blue — secondary dark */
+  --color-navy-muted:   #3b82f6;   /* medium blue — muted elements */
+
+  --color-burgundy:     #1d4ed8;   /* deep blue — replaces burgundy accent */
+  --color-burgundy-light: #2563eb; /* blue — lighter accent */
+
+  /* ── Surface / background tones — crisp white & blue tints ── */
+  --color-cream:        #ffffff;   /* pure white */
+  --color-paper:        #f8faff;   /* very light blue-white */
+  --color-paper-warm:   #eff6ff;   /* soft blue tint background */
+  --color-paper-edge:   #bfdbfe;   /* light blue border */
 }
 
 @layer base {
@@ -26,17 +35,19 @@
 }
 
 @layer utilities {
+  /* ── Page / background surfaces ── */
   .book-surface {
     background:
-      radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.35), transparent 40%),
-      linear-gradient(180deg, #e6dcc8 0%, #d8ccb4 100%);
+      radial-gradient(ellipse at 20% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(29, 78, 216, 0.06) 0%, transparent 50%),
+      linear-gradient(160deg, #ffffff 0%, #eff6ff 50%, #dbeafe 100%);
   }
 
   .book-shadow {
     box-shadow:
-      0 18px 40px -16px rgba(74, 58, 38, 0.35),
-      0 2px 0 rgba(255, 255, 255, 0.5) inset,
-      0 -1px 0 rgba(180, 155, 120, 0.25) inset;
+      0 20px 50px -15px rgba(15, 23, 42, 0.18),
+      0 2px 0 rgba(255, 255, 255, 0.8) inset,
+      0 -1px 0 rgba(191, 219, 254, 0.4) inset;
   }
 
   .book-page {
@@ -44,50 +55,82 @@
     background-image:
       linear-gradient(
         90deg,
-        rgba(210, 190, 155, 0.12) 0%,
-        transparent 3%,
-        transparent 97%,
-        rgba(210, 190, 155, 0.12) 100%
+        rgba(37, 99, 235, 0.05) 0%,
+        transparent 2%,
+        transparent 98%,
+        rgba(37, 99, 235, 0.05) 100%
       ),
       linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.55) 0%,
-        transparent 18%,
-        transparent 82%,
-        rgba(180, 155, 120, 0.08) 100%
-      ),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        rgba(255, 255, 255, 0.8) 0%,
+        transparent 20%,
+        transparent 80%,
+        rgba(219, 234, 254, 0.15) 100%
+      );
   }
 
+  /* ── Interactive hover lift ── */
   .nav-btn-hover {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md;
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0;
   }
 
+  /* ── Card component ── */
   .section-card {
-    @apply overflow-hidden rounded-2xl border border-gold/30 bg-white/85;
+    @apply overflow-hidden rounded-2xl border border-blue-200/60 bg-white/95;
     box-shadow:
-      0 18px 40px -16px rgba(74, 58, 38, 0.35),
-      0 2px 0 rgba(255, 255, 255, 0.5) inset,
-      0 -1px 0 rgba(180, 155, 120, 0.25) inset;
+      0 8px 32px -8px rgba(15, 23, 42, 0.10),
+      0 2px 0 rgba(255, 255, 255, 0.9) inset,
+      0 -1px 0 rgba(191, 219, 254, 0.3) inset;
   }
 
+  .section-card:hover {
+    box-shadow:
+      0 14px 40px -10px rgba(37, 99, 235, 0.15),
+      0 2px 0 rgba(255, 255, 255, 0.9) inset,
+      0 -1px 0 rgba(191, 219, 254, 0.3) inset;
+  }
+
+  /* ── Card header band ── */
   .section-header {
-    background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 55%, var(--color-burgundy) 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
     @apply px-4 py-3 text-white sm:px-5 sm:py-4;
   }
 
   .section-body {
-    @apply p-4 sm:p-5 md:p-6;
+    @apply p-5 sm:p-6 md:p-8;
   }
 
+  /* ── Blue accent border ── */
   .gold-border {
     border: 2px solid var(--color-gold);
   }
 
+  /* ── Blue gradient text ── */
   .text-gradient-gold {
-    background: linear-gradient(135deg, #c9a227, #e8d48b, #c9a227);
+    background: linear-gradient(135deg, #1d4ed8, #2563eb, #60a5fa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* ── Glassmorphism pill ── */
+  .glass-pill {
+    @apply backdrop-blur-md bg-white/15 border border-white/20 rounded-full;
+  }
+
+  /* ── Primary blue button ── */
+  .btn-gold {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    @apply text-white font-semibold shadow-md transition-all duration-200;
+  }
+
+  .btn-gold:hover {
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+    @apply shadow-lg -translate-y-0.5;
+  }
+
+  /* ── Shimmer loading skeleton ── */
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-blue-100;
   }
 }

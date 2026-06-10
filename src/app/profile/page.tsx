@@ -128,7 +128,7 @@ export default function ProfilePage() {
 
           <form
             onSubmit={handleSubmit}
-            className="book-page space-y-6 rounded-2xl border border-gold/20 p-4 sm:p-6 md:p-8 book-shadow"
+            className="book-page space-y-6 rounded-3xl border border-gold/20 p-4 sm:p-6 md:p-8 book-shadow"
           >
             <div className="grid gap-6 sm:grid-cols-2">
               <PhotoUpload
@@ -215,7 +215,7 @@ export default function ProfilePage() {
             </div>
 
             {error && (
-              <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600">
+              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
                 {error}
               </p>
             )}
@@ -223,7 +223,8 @@ export default function ProfilePage() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-navy py-3 font-semibold text-white transition-colors hover:bg-navy-light disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-semibold text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50"
+              style={{ background: "linear-gradient(135deg, #0f172a, #1e3a8a)" }}
             >
               {saving ? (
                 <>

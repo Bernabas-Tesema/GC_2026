@@ -37,14 +37,15 @@ export default function PhotoUpload({
         body: formData,
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Upload failed");
+        throw new Error(data.details ?? data.error ?? "Upload failed");
       }
 
-      const data = await response.json();
       onChange(data.url);
-    } catch {
-      setError(t.common.error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t.common.error);
     } finally {
       setUploading(false);
     }

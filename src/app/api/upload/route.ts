@@ -14,7 +14,10 @@ export async function POST(request: NextRequest) {
 
     if (!cloudName || !uploadPreset) {
       return NextResponse.json(
-        { error: "Cloudinary is not configured" },
+        {
+          error: "Cloudinary is not configured",
+          hint: "Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in .env.local",
+        },
         { status: 500 }
       );
     }
@@ -26,26 +29,36 @@ export async function POST(request: NextRequest) {
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      {
-        method: "POST",
-        body: uploadData,
-      }
+      { method: "POST", body: uploadData }
     );
 
+    const body = await response.text();
+
     if (!response.ok) {
-      const error = await response.text();
+      console.error("[upload] Cloudinary error:", response.status, body);
+      let parsed: Record<string, unknown> = {};
+      try { parsed = JSON.parse(body); } catch { /* not json */ }
       return NextResponse.json(
-        { error: "Upload failed", details: error },
+        {
+          error: "Cloudinary upload failed",
+          status: response.status,
+          // surface the cloudinary error message directly
+          details: (parsed?.error as { message?: string })?.message ?? body,
+        },
         { status: 500 }
       );
     }
 
-    const result = await response.json();
+    const result = JSON.parse(body);
     return NextResponse.json({
       url: result.secure_url,
       publicId: result.public_id,
     });
-  } catch {
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  } catch (err) {
+    console.error("[upload] Unexpected error:", err);
+    return NextResponse.json(
+      { error: "Upload failed", details: String(err) },
+      { status: 500 }
+    );
   }
 }

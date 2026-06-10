@@ -86,3 +86,32 @@ export async function getStudentById(id: string): Promise<Student | null> {
   if (!docSnap.exists()) return null;
   return { id: docSnap.id, ...docSnap.data() } as Student;
 }
+
+import { deleteDoc } from "firebase/firestore";
+
+/** Delete a student document by Firestore doc id (admin only). */
+export async function deleteStudent(id: string): Promise<void> {
+  const db = getClientDb();
+  await deleteDoc(doc(db, STUDENTS_COLLECTION, id));
+}
+
+/** Admin creates/updates a student record directly (no Firebase Auth uid required). */
+export async function adminSaveStudent(
+  data: Omit<Student, "id" | "createdAt" | "updatedAt"> & { id?: string }
+): Promise<string> {
+  const db = getClientDb();
+  const now = new Date().toISOString();
+  if (data.id) {
+    const ref = doc(db, STUDENTS_COLLECTION, data.id);
+    const existing = await getDoc(ref);
+    await setDoc(ref, {
+      ...data,
+      createdAt: existing.exists() ? existing.data().createdAt : now,
+      updatedAt: now,
+    });
+    return data.id;
+  }
+  const newRef = doc(collection(db, STUDENTS_COLLECTION));
+  await setDoc(newRef, { ...data, createdAt: now, updatedAt: now });
+  return newRef.id;
+}

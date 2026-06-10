@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
@@ -12,6 +12,7 @@ import {
   EVENT_GALLERY_PHOTOS,
   isEventSlug,
 } from "@/lib/events";
+import { getAllMedia } from "@/lib/media";
 import BookFooter from "@/components/BookFooter";
 
 export default function EventGalleryPage() {
@@ -19,17 +20,31 @@ export default function EventGalleryPage() {
   const slugParam = params.slug;
   const slug = typeof slugParam === "string" ? slugParam : slugParam?.[0];
   const { t } = useLanguage();
+  const [media, setMedia] = useState<Record<string, string>>({});
 
-  if (!slug || !isEventSlug(slug)) {
-    notFound();
-  }
+  useEffect(() => {
+    getAllMedia().then(setMedia).catch(() => {});
+  }, []);
 
+  if (!slug || !isEventSlug(slug)) notFound();
   const event = t.home.events.find((e) => e.slug === slug);
-  if (!event) {
-    notFound();
-  }
+  if (!event) notFound();
 
-  const photos = EVENT_GALLERY_PHOTOS[slug];
+  // Build photo list: Firestore slots first, fallback to static
+  const staticPhotos = EVENT_GALLERY_PHOTOS[slug];
+  const firestorePhotos = Object.entries(media)
+    .filter(([k]) => k.startsWith(`event-gallery:${slug}:`))
+    .sort(([a], [b]) => {
+      const ai = parseInt(a.split(":")[2] ?? "0");
+      const bi = parseInt(b.split(":")[2] ?? "0");
+      return ai - bi;
+    })
+    .map(([, url]) => url);
+
+  const photos = firestorePhotos.length > 0 ? firestorePhotos : staticPhotos;
+
+  // Cover: Firestore first, fallback to static file
+  const coverSrc = media[`event-cover:${slug}`] || EVENT_COVER_IMAGE(slug);
 
   return (
     <div className="flex min-h-[calc(100dvh-4rem)] w-full flex-col">
@@ -88,7 +103,7 @@ export default function EventGalleryPage() {
           ) : (
             <EventGalleryPlaceholder
               eventName={event.name}
-              coverSrc={EVENT_COVER_IMAGE(slug)}
+              coverSrc={coverSrc}
               noPhotosLabel={t.events.noPhotos}
               addPhotosHint={t.events.addPhotosHint.replace("{slug}", slug)}
             />

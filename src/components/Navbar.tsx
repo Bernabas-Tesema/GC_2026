@@ -9,6 +9,7 @@ import {
   LogIn,
   LogOut,
   Menu,
+  Shield,
   User,
   UserPlus,
   Users,
@@ -90,6 +91,15 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   <User className="h-4 w-4 text-gold" />
                   {t.nav.myProfile}
                 </Link>
+                {user && (
+                  <Link
+                    href="/managers"
+                    className="nav-btn-hover inline-flex items-center gap-1.5 rounded-full border border-gold/50 bg-gold/15 px-4 py-2 text-sm font-medium text-gold-light transition-colors hover:bg-gold/25"
+                  >
+                    <Shield className="h-4 w-4" />
+                    Managers
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={() => logout()}
@@ -272,6 +282,17 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                     <User className="h-4 w-4 text-gold" />
                     {t.nav.myProfile}
                   </Link>
+                  {user && (
+                    <Link
+                      href="/managers"
+                      className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                        isCover ? "hover:bg-white/10" : "hover:bg-gold/10 text-gold"
+                      }`}
+                    >
+                      <Shield className="h-4 w-4 text-gold" />
+                      Managers
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={() => {
@@ -279,7 +300,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                       setMenuOpen(false);
                     }}
                     className={`flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
+                      isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
                     }`}
                   >
                     <LogOut className="h-4 w-4 text-gold" />
