@@ -3,20 +3,37 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useManagerAuth } from "@/contexts/ManagerAuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { isStudentProfileComplete } from "@/lib/students";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, student, loading } = useAuth();
+  const { isManager, loading: managerLoading } = useManagerAuth();
   const { t } = useLanguage();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
-    }
-  }, [user, loading, router]);
+  const profileComplete = isStudentProfileComplete(student);
 
-  if (loading) {
+  useEffect(() => {
+    if (loading || managerLoading) return;
+
+    if (isManager) {
+      router.push("/managers");
+      return;
+    }
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    if (!profileComplete) {
+      router.push("/profile");
+    }
+  }, [user, student, loading, managerLoading, isManager, router, profileComplete]);
+
+  if (loading || managerLoading) {
     return (
       <div className="book-surface flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -27,7 +44,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!user) return null;
+  if (isManager || !user || !profileComplete) return null;
 
   return <>{children}</>;
 }

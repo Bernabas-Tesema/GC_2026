@@ -5,12 +5,23 @@ import Image from "next/image";
 import { Camera, ImageIcon, Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import IconLabel from "@/components/IconLabel";
+import { MAX_STUDENT_PHOTO_UPLOADS } from "@/lib/constants";
+import {
+  getPhotoUploadCount,
+  isPhotoUploadLimitReached,
+  recordStudentPhotoUpload,
+} from "@/lib/photoUploadLimit";
 
 interface PhotoUploadProps {
   label: string;
   value: string;
   onChange: (url: string) => void;
   aspect?: "square" | "portrait";
+  fullWidth?: boolean;
+  /** When set, enforces the student photo upload limit. */
+  userId?: string;
+  uploadCount?: number;
+  onUploadCountChange?: (count: number) => void;
 }
 
 export default function PhotoUpload({
@@ -18,13 +29,30 @@ export default function PhotoUpload({
   value,
   onChange,
   aspect = "portrait",
+  fullWidth = false,
+  userId,
+  uploadCount = 0,
+  onUploadCountChange,
 }: PhotoUploadProps) {
   const { t } = useLanguage();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
+  const enforceLimit = Boolean(userId);
+  const limitReached = enforceLimit && isPhotoUploadLimitReached(uploadCount);
+  const remaining = Math.max(0, MAX_STUDENT_PHOTO_UPLOADS - uploadCount);
+
   const handleUpload = async (file: File) => {
+    if (enforceLimit && userId) {
+      const count = await getPhotoUploadCount(userId);
+      if (isPhotoUploadLimitReached(count)) {
+        onUploadCountChange?.(count);
+        setError(t.profile.uploadLimitReached);
+        return;
+      }
+    }
+
     setUploading(true);
     setError("");
 
@@ -43,16 +71,30 @@ export default function PhotoUpload({
         throw new Error(data.details ?? data.error ?? "Upload failed");
       }
 
+      if (enforceLimit && userId) {
+        const nextCount = await recordStudentPhotoUpload(userId);
+        onUploadCountChange?.(nextCount);
+      }
+
       onChange(data.url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t.common.error);
+      if (err instanceof Error && err.message === "UPLOAD_LIMIT_REACHED") {
+        onUploadCountChange?.(MAX_STUDENT_PHOTO_UPLOADS);
+        setError(t.profile.uploadLimitReached);
+      } else {
+        setError(err instanceof Error ? err.message : t.common.error);
+      }
     } finally {
       setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
     }
   };
 
-  const aspectClass =
-    aspect === "square" ? "aspect-square max-w-[160px]" : "aspect-[3/4] max-w-[200px]";
+  const aspectClass = fullWidth
+    ? "aspect-[3/4] w-full max-w-sm mx-auto"
+    : aspect === "square"
+      ? "aspect-square max-w-[160px]"
+      : "aspect-[3/4] max-w-[200px]";
 
   const LabelIcon = aspect === "square" ? Camera : ImageIcon;
 
@@ -67,7 +109,7 @@ export default function PhotoUpload({
             src={value}
             alt={label}
             fill
-            className="object-cover"
+            className="object-contain"
             sizes="200px"
           />
         ) : (
@@ -95,10 +137,20 @@ export default function PhotoUpload({
         }}
       />
 
+      {enforceLimit && (
+        <p className="text-xs text-navy/50">
+          {limitReached
+            ? t.profile.uploadLimitReached
+            : t.profile.uploadsRemaining
+                .replace("{remaining}", String(remaining))
+                .replace("{max}", String(MAX_STUDENT_PHOTO_UPLOADS))}
+        </p>
+      )}
+
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        disabled={uploading}
+        disabled={uploading || limitReached}
         className="inline-flex items-center gap-2 rounded-lg border border-gold/40 px-4 py-2 text-sm font-medium text-navy transition-colors hover:bg-gold/10 disabled:opacity-50"
       >
         <Camera className="h-4 w-4 text-gold" />

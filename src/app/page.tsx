@@ -3,15 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { BookOpen, ChevronRight, LogIn, UserPlus } from "lucide-react";
+import { BookOpen, ChevronRight, LogIn, Shield, UserPlus } from "lucide-react";
 import { GRADUATION_YEAR } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useManagerAuth } from "@/contexts/ManagerAuthContext";
 
 export default function CoverPage() {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { isManager } = useManagerAuth();
+  const isLoggedIn = Boolean(user) || isManager;
 
   return (
     <main className="relative h-screen w-full overflow-hidden bg-[#050a14]">
@@ -183,23 +186,37 @@ export default function CoverPage() {
           transition={{ delay: 1.1 }}
           className="flex w-full max-w-sm flex-col items-center gap-4"
         >
-          {user ? (
+          {isLoggedIn ? (
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center lg:hidden">
-              <Link
-                href="/book"
-                className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5 sm:flex-none"
-                style={{ background: "linear-gradient(135deg, #1d4ed8, #2563eb)" }}
-              >
-                <BookOpen className="h-4 w-4" />
-                {t.cover.openBook}
-                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                href="/profile"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/30 hover:text-white sm:flex-none"
-              >
-                {t.nav.myProfile}
-              </Link>
+              {isManager ? (
+                <Link
+                  href="/managers"
+                  className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5 sm:flex-none"
+                  style={{ background: "linear-gradient(135deg, #1d4ed8, #2563eb)" }}
+                >
+                  <Shield className="h-4 w-4" />
+                  Managers
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/book"
+                    className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5 sm:flex-none"
+                    style={{ background: "linear-gradient(135deg, #1d4ed8, #2563eb)" }}
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    {t.cover.openBook}
+                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/30 hover:text-white sm:flex-none"
+                  >
+                    {t.nav.myProfile}
+                  </Link>
+                </>
+              )}
             </div>
           ) : (
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center lg:hidden">

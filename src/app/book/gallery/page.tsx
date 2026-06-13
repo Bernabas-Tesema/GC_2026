@@ -13,7 +13,6 @@ import {
 import type { Student } from "@/lib/types";
 import StudentCard from "@/components/StudentCard";
 import StudentModal from "@/components/StudentModal";
-import BookFooter from "@/components/BookFooter";
 
 const STUDENTS_PER_PAGE = 4;
 
@@ -90,11 +89,11 @@ export default function GalleryPage() {
   }, [page, totalPages]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="sticky top-16 z-20 -mx-4 space-y-3 border-b border-gold/20 bg-paper/95 px-4 py-4 backdrop-blur-sm md:-mx-10 md:px-10 lg:-mx-14 lg:px-14"
+        className="sticky top-12 z-20 -mx-4 space-y-2 border-b border-gold/20 bg-paper/95 px-4 py-3 backdrop-blur-sm md:-mx-10 md:px-10 lg:-mx-14 lg:px-14"
       >
         <label className="flex w-full items-center gap-2 text-[11px] text-navy md:text-xs">
           <span className="sr-only">{t.gallery.searchName}</span>
@@ -153,18 +152,18 @@ export default function GalleryPage() {
         </div>
       </motion.div>
 
-      <div className="pt-6">
+      <div className="pt-3">
       {loading ? (
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-10">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold border-t-transparent" />
         </div>
       ) : filteredStudents.length === 0 ? (
-        <div className="py-16 text-center">
+        <div className="py-10 text-center">
           <p className="font-serif text-lg text-navy/40">{t.gallery.noResults}</p>
         </div>
       ) : (
-        <div className="space-y-8">
-          <div className="grid grid-cols-2 gap-5 md:gap-6 lg:grid-cols-4 lg:gap-8">
+        <div className="space-y-4 px-3 sm:px-5 md:px-8">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:gap-x-10 sm:gap-y-7 lg:grid-cols-4 lg:gap-x-12 lg:gap-y-8">
             {pagedStudents.map((student, index) => (
               <StudentCard
                 key={student.id}
@@ -176,7 +175,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-center gap-5 py-2 sm:gap-8">
+          <div className="flex items-center justify-center gap-4 py-1 sm:gap-6">
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
@@ -208,8 +207,6 @@ export default function GalleryPage() {
         student={selectedStudent}
         onClose={() => setSelectedStudent(null)}
       />
-
-      <BookFooter />
       </div>
     </div>
   );

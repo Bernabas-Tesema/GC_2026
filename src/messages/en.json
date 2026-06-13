@@ -30,7 +30,8 @@
     "hasAccount": "Already have an account?",
     "loginError": "Invalid email or password",
     "signupError": "Could not create account",
-    "authMethodDisabled": "Email sign-up is not enabled. Enable Email/Password in the Firebase Console under Authentication → Sign-in method.",
+    "authMethodDisabled": "Email sign-in is not enabled. In Firebase Console go to Authentication → Sign-in method and enable Email/Password (and Anonymous if managers need to save data).",
+    "firebaseNotConfigured": "Firebase is not configured correctly. Check NEXT_PUBLIC_FIREBASE_* values in .env.local and restart the dev server.",
     "emailInUse": "This email is already registered. Try signing in instead.",
     "invalidEmail": "Please enter a valid email address.",
     "passwordMismatch": "Passwords do not match",
@@ -43,7 +44,13 @@
     "resetError": "Could not send reset email. Try again.",
     "backToLogin": "Back to login",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "managerLoginTitle": "Managers Login",
+    "managerLoginSubtitle": "Sign in with your manager email and password",
+    "managerLoginButton": "Sign In to Managers",
+    "managerNotAuthorized": "This email is not authorized for manager access",
+    "managerUseLogin": "Managers sign in on the Login page — use Sign Up only for student accounts.",
+    "backToBook": "Back to yearbook"
   },
   "profile": {
     "title": "Complete Your Profile",
@@ -64,7 +71,10 @@
     "selectDepartment": "Select a department",
     "otherDepartment": "Other",
     "otherDepartmentPlaceholder": "Type your department name…",
-    "required": "This field is required"
+    "required": "Please fill in all required fields and upload both photos.",
+    "completeRequired": "Complete your profile and upload your photo before you can access the yearbook.",
+    "uploadLimitReached": "You have used all 4 photo uploads. Contact a manager if you need help.",
+    "uploadsRemaining": "{remaining} of {max} photo uploads remaining"
   },
   "gallery": {
     "title": "Graduating Students",
@@ -121,7 +131,7 @@
     "backToHome": "Back to home",
     "galleryTitle": "Photo Gallery",
     "noPhotos": "More photos coming soon for this event.",
-    "addPhotosHint": "Add photos to public/events/{slug}/",
+    "addPhotosHint": "Upload photos from Managers → Upload Photos (event cover & gallery).",
     "viewGallery": "View gallery"
   },
   "departments": {

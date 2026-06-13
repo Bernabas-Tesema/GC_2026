@@ -17,7 +17,8 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useManagerAuth } from "@/contexts/ManagerAuthContext";
+import { ensureFirestoreWriteAccess } from "@/lib/firestoreAccess";
 import {
   getAllStudents,
   adminSaveStudent,
@@ -81,25 +82,32 @@ const BLANK_STUDENT: Omit<Student, "id" | "createdAt" | "updatedAt"> = {
 type Tab = "users" | "upload";
 
 export default function ManagersPage() {
-  const { user, logout, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const { isManager, loading: managerLoading, logout: managerLogout } = useManagerAuth();
   const [tab, setTab] = useState<Tab>("users");
 
-  // allow any logged-in user
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) { router.push("/login"); return; }
-    setAuthorized(true);
-  }, [user, authLoading, router]);
+    if (!managerLoading && !isManager) {
+      router.replace("/login?next=/managers");
+      return;
+    }
+    if (isManager) {
+      ensureFirestoreWriteAccess().catch(() => {});
+    }
+  }, [isManager, managerLoading, router]);
 
-  if (authLoading || authorized === null) {
+  if (managerLoading || !isManager) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-paper-warm">
         <Loader2 className="h-8 w-8 animate-spin text-gold" />
       </div>
     );
   }
+
+  const handleLogout = () => {
+    managerLogout();
+    router.push("/login");
+  };
 
   return (
     <main className="min-h-screen bg-paper-warm">
@@ -128,7 +136,7 @@ export default function ManagersPage() {
               </p>
             </div>
             <button
-              onClick={() => logout()}
+              onClick={handleLogout}
               className="ml-auto flex items-center gap-1.5 rounded-full border border-navy/15 px-4 py-2 text-sm font-medium text-navy/70 transition-all hover:bg-red-50 hover:text-red-600 hover:border-red-200"
             >
               <LogOut className="h-4 w-4" />
@@ -208,6 +216,7 @@ function UsersTab() {
     if (!editStudent) return;
     setSaving(true);
     try {
+      await ensureFirestoreWriteAccess();
       await adminSaveStudent({
         ...(BLANK_STUDENT),
         ...editStudent,
@@ -225,6 +234,7 @@ function UsersTab() {
     if (!deleteTarget) return;
     setDeleting(true);
     try {
+      await ensureFirestoreWriteAccess();
       await deleteStudent(deleteTarget.id);
       load();
       setDeleteTarget(null);
@@ -550,13 +560,19 @@ function UploadTab() {
       const dest = buildDest();
       const url: string = data.url;
 
+      await ensureFirestoreWriteAccess();
+
       // ── Persist URL to the right place ──────────────────
       if ((dest.type === "student-large" || dest.type === "student-small") && dest.studentId) {
         // Save directly to student's Firestore document
         const s = students.find((st) => st.id === dest.studentId);
         if (s) {
           const field = dest.type === "student-large" ? "largePhotoUrl" : "smallPhotoUrl";
-          await adminSaveStudent({ ...s, [field]: url });
+          await adminSaveStudent({
+            ...s,
+            [field]: url,
+            coverPhotoUrl: s.coverPhotoUrl || url,
+          });
         }
       } else {
         // Save to siteMedia collection with a slot key

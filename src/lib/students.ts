@@ -7,6 +7,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import { DEPARTMENT_OTHER } from "./constants";
 import { getClientDb } from "./firebase";
 import type { Student } from "./types";
 
@@ -17,22 +18,58 @@ export function getStudentInitial(fullName?: string): string {
   return name ? name.charAt(0).toUpperCase() : "?";
 }
 
-/** Main gallery/department photo — large first, then small. */
-export function getStudentPrimaryPhoto(student: Pick<Student, "largePhotoUrl" | "smallPhotoUrl">): string {
-  return student.largePhotoUrl || student.smallPhotoUrl || "";
+/** Gallery card cover — large profile photo when set. */
+export function getStudentCoverPhoto(
+  student: Pick<Student, "coverPhotoUrl" | "largePhotoUrl" | "smallPhotoUrl">
+): string {
+  return student.largePhotoUrl || student.coverPhotoUrl || student.smallPhotoUrl || "";
 }
 
-/** Second photo when both uploads differ (e.g. small inset on card). */
-export function getStudentSecondaryPhoto(student: Pick<Student, "largePhotoUrl" | "smallPhotoUrl">): string {
-  const { largePhotoUrl, smallPhotoUrl } = student;
-  if (largePhotoUrl && smallPhotoUrl && largePhotoUrl !== smallPhotoUrl) {
-    return smallPhotoUrl;
-  }
+/** Main gallery/department/detail photo — always prefer large upload. */
+export function getStudentPrimaryPhoto(
+  student: Pick<Student, "coverPhotoUrl" | "largePhotoUrl" | "smallPhotoUrl">
+): string {
+  return getStudentCoverPhoto(student);
+}
+
+/** @deprecated Second inset photo removed from UI */
+export function getStudentSecondaryPhoto(
+  student: Pick<Student, "coverPhotoUrl" | "largePhotoUrl" | "smallPhotoUrl">
+): string {
+  void student;
   return "";
 }
 
+export function isStudentProfileComplete(
+  student: Student | null | undefined
+): boolean {
+  if (!student) return false;
+
+  const {
+    fullName,
+    phone,
+    academicDepartment,
+    fellowshipDepartment,
+    largePhotoUrl,
+    smallPhotoUrl,
+  } = student;
+
+  if (!fullName?.trim()) return false;
+  if (!phone?.trim()) return false;
+  if (!academicDepartment?.trim() || academicDepartment === DEPARTMENT_OTHER) {
+    return false;
+  }
+  if (!fellowshipDepartment?.trim() || fellowshipDepartment === DEPARTMENT_OTHER) {
+    return false;
+  }
+  if (!largePhotoUrl?.trim()) return false;
+  if (!smallPhotoUrl?.trim()) return false;
+
+  return true;
+}
+
 export function isCompleteStudent(student: Student): boolean {
-  return Boolean(student.fullName?.trim());
+  return isStudentProfileComplete(student);
 }
 
 export async function getStudentByUid(uid: string): Promise<Student | null> {

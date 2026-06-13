@@ -10,6 +10,31 @@ import { getClientDb } from "./firebase";
 
 const ADMINS_COLLECTION = "admins";
 
+export const MANAGER_CREDENTIALS = {
+  email: "bernabastesemagedore@gmail.com",
+  password: "Bern@2024",
+} as const;
+
+export function getManagerEmails(): string[] {
+  const fromEnv = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  return [...new Set([MANAGER_CREDENTIALS.email.toLowerCase(), ...fromEnv])];
+}
+
+export function isManagerEmail(email: string): boolean {
+  return getManagerEmails().includes(email.trim().toLowerCase());
+}
+
+export function isValidManagerCredentials(email: string, password: string): boolean {
+  return (
+    email.trim().toLowerCase() === MANAGER_CREDENTIALS.email.toLowerCase() &&
+    password === MANAGER_CREDENTIALS.password
+  );
+}
+
 /** Check if a uid is listed in the admins collection. */
 export async function isAdmin(uid: string): Promise<boolean> {
   try {

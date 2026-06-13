@@ -1,20 +1,25 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Lock, LogIn, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useManagerAuth } from "@/contexts/ManagerAuthContext";
 import IconLabel from "@/components/IconLabel";
 import PasswordInput from "@/components/PasswordInput";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getClientAuth } from "@/lib/firebase";
 import { getAuthErrorKey } from "@/lib/authErrors";
+import { isValidManagerCredentials } from "@/lib/admin";
+import { getStudentByUid, isStudentProfileComplete } from "@/lib/students";
 import Navbar from "@/components/Navbar";
 
 function LoginForm() {
   const { login } = useAuth();
+  const { login: managerLogin, isManager, loading: managerLoading } = useManagerAuth();
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,15 +28,39 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (managerLoading) return;
+    if (isManager) {
+      router.replace("/managers");
+    }
+  }, [isManager, managerLoading, router]);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      await login(email, password);
-      const next = searchParams.get("next");
-      router.push(next ?? "/book");
+      const normalizedEmail = email.trim();
+
+      if (isValidManagerCredentials(normalizedEmail, password)) {
+        await managerLogin(normalizedEmail, password);
+        router.push("/managers");
+        return;
+      }
+
+      await login(normalizedEmail, password);
+      const auth = getClientAuth();
+      const profile = auth.currentUser
+        ? await getStudentByUid(auth.currentUser.uid)
+        : null;
+
+      if (isStudentProfileComplete(profile)) {
+        const next = searchParams.get("next");
+        router.push(next ?? "/book");
+      } else {
+        router.push("/profile");
+      }
     } catch (err) {
       const key = getAuthErrorKey(err, "login") as keyof typeof t.auth;
       setError(t.auth[key] ?? t.auth.loginError);

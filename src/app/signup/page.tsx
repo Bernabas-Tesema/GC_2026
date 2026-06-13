@@ -10,6 +10,7 @@ import IconLabel from "@/components/IconLabel";
 import PasswordInput from "@/components/PasswordInput";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getAuthErrorKey } from "@/lib/authErrors";
+import { isManagerEmail } from "@/lib/admin";
 import Navbar from "@/components/Navbar";
 
 export default function SignupPage() {
@@ -33,6 +34,11 @@ export default function SignupPage() {
 
     if (password !== confirmPassword) {
       setError(t.auth.passwordMismatch);
+      return;
+    }
+
+    if (isManagerEmail(email.trim())) {
+      setError(t.auth.managerUseLogin);
       return;
     }
 

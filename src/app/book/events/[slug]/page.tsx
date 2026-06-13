@@ -8,12 +8,10 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Images } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
-  EVENT_COVER_IMAGE,
   EVENT_GALLERY_PHOTOS,
   isEventSlug,
 } from "@/lib/events";
 import { getAllMedia } from "@/lib/media";
-import BookFooter from "@/components/BookFooter";
 
 export default function EventGalleryPage() {
   const params = useParams();
@@ -44,42 +42,42 @@ export default function EventGalleryPage() {
   const photos = firestorePhotos.length > 0 ? firestorePhotos : staticPhotos;
 
   // Cover: Firestore first, fallback to static file
-  const coverSrc = media[`event-cover:${slug}`] || EVENT_COVER_IMAGE(slug);
+  const coverSrc = media[`event-cover:${slug}`];
 
   return (
-    <div className="flex min-h-[calc(100dvh-4rem)] w-full flex-col">
+    <div className="flex w-full flex-col">
       <motion.header
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full border-b border-gold/25 bg-gradient-to-r from-navy via-navy-light to-burgundy px-4 py-5 text-white sm:px-6 md:px-8 md:py-6"
+        className="w-full border-b border-gold/25 bg-gradient-to-r from-navy via-navy-light to-burgundy px-3 py-1.5 text-white sm:px-4"
       >
         <Link
           href="/book"
-          className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-gold-light hover:text-gold hover:underline"
+          className="mb-0.5 inline-flex items-center gap-1 text-[10px] font-medium text-gold-light hover:text-gold hover:underline sm:text-xs"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-3 w-3" />
           {t.events.backToHome}
         </Link>
         <div className="text-center">
-          <h1 className="font-serif text-2xl font-bold md:text-3xl">{event.name}</h1>
-          <p className="mt-1 text-sm text-white/75 md:text-base">{event.desc}</p>
+          <h1 className="font-serif text-sm font-bold leading-tight md:text-base">{event.name}</h1>
+          <p className="mt-0.5 text-[10px] leading-snug text-white/75 md:text-xs">{event.desc}</p>
         </div>
       </motion.header>
 
       <motion.section
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
+        transition={{ delay: 0.03 }}
         className="flex w-full flex-1 flex-col"
       >
-        <div className="flex w-full items-center gap-2 border-b border-gold/20 bg-white/60 px-4 py-3 sm:px-6 md:px-8">
-          <Images className="h-5 w-5 shrink-0 text-gold" />
-          <h2 className="font-serif text-lg font-bold text-navy">{t.events.galleryTitle}</h2>
+        <div className="flex w-full items-center gap-1 border-b border-gold/20 bg-white/60 px-3 py-1 sm:px-4">
+          <Images className="h-3.5 w-3.5 shrink-0 text-gold" />
+          <h2 className="font-serif text-xs font-bold text-navy">{t.events.galleryTitle}</h2>
         </div>
 
-        <div className="w-full flex-1 px-2 py-4 sm:px-4 md:px-6 md:py-6">
+        <div className="w-full flex-1 px-4 py-3 sm:px-6 md:px-8 md:py-4">
           {photos.length > 0 ? (
-            <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid w-full grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 sm:gap-x-8 sm:gap-y-5 md:grid-cols-4 md:gap-x-10 md:gap-y-6 lg:grid-cols-5 lg:gap-x-11 lg:gap-y-7 xl:grid-cols-6 xl:gap-x-12">
               {photos.map((src, i) => (
                 <motion.figure
                   key={src}
@@ -104,14 +102,10 @@ export default function EventGalleryPage() {
             <EventGalleryPlaceholder
               eventName={event.name}
               coverSrc={coverSrc}
-              noPhotosLabel={t.events.noPhotos}
-              addPhotosHint={t.events.addPhotosHint.replace("{slug}", slug)}
             />
           )}
         </div>
       </motion.section>
-
-      <BookFooter />
     </div>
   );
 }
@@ -119,39 +113,27 @@ export default function EventGalleryPage() {
 function EventGalleryPlaceholder({
   eventName,
   coverSrc,
-  noPhotosLabel,
-  addPhotosHint,
 }: {
   eventName: string;
-  coverSrc: string;
-  noPhotosLabel: string;
-  addPhotosHint: string;
+  coverSrc?: string;
 }) {
   const [coverError, setCoverError] = useState(false);
+  const showCover = Boolean(coverSrc) && !coverError;
+
+  if (!showCover) return null;
 
   return (
-    <div className="flex min-h-[50vh] w-full flex-col justify-center space-y-4">
+    <div className="w-full">
       <div className="relative aspect-[21/9] w-full overflow-hidden border-y border-gold/20 bg-white">
-        {!coverError ? (
-          <Image
-            src={coverSrc}
-            alt={eventName}
-            fill
-            className="object-cover object-center"
-            sizes="100vw"
-            onError={() => setCoverError(true)}
-          />
-        ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-6 text-center">
-            <Images className="h-12 w-12 text-navy/25" />
-            <p className="font-serif text-xl font-bold text-navy/40 md:text-2xl">
-              {eventName}
-            </p>
-          </div>
-        )}
+        <Image
+          src={coverSrc!}
+          alt={eventName}
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          onError={() => setCoverError(true)}
+        />
       </div>
-      <p className="text-center text-sm text-navy/50">{noPhotosLabel}</p>
-      <p className="text-center font-mono text-xs text-navy/35">{addPhotosHint}</p>
     </div>
   );
 }

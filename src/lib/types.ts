@@ -9,6 +9,8 @@ export interface Student {
   lastWords: string;
   largePhotoUrl: string;
   smallPhotoUrl: string;
+  /** First uploaded photo — used as gallery card cover */
+  coverPhotoUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

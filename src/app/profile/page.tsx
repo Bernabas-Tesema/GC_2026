@@ -17,14 +17,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import IconLabel from "@/components/IconLabel";
 import DepartmentSelect from "@/components/DepartmentSelect";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { saveStudent } from "@/lib/students";
+import { isStudentProfileComplete, saveStudent } from "@/lib/students";
 import {
   ACADEMIC_DEPARTMENTS,
-  DEPARTMENT_OTHER,
   FELLOWSHIP_DEPARTMENTS,
 } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import PhotoUpload from "@/components/PhotoUpload";
+import { getPhotoUploadCount } from "@/lib/photoUploadLimit";
 
 export default function ProfilePage() {
   const { user, student, loading: authLoading, refreshStudent } = useAuth();
@@ -38,6 +38,8 @@ export default function ProfilePage() {
   const [lastWords, setLastWords] = useState("");
   const [largePhotoUrl, setLargePhotoUrl] = useState("");
   const [smallPhotoUrl, setSmallPhotoUrl] = useState("");
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState("");
+  const [photoUploadCount, setPhotoUploadCount] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,24 +58,41 @@ export default function ProfilePage() {
       setLastWords(student.lastWords);
       setLargePhotoUrl(student.largePhotoUrl);
       setSmallPhotoUrl(student.smallPhotoUrl);
+      setCoverPhotoUrl(
+        student.coverPhotoUrl || student.largePhotoUrl || student.smallPhotoUrl || ""
+      );
     } else if (user) {
       setFullName(user.displayName || "");
     }
   }, [student, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    getPhotoUploadCount(user.uid)
+      .then(setPhotoUploadCount)
+      .catch(() => setPhotoUploadCount(0));
+  }, [user]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     if (
-      !fullName ||
-      !phone ||
-      !academicDepartment ||
-      academicDepartment === DEPARTMENT_OTHER ||
-      !fellowshipDepartment ||
-      fellowshipDepartment === DEPARTMENT_OTHER ||
-      !largePhotoUrl ||
-      !smallPhotoUrl
+      !isStudentProfileComplete({
+        id: "",
+        uid: user.uid,
+        fullName,
+        email: user.email || "",
+        phone,
+        academicDepartment,
+        fellowshipDepartment,
+        lastWords,
+        largePhotoUrl,
+        smallPhotoUrl,
+        coverPhotoUrl,
+        createdAt: "",
+        updatedAt: "",
+      })
     ) {
       setError(t.profile.required);
       return;
@@ -92,6 +111,7 @@ export default function ProfilePage() {
         lastWords,
         largePhotoUrl,
         smallPhotoUrl,
+        coverPhotoUrl: coverPhotoUrl || largePhotoUrl || smallPhotoUrl,
       });
       await refreshStudent();
       router.push("/book");
@@ -126,6 +146,12 @@ export default function ProfilePage() {
             <p className="mt-2 text-navy/60">{t.profile.subtitle}</p>
           </div>
 
+          {!authLoading && !student && (
+            <p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm text-amber-800">
+              {t.profile.completeRequired}
+            </p>
+          )}
+
           <form
             onSubmit={handleSubmit}
             className="book-page space-y-6 rounded-3xl border border-gold/20 p-4 sm:p-6 md:p-8 book-shadow"
@@ -134,14 +160,26 @@ export default function ProfilePage() {
               <PhotoUpload
                 label={t.profile.largePhoto}
                 value={largePhotoUrl}
-                onChange={setLargePhotoUrl}
+                onChange={(url) => {
+                  setLargePhotoUrl(url);
+                  setCoverPhotoUrl((c) => c || url);
+                }}
                 aspect="portrait"
+                userId={user?.uid}
+                uploadCount={photoUploadCount}
+                onUploadCountChange={setPhotoUploadCount}
               />
               <PhotoUpload
                 label={t.profile.smallPhoto}
                 value={smallPhotoUrl}
-                onChange={setSmallPhotoUrl}
+                onChange={(url) => {
+                  setSmallPhotoUrl(url);
+                  setCoverPhotoUrl((c) => c || url);
+                }}
                 aspect="square"
+                userId={user?.uid}
+                uploadCount={photoUploadCount}
+                onUploadCountChange={setPhotoUploadCount}
               />
             </div>
 

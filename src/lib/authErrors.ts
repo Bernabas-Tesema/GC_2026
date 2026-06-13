@@ -2,6 +2,8 @@ type AuthAction = "login" | "signup" | "reset";
 
 const SIGNUP_ERROR_KEYS: Record<string, string> = {
   "auth/operation-not-allowed": "authMethodDisabled",
+  "auth/admin-restricted-operation": "authMethodDisabled",
+  "auth/invalid-api-key": "firebaseNotConfigured",
   "auth/email-already-in-use": "emailInUse",
   "auth/invalid-email": "invalidEmail",
   "auth/weak-password": "passwordTooShort",
@@ -13,6 +15,8 @@ const LOGIN_ERROR_KEYS: Record<string, string> = {
   "auth/user-not-found": "loginError",
   "auth/invalid-email": "invalidEmail",
   "auth/operation-not-allowed": "authMethodDisabled",
+  "auth/admin-restricted-operation": "authMethodDisabled",
+  "auth/invalid-api-key": "firebaseNotConfigured",
 };
 
 const RESET_ERROR_KEYS: Record<string, string> = {
@@ -28,7 +32,23 @@ export function getAuthErrorKey(error: unknown, action: AuthAction): string {
       ? String((error as { code: string }).code)
       : null;
 
-  if (process.env.NODE_ENV === "development" && code) {
+  const expectedUserErrors = new Set([
+    "auth/invalid-credential",
+    "auth/wrong-password",
+    "auth/user-not-found",
+    "auth/invalid-email",
+    "auth/email-already-in-use",
+    "auth/weak-password",
+    "auth/operation-not-allowed",
+    "auth/admin-restricted-operation",
+    "auth/invalid-api-key",
+  ]);
+
+  if (
+    process.env.NODE_ENV === "development" &&
+    code &&
+    !expectedUserErrors.has(code)
+  ) {
     console.error(`Firebase Auth error [${action}]:`, code);
   }
 

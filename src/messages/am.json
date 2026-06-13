@@ -30,7 +30,8 @@
     "hasAccount": "መለያ አለዎት?",
     "loginError": "ኢሜይል ወይም የይለፍ ቃል ትክክል አይደለም",
     "signupError": "መለያ መፍጠር አልተቻለም",
-    "authMethodDisabled": "የኢሜይል ምዝገባ አልተነቃም። በ Firebase Console → Authentication → Sign-in method ውስጥ Email/Password ያንቁ።",
+    "authMethodDisabled": "የኢሜይል መግቢያ አልተነቃም። በ Firebase Console → Authentication → Sign-in method ውስጥ Email/Password (እና Anonymous) ያንቁ።",
+    "firebaseNotConfigured": "Firebase ትክክል አልተዋቀረም። .env.local ውስጥ NEXT_PUBLIC_FIREBASE_* ይመልከቱ እና dev server እንደገና ያስጀምሩ።",
     "emailInUse": "ይህ ኢሜይል ቀድሞ ተመዝግቧል። መግባት ይሞክሩ።",
     "invalidEmail": "ትክክለኛ ኢሜይል ያስገቡ።",
     "passwordMismatch": "የይለፍ ቃሎች አይዛመዱም",
@@ -43,7 +44,13 @@
     "resetError": "የመቀየሪያ ኢሜይል መላክ አልተቻለም። እንደገና ይሞክሩ።",
     "backToLogin": "ወደ መግቢያ ተመለስ",
     "showPassword": "የይለፍ ቃል አሳይ",
-    "hidePassword": "የይለፍ ቃል ደብቅ"
+    "hidePassword": "የይለፍ ቃል ደብቅ",
+    "managerLoginTitle": "የማነጅሮች መግቢያ",
+    "managerLoginSubtitle": "በማነጅር ኢሜይል እና የይለፍ ቃልዎ ይግቡ",
+    "managerLoginButton": "ወደ ማነጅሮች ግባ",
+    "managerNotAuthorized": "ይህ ኢሜይል ለማነጅር መዳረሻ አልተፈቀደም",
+    "managerUseLogin": "ማነጅሮች በ Login ገጽ ይግቡ — Sign Up ለተማሪ መለያዎች ብቻ ነው።",
+    "backToBook": "ወደ የዓመት መጽሐፍ ተመለስ"
   },
   "profile": {
     "title": "መገለጫዎን ያጠናቅቁ",
@@ -64,7 +71,10 @@
     "selectDepartment": "ክፍል ይምረጡ",
     "otherDepartment": "ሌላ",
     "otherDepartmentPlaceholder": "የክፍልዎን ስም ይፃፉ…",
-    "required": "ይህ መስክ ያስፈልጋል"
+    "required": "እባክዎ ሁሉንም የሚፈለጉ መስኮች ይሙሉ እና ሁለቱንም ፎቶዎች ይጭኑ።",
+    "completeRequired": "የዓመት መጽሐፍን ከመጠቀምዎ በፊት መገለጫዎን ያጠናቅቁ እና ፎቶዎን ይጭኑ።",
+    "uploadLimitReached": "ሁሉንም 4 የፎቶ ስቀላዎች ተጠቅመዋል። እገዛ ከፈለጉ ከማነጅር ጋር ያገናኙ።",
+    "uploadsRemaining": "{remaining} ከ {max} የፎቶ ስቀላዎች ቀርተዋል"
   },
   "gallery": {
     "title": "የሚመረቁ ተማሪዎች",
@@ -121,7 +131,7 @@
     "backToHome": "ወደ መነሻ ተመለስ",
     "galleryTitle": "የፎቶ ጋሌሪ",
     "noPhotos": "ለዚህ ዝግጅት ተጨማሪ ፎቶዎች በቅርቡ ይጨመራሉ።",
-    "addPhotosHint": "ፎቶዎችን ወደ public/events/{slug}/ ያክሉ",
+    "addPhotosHint": "ፎቶዎችን ከ Managers → Upload Photos (የክስተት ሽፋን እና ጋለሪ) ይስቀሉ።",
     "viewGallery": "ጋሌሪ ይመልከቱ"
   },
   "departments": {

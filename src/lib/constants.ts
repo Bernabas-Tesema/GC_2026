@@ -52,3 +52,6 @@ export const FELLOWSHIP_NAME = {
 };
 
 export const GRADUATION_YEAR = "2026";
+
+/** Max profile photo uploads per student (large + small combined). */
+export const MAX_STUDENT_PHOTO_UPLOADS = 4;

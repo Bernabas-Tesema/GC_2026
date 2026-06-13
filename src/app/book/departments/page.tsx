@@ -5,10 +5,9 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getAllStudents, getStudentPrimaryPhoto, getStudentSecondaryPhoto } from "@/lib/students";
+import { getAllStudents, getStudentPrimaryPhoto } from "@/lib/students";
 import { FELLOWSHIP_DEPARTMENTS } from "@/lib/constants";
 import type { Student } from "@/lib/types";
-import BookFooter from "@/components/BookFooter";
 
 function DepartmentsContent() {
   const { t } = useLanguage();
@@ -38,43 +37,42 @@ function DepartmentsContent() {
         id: student.id,
         name: student.fullName || "Student",
         primaryPhoto: getStudentPrimaryPhoto(student),
-        secondaryPhoto: getStudentSecondaryPhoto(student),
       }))
       .filter((entry) => entry.primaryPhoto);
   }, [departmentStudents]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <motion.header
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center"
+        className="border-b border-gold/20 py-2 text-center"
       >
-        <h1 className="font-serif text-lg font-bold text-navy md:text-xl">
+        <h1 className="font-serif text-sm font-bold text-navy md:text-base">
           {t.departments.title}
         </h1>
-        <p className="mt-0.5 text-xs text-navy/60 md:text-sm">
+        <p className="mt-0.5 text-[10px] text-navy/60 md:text-xs">
           {t.departments.subtitle}
         </p>
-        <p className="mt-2 text-sm font-medium text-navy">{activeDept}</p>
+        <p className="mt-1 text-xs font-medium text-navy">{activeDept}</p>
       </motion.header>
 
       {loading ? (
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-8">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold border-t-transparent" />
         </div>
       ) : (
         <motion.div
           key={activeDept}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h3 className="mb-4 text-center font-serif text-lg font-bold text-navy">
+          <h3 className="mb-2 text-center font-serif text-sm font-bold text-navy">
             {t.departments.memories}
           </h3>
           {departmentMemories.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {departmentMemories.map(({ id, name, primaryPhoto, secondaryPhoto }, i) => (
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6 px-2 sm:grid-cols-2 sm:gap-x-10 sm:px-4 md:grid-cols-3 md:gap-x-11 lg:grid-cols-4 lg:gap-x-12">
+              {departmentMemories.map(({ id, name, primaryPhoto }, i) => (
                 <motion.figure
                   key={id}
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -90,18 +88,6 @@ function DepartmentsContent() {
                       className="object-cover object-center transition-transform hover:scale-105"
                       sizes="(max-width: 768px) 50vw, 25vw"
                     />
-
-                    {secondaryPhoto && (
-                      <div className="absolute right-2 bottom-10 z-10 h-14 w-14 overflow-hidden rounded-full border-2 border-gold bg-white shadow-md md:bottom-12 md:h-16 md:w-16">
-                        <Image
-                          src={secondaryPhoto}
-                          alt={`${name} — ${t.profile.smallPhoto}`}
-                          fill
-                          className="object-cover object-center"
-                          sizes="64px"
-                        />
-                      </div>
-                    )}
 
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/85 via-navy/50 to-transparent px-2 pt-8 pb-2">
                       <figcaption className="line-clamp-2 text-center font-serif text-xs font-bold text-white md:text-sm">
@@ -119,8 +105,6 @@ function DepartmentsContent() {
           )}
         </motion.div>
       )}
-
-      <BookFooter />
     </div>
   );
 }
