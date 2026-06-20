@@ -3,10 +3,11 @@
     "login": "ግባ",
     "signup": "ተመዝገብ",
     "logout": "ውጣ",
-    "openBook": "የዓመት መጽሐፍ ክፈት",
+    "openBook": "መነሻ ክፈት",
     "myProfile": "መገለጫዬ",
     "home": "መነሻ",
-    "gallery": "ተመራቂዎች",
+    "graduates": "ተመራቂዎች",
+    "gallery": "ጋሌሪ",
     "gcSpeech": "የ GC መልዕክት",
     "departments": "ክፍሎች"
   },
@@ -14,13 +15,13 @@
     "title": "አርባ ምንጭ ዩኒቨርሲቲ",
     "subtitle": "ክርስትያን ፌሎውሺፕ",
     "year": "የ 2026 ተመራቂ ክፍል",
-    "tagline": "የእምነት፣ ጓደኝነት እና ሰላምታ ዲጂታል የዓመት መጽሐፍ",
-    "openBook": "የዓመት መጽሐፉን ክፈት",
+    "tagline": "የእምነት፣ ጓደኝነት እና ሰላምታ ዲጂታል ትዝታ",
+    "openBook": "GC ቤንሃናን ይግቡ",
     "flipHint": "ጉዞዎን ለመጀመር ገጹን ይገልብጡ"
   },
   "auth": {
     "loginTitle": "እንኳን ደህና መጡ",
-    "signupTitle": "የዓመት መጽሐፍ ይቀላቀሉ",
+    "signupTitle": "GC ቤንሃናን ይቀላቀሉ",
     "email": "ኢሜይል",
     "password": "የይለፍ ቃል",
     "confirmPassword": "የይለፍ ቃል አረጋግጥ",
@@ -30,7 +31,7 @@
     "hasAccount": "መለያ አለዎት?",
     "loginError": "ኢሜይል ወይም የይለፍ ቃል ትክክል አይደለም",
     "signupError": "መለያ መፍጠር አልተቻለም",
-    "authMethodDisabled": "የኢሜይል መግቢያ አልተነቃም። በ Firebase Console → Authentication → Sign-in method ውስጥ Email/Password (እና Anonymous) ያንቁ።",
+    "authMethodDisabled": "የኢሜይል መግቢያ በ Firebase ውስጥ አልተነቃም። Firebase Console → Authentication → Sign-in method → Email/Password ያንቁ፣ ከዚያ እንደገና ይሞክሩ።",
     "firebaseNotConfigured": "Firebase ትክክል አልተዋቀረም። .env.local ውስጥ NEXT_PUBLIC_FIREBASE_* ይመልከቱ እና dev server እንደገና ያስጀምሩ።",
     "emailInUse": "ይህ ኢሜይል ቀድሞ ተመዝግቧል። መግባት ይሞክሩ።",
     "invalidEmail": "ትክክለኛ ኢሜይል ያስገቡ።",
@@ -50,7 +51,9 @@
     "managerLoginButton": "ወደ ማነጅሮች ግባ",
     "managerNotAuthorized": "ይህ ኢሜይል ለማነጅር መዳረሻ አልተፈቀደም",
     "managerUseLogin": "ማነጅሮች በ Login ገጽ ይግቡ — Sign Up ለተማሪ መለያዎች ብቻ ነው።",
-    "backToBook": "ወደ የዓመት መጽሐፍ ተመለስ"
+    "firestoreAccessRequired": "ከመረጃ ቋት ጋር መገናኘት አልተቻለም። በ Firebase Console Authentication → Anonymous sign-in ያንቁ፣ ከዚያም የዚህ ፕሮጀክት Firestore rules ይለጡ።",
+    "siteSubtitle": "GC ቤንሃናን · የ 2026 ተመራቂ ክፍል",
+    "backToBook": "ወደ መነሻ ተመለስ"
   },
   "profile": {
     "title": "መገለጫዎን ያጠናቅቁ",
@@ -72,7 +75,8 @@
     "otherDepartment": "ሌላ",
     "otherDepartmentPlaceholder": "የክፍልዎን ስም ይፃፉ…",
     "required": "እባክዎ ሁሉንም የሚፈለጉ መስኮች ይሙሉ እና ሁለቱንም ፎቶዎች ይጭኑ።",
-    "completeRequired": "የዓመት መጽሐፍን ከመጠቀምዎ በፊት መገለጫዎን ያጠናቅቁ እና ፎቶዎን ይጭኑ።",
+    "completeRequired": "ሳይቱን ከመጠቀምዎ በፊት መገለጫዎን ያጠናቅቁ እና ፎቶዎን ይጭኑ።",
+    "saveFailed": "መገለጫ መቀመጥ አልተቻለም። ይውጡ እና እንደገና ይግቡ፣ ወይም ችግሩ ከቀጠለ ማነጅር ያግኙ።",
     "uploadLimitReached": "ሁሉንም 4 የፎቶ ስቀላዎች ተጠቅመዋል። እገዛ ከፈለጉ ከማነጅር ጋር ያገናኙ።",
     "uploadsRemaining": "{remaining} ከ {max} የፎቶ ስቀላዎች ቀርተዋል"
   },
@@ -91,19 +95,25 @@
     "academicDept": "የትምህርት ክፍል",
     "fellowshipDept": "የፌሎውሺፕ ክፍል"
   },
+  "photoGallery": {
+    "title": "የፎቶ ጋሌሪ",
+    "subtitle": "ከፌሎውሺፕ ዓመታችን ትዝታዎች",
+    "noPhotos": "ፎቶዎች ገና የሉም — በቅርቡ ይመለከቱ።",
+    "addPhotosHint": "ማነጅሮች ከ Managers → Upload → Photo Gallery ፎቶዎችን ሊስቀሉ ይችላሉ።"
+  },
   "gcSpeech": {
     "title": "ከ GC ቤንሃናን የተላከ መልዕክት",
     "subtitle": "ለተመራቂው ክፍል የበረከት ቃል",
     "speech": "ውድ የ 2026 ተመራቂዎች፣\n\nወደ አዲስ የሕይወት ምዕራፍ ሲገቡ፣ በፌሎውሺፕ ውስጥ የተጣለውን መሠረት — በጸሎት፣ በአምልኮ እና በአገልግሎት — ያስታውሱ። በትምህርትዎ ብቻ ሳይሆን በዚህ ማህበረሰብ ፍቅር ተቀራርበዋል።\n\nበጥንካሬ ይሂዱ፣ ክርስቶስን በልባችሁ ይዘው ይሂዱ፣ ብርሃናችሁ በሄዳችሁበት ሁሉ ይብራ። የፌሎውሺፕ ቤተሰብ በእያንዳንዳችሁ ደስተኛ ነው።\n\nእግዚአብሔር በብዙ ይባርካችሁ።\n\nበፍቅር፣\nGC ቤንሃናን"
   },
   "home": {
-    "welcome": "ወደ የዓመት መጽሐፉ እንኳን ደህና መጡ",
+    "welcome": "ወደ GC ቤንሃናን እንኳን ደህና መጡ",
     "guestName": "የፌሎውሺፕ ቤተሰብ",
     "completeProfile": "በተመራቂዎች ጋሌሪ ውስጥ ለመታየት መገለጫዎን ያጠናቅቁ።",
     "gcCommitteeTitle": "የ GC ኮሚቴ መልዕክት",
     "berketName": "መሐንዲስ በርከት",
     "berketRole": "የ GC ኮሚቴ ተወካይ",
-    "berketSpeech": "ውድ የ 2026 ተመራቂ ክፍል፣\n\nበ GC ኮሚቴ ስም እያንዳንዳችሁን በዚህ ምዕራፍ ላይ ስትደርሱ እንኳን አረጋግጣችኋለን። በፌሎውሺፕ ውስጥ ያሳየችሁ እምነት፣ ዓላማ እና አገልግሎት ለሚቀጥለው ጉዞ ያስተዳውቃችኋል።\n\nከክርስቶስ ጋር እንዲሄዱ እና ማህበረሰባችሁን በታማኝነት እንዲያገለግሉ እንመኛለን።\n\nበበረከት፣\nመሐንዲስ በርከት",
+    "berketSpeech": "\"እግዚአብሔር ለሚፈሩት ኃይላቸው ነው፥ ቃል ኪዳኑንም ያስታውቃቸዋል።\"\n\n— መዝሙር 25፥14\n\nየ2018 ዓ.ም ተመራቂዎቻችን GC Benhanans እንኳን ጌታ በነገር ሁሉ ረዳችሁ። ይህ ድህረ-ገፅ ለGC Benhanans የተዘጋጀ ሲሆን የሁላችንም የምረቃ ማስታወሻ ፎቶዎችና የመጨረሻ ቃላችን የተካተተበት ነው።\n\nወንድሞቻችንና እህቶቻችን የ2018 ዓ.ም የ14 እና የ15 ባች ምሩቃን በድጋሚ እንኳን ጌታ ረዳችሁ። እግዚአብሔር በነገር ሁሉ ታማኝነቱን አሳይቶናል። ከእኛ አንዳችም አልጎደለም፤ በነገር ሁሉ የረዳንና የታመነ እግዚአብሔር ነውና ክብር ለእርሱ ብቻ ይሁን።\n\n\"እናንተ ሁላችሁም እንደተወደዳችሁ ከትዝታችሁ ጋር በልባችን ትኖራላችሁ።\"\n\nGC ቤንሃናን ትወደዳላችሁ፤❤️",
     "leaderTitle": "የፌሎውሺፕ መሪ መልዕክት",
     "semagagnName": "ሰማገን",
     "semagagnRole": "የፌሎውሺፕ መሪ",
@@ -124,8 +134,8 @@
     "selihom2018": "የሰሊሆም ኮሚቴ 2018",
     "socialsTitle": "ከእኛ ጋር ይገናኙ",
     "socialsSubtitle": "ፌሎውሺፑን በማህበራዊ ሚዲያ ይከተሉን",
-    "explorePages": "የዓመት መጽሐፉን ያስሱ",
-    "footerTagline": "የክርስትያን ፌሎውሺፕ የዓመት መጽሐፍ"
+    "explorePages": "ያስሱ",
+    "footerTagline": "ክርስትያን ፌሎውሺፕ · የ 2026 ተመራቂ ክፍል"
   },
   "events": {
     "backToHome": "ወደ መነሻ ተመለስ",
@@ -139,7 +149,9 @@
     "subtitle": "ከአገልግሎት ቡድኖቻችን ትዝታዎች",
     "highlights": "የክፍል ማዕከላዊ ነጥቦች",
     "memories": "የተጋሩ ትዝታዎች",
-    "noPhotos": "ለዚህ ክፍል ፎቶዎች ገና የሉም"
+    "noPhotos": "ለዚህ ክፍል ፎቶዎች ገና የሉም",
+    "searchPlaceholder": "በስም ወይም በክፍል ይፈልጉ…",
+    "noResults": "ምንም አባላት አልተገኙም"
   },
   "common": {
     "loading": "በመጫን ላይ...",

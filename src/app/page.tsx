@@ -3,22 +3,41 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { BookOpen, ChevronRight, LogIn, Shield, UserPlus } from "lucide-react";
+import { BookOpen, ChevronRight, LogIn, LogOut, Shield, UserPlus } from "lucide-react";
 import { GRADUATION_YEAR } from "@/lib/constants";
-import Navbar from "@/components/Navbar";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import TelegramChatButton from "@/components/TelegramChatButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useManagerAuth } from "@/contexts/ManagerAuthContext";
 
 export default function CoverPage() {
   const { t } = useLanguage();
-  const { user } = useAuth();
-  const { isManager } = useManagerAuth();
+  const { user, logout } = useAuth();
+  const { isManager, logout: managerLogout } = useManagerAuth();
   const isLoggedIn = Boolean(user) || isManager;
 
+  const handleLogout = () => {
+    if (isManager) managerLogout();
+    if (user) logout();
+  };
+
   return (
-    <main className="relative h-screen w-full overflow-hidden bg-[#050a14]">
-      <Navbar variant="cover" />
+    <main className="relative h-[100dvh] min-h-screen w-full overflow-hidden bg-[#050a14]">
+      <div className="absolute top-4 right-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:top-6 sm:right-6">
+        {isLoggedIn && (
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex items-center gap-1 rounded-full border border-white/20 px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:border-white/35 hover:text-white"
+          >
+            <LogOut className="h-3.5 w-3.5 text-gold" />
+            {t.nav.logout}
+          </button>
+        )}
+        <TelegramChatButton variant="cover" />
+        <LanguageSwitcher variant="cover" className="w-auto shrink-0" />
+      </div>
 
       {/* ── Animated gradient mesh background ── */}
       <div className="absolute inset-0 overflow-hidden">
@@ -64,20 +83,20 @@ export default function CoverPage() {
 
       {/* ── Decorative corner brackets ── */}
       <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="absolute top-[72px] left-6 h-10 w-10 border-t border-l border-blue-400/30 md:left-10 md:h-14 md:w-14" />
-        <div className="absolute top-[72px] right-6 h-10 w-10 border-t border-r border-blue-400/30 md:right-10 md:h-14 md:w-14" />
+        <div className="absolute top-6 left-6 h-10 w-10 border-t border-l border-blue-400/30 md:left-10 md:h-14 md:w-14" />
+        <div className="absolute top-6 right-6 h-10 w-10 border-t border-r border-blue-400/30 md:right-10 md:h-14 md:w-14" />
         <div className="absolute bottom-6 left-6 h-10 w-10 border-b border-l border-blue-400/30 md:left-10 md:h-14 md:w-14" />
         <div className="absolute right-6 bottom-6 h-10 w-10 border-r border-b border-blue-400/30 md:right-10 md:h-14 md:w-14" />
       </div>
 
       {/* ── Main content ── */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-between px-6 pt-24 pb-10 md:px-16 md:pt-28 md:pb-14">
+      <div className="relative z-10 flex h-full min-h-0 flex-col items-center px-6 pt-10 pb-6 md:px-16 md:pt-12 md:pb-8">
 
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="flex flex-1 flex-col items-center justify-center gap-7 text-center md:gap-9"
+          className="flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 text-center md:gap-7"
         >
           {/* Logo medallion */}
           <motion.div
@@ -130,7 +149,7 @@ export default function CoverPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.52 }}
-              className="font-serif text-4xl font-bold text-white drop-shadow-lg md:text-6xl lg:text-7xl"
+              className="font-serif text-3xl font-bold text-white drop-shadow-lg sm:text-4xl md:text-6xl lg:text-7xl"
             >
               {t.cover.subtitle}
             </motion.h1>
@@ -144,7 +163,7 @@ export default function CoverPage() {
               <p
                 className="font-serif font-black leading-none tracking-tight text-transparent md:text-[120px] lg:text-[150px]"
                 style={{
-                  fontSize: "clamp(72px, 18vw, 150px)",
+                  fontSize: "clamp(56px, 14vw, 150px)",
                   background: "linear-gradient(135deg, #93c5fd 0%, #3b82f6 40%, #1d4ed8 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -165,33 +184,21 @@ export default function CoverPage() {
               {t.cover.year}
             </motion.p>
           </div>
-
-          {/* Tagline with thin divider lines */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.95 }}
-            className="flex items-center gap-4"
-          >
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-blue-400/40 md:w-20" />
-            <p className="text-xs italic text-white/40 md:text-sm">{t.cover.tagline}</p>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-blue-400/40 md:w-20" />
-          </motion.div>
         </motion.div>
 
-        {/* ── CTA buttons ── */}
+        {/* ── CTA buttons — pinned to bottom so Login / Sign Up stay visible ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1 }}
-          className="flex w-full max-w-sm flex-col items-center gap-4"
+          className="mt-auto w-full max-w-lg shrink-0 pt-4"
         >
           {isLoggedIn ? (
-            <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center lg:hidden">
+            <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
               {isManager ? (
                 <Link
                   href="/managers"
-                  className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5 sm:flex-none"
+                  className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-blue-500/30 sm:flex-none"
                   style={{ background: "linear-gradient(135deg, #1d4ed8, #2563eb)" }}
                 >
                   <Shield className="h-4 w-4" />
@@ -202,7 +209,7 @@ export default function CoverPage() {
                 <>
                   <Link
                     href="/book"
-                    className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5 sm:flex-none"
+                    className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-blue-500/30 sm:flex-none"
                     style={{ background: "linear-gradient(135deg, #1d4ed8, #2563eb)" }}
                   >
                     <BookOpen className="h-4 w-4" />
@@ -219,17 +226,17 @@ export default function CoverPage() {
               )}
             </div>
           ) : (
-            <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center lg:hidden">
+            <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/login"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/30 hover:text-white sm:flex-none"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white shadow-md backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/15 sm:flex-none"
               >
-                <LogIn className="h-4 w-4" />
+                <LogIn className="h-4 w-4 text-gold" />
                 {t.nav.login}
               </Link>
               <Link
                 href="/signup"
-                className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-blue-500/30 hover:-translate-y-0.5 sm:flex-none"
+                className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-blue-500/30 sm:flex-none"
                 style={{ background: "linear-gradient(135deg, #1d4ed8, #2563eb)" }}
               >
                 <UserPlus className="h-4 w-4" />
@@ -238,7 +245,7 @@ export default function CoverPage() {
             </div>
           )}
 
-          <p className="flex items-center gap-2 text-[11px] text-white/20">
+          <p className="mt-3 flex items-center justify-center gap-2 text-[11px] text-white/25">
             <span className="h-px w-8 bg-white/15" />
             {t.cover.flipHint}
             <span className="h-px w-8 bg-white/15" />

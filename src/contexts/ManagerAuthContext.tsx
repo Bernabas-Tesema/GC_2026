@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { isValidManagerCredentials } from "@/lib/admin";
+import { ensureFirestoreWriteAccess } from "@/lib/firestoreAccess";
 
 const SESSION_KEY = "gc-manager-auth";
 
@@ -26,7 +27,13 @@ export function ManagerAuthProvider({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setIsManager(sessionStorage.getItem(SESSION_KEY) === "1");
+    const hasSession = sessionStorage.getItem(SESSION_KEY) === "1";
+    setIsManager(hasSession);
+
+    if (hasSession) {
+      ensureFirestoreWriteAccess().catch(() => {});
+    }
+
     setLoading(false);
   }, []);
 

@@ -163,4 +163,55 @@
   .skeleton {
     @apply animate-pulse rounded-lg bg-blue-100;
   }
+
+  /* ── Glass card (auth & forms) ── */
+  .glass-card {
+    @apply border border-white/60 bg-white/80 backdrop-blur-xl;
+    box-shadow:
+      0 25px 50px -20px rgba(15, 23, 42, 0.15),
+      0 0 0 1px rgba(191, 219, 254, 0.5) inset;
+  }
+
+  /* ── Hero band for inner pages ── */
+  .hero-band {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%);
+    box-shadow: 0 12px 40px -16px rgba(37, 99, 235, 0.45);
+  }
+
+  /* ── Form inputs ── */
+  .input-field {
+    @apply w-full rounded-xl border border-navy/12 bg-white/90 px-4 py-3 text-navy outline-none transition-all;
+    @apply placeholder:text-navy/35 focus:border-gold focus:ring-4 focus:ring-gold/15;
+  }
+
+  .select-field {
+    @apply rounded-xl border border-navy/12 bg-white/90 px-3 py-2.5 text-sm text-navy outline-none transition-all;
+    @apply focus:border-gold focus:ring-4 focus:ring-gold/15;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-semibold text-white shadow-md transition-all duration-200;
+    @apply hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:hover:translate-y-0;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-gold/35 bg-white px-5 py-3 text-sm font-semibold text-navy transition-all duration-200;
+    @apply hover:border-gold hover:bg-gold/5;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-navy/70 transition-colors hover:bg-navy/5 hover:text-navy;
+  }
+
+  /* ── Floating animation ── */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
 }

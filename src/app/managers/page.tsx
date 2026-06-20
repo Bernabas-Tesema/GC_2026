@@ -24,7 +24,7 @@ import {
   adminSaveStudent,
   deleteStudent,
 } from "@/lib/students";
-import { setMediaSlot, buildSlotKey } from "@/lib/media";
+import { setMediaSlot, buildSlotKey, getAllMedia } from "@/lib/media";
 import {
   ACADEMIC_DEPARTMENTS,
   DEPARTMENT_OTHER,
@@ -33,6 +33,8 @@ import {
   SITE_BRAND_NAME,
 } from "@/lib/constants";
 import { EVENT_SLUGS } from "@/lib/events";
+import type { EventSlug } from "@/lib/events";
+import { parseJsonResponse } from "@/lib/parseJsonResponse";
 import type { Student } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import IconLabel from "@/components/IconLabel";
@@ -48,7 +50,8 @@ type UploadDest =
   | { type: "event-cover"; slug: string }
   | { type: "event-gallery"; slug: string }
   | { type: "gc-committee" }
-  | { type: "leaders" };
+  | { type: "leaders" }
+  | { type: "site-gallery" };
 
 function destLabel(dest: UploadDest): string {
   switch (dest.type) {
@@ -56,8 +59,9 @@ function destLabel(dest: UploadDest): string {
     case "student-small": return "Student — small photo";
     case "event-cover":   return `Event cover — ${dest.slug}`;
     case "event-gallery": return `Event gallery — ${dest.slug}`;
-    case "gc-committee":  return "GC Committee photo";
-    case "leaders":       return "Leaders photo";
+    case "gc-committee":  return "GC Committee group photo";
+    case "leaders":       return "Leader message photo";
+    case "site-gallery":  return "Photo gallery";
   }
 }
 
@@ -515,11 +519,12 @@ function StudentFormModal({
 function UploadTab() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loadingStudents, setLoadingStudents] = useState(true);
+  const [siteMedia, setSiteMedia] = useState<Record<string, string>>({});
 
   // Destination selector state
-  const [destType, setDestType] = useState<UploadDest["type"]>("gc-committee");
+  const [destType, setDestType] = useState<UploadDest["type"]>("leaders");
   const [selectedStudentId, setSelectedStudentId] = useState("");
-  const [selectedEventSlug, setSelectedEventSlug] = useState(EVENT_SLUGS[0]);
+  const [selectedEventSlug, setSelectedEventSlug] = useState<EventSlug>(EVENT_SLUGS[0]);
   const [galleryIndex, setGalleryIndex] = useState(1); // for gallery / committee / leaders
 
   // Upload state
@@ -535,6 +540,14 @@ function UploadTab() {
       .finally(() => setLoadingStudents(false));
   }, []);
 
+  const refreshSiteMedia = () => {
+    getAllMedia().then(setSiteMedia).catch(() => setSiteMedia({}));
+  };
+
+  useEffect(() => {
+    refreshSiteMedia();
+  }, []);
+
   const buildDest = (): UploadDest => {
     switch (destType) {
       case "student-large": return { type: "student-large", studentId: selectedStudentId };
@@ -543,6 +556,7 @@ function UploadTab() {
       case "event-gallery": return { type: "event-gallery", slug: selectedEventSlug };
       case "gc-committee":  return { type: "gc-committee" };
       case "leaders":       return { type: "leaders" };
+      case "site-gallery":  return { type: "site-gallery" };
     }
   };
 
@@ -554,11 +568,12 @@ function UploadTab() {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = await res.json();
+      const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(res);
       if (!res.ok) throw new Error(data.details ?? data.error ?? "Upload failed");
+      if (!data.url) throw new Error("Upload failed");
 
       const dest = buildDest();
-      const url: string = data.url;
+      const url = data.url;
 
       await ensureFirestoreWriteAccess();
 
@@ -586,6 +601,7 @@ function UploadTab() {
       // ────────────────────────────────────────────────────
 
       setResult({ url, dest: destLabel(dest) });
+      refreshSiteMedia();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed. Please try again.");
     } finally {
@@ -595,7 +611,24 @@ function UploadTab() {
 
   const needsStudent    = destType === "student-large" || destType === "student-small";
   const needsEvent      = destType === "event-cover"   || destType === "event-gallery";
-  const needsIndex      = destType === "event-gallery" || destType === "gc-committee" || destType === "leaders";
+  const needsIndex      = destType === "event-gallery" || destType === "gc-committee" || destType === "leaders" || destType === "site-gallery";
+
+  const previewSlot =
+    destType === "gc-committee" || destType === "leaders" || destType === "site-gallery"
+      ? buildSlotKey({ type: destType, index: galleryIndex })
+      : null;
+  const previewUrl = previewSlot ? siteMedia[previewSlot] : undefined;
+
+  const slotHint =
+    destType === "gc-committee"
+      ? "Use slot 1 for the GC Committee group photo on the home page"
+      : destType === "leaders"
+        ? "1 = Fellowship Leader message photo (Semagegn) · 2 = GC Committee message photo (Berket)"
+        : destType === "site-gallery"
+          ? "Photo position on Gallery page (1, 2, 3…)"
+          : destType === "event-gallery"
+          ? "Position in the event gallery grid"
+          : null;
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -617,8 +650,9 @@ function UploadTab() {
               { val: "student-small",  label: "Student Photo\n(Small)" },
               { val: "event-cover",    label: "Event Cover" },
               { val: "event-gallery",  label: "Event Gallery" },
-              { val: "gc-committee",   label: "GC Committee" },
-              { val: "leaders",        label: "Leaders Photo" },
+              { val: "gc-committee",   label: "GC Committee\nGroup Photo" },
+              { val: "leaders",        label: "Leader Message\nPhoto" },
+              { val: "site-gallery",   label: "Photo Gallery" },
             ] as const).map(({ val, label }) => (
               <button
                 key={val}
@@ -672,7 +706,7 @@ function UploadTab() {
             <div className="relative">
               <select
                 value={selectedEventSlug}
-                onChange={(e) => setSelectedEventSlug(e.target.value as typeof EVENT_SLUGS[number])}
+                onChange={(e) => setSelectedEventSlug(e.target.value as EventSlug)}
                 className="w-full appearance-none rounded-xl border border-navy/15 bg-white px-4 py-2.5 pr-10 text-sm text-navy outline-none focus:border-gold"
               >
                 {EVENT_SLUGS.map((slug) => (
@@ -699,10 +733,21 @@ function UploadTab() {
               className="w-24 rounded-xl border border-navy/15 bg-white px-4 py-2.5 text-sm text-navy outline-none focus:border-gold"
             />
             <p className="mt-1 text-[11px] text-navy/40">
-              {destType === "gc-committee"
-                ? "1 = left card, 2 = right card"
-                : "Position in the gallery grid"}
+              {slotHint}
             </p>
+            {previewUrl && (
+              <div className="mt-3 overflow-hidden rounded-xl border border-gold/25 bg-white">
+                <p className="border-b border-gold/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-navy/45">
+                  Current photo in this slot
+                </p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={previewUrl}
+                  alt="Current upload preview"
+                  className="max-h-40 w-full object-cover object-center"
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -825,8 +870,9 @@ function AdminPhotoUpload({
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = await res.json();
+      const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(res);
       if (!res.ok) throw new Error(data.details ?? data.error ?? "Upload failed");
+      if (!data.url) throw new Error("Upload failed");
       onChange(data.url);
     } catch (err) {
       console.error("AdminPhotoUpload error:", err);

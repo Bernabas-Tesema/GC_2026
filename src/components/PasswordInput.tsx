@@ -28,7 +28,7 @@ export default function PasswordInput({
         required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-navy/15 bg-white py-2.5 pr-11 pl-4 text-navy outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-gold/20"
+        className="input-field pr-11"
       />
       <button
         type="button"

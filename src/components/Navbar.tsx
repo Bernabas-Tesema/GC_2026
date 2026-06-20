@@ -2,10 +2,11 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Building2,
   Home,
+  Images,
   LogIn,
   LogOut,
   Menu,
@@ -18,7 +19,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useManagerAuth } from "@/contexts/ManagerAuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FELLOWSHIP_DEPARTMENTS } from "@/lib/constants";
+import { FELLOWSHIP_DEPARTMENTS, fellowshipDepartmentSlug } from "@/lib/constants";
 import LanguageSwitcher from "./LanguageSwitcher";
 import BrandTitle from "./BrandTitle";
 import TelegramChatButton from "./TelegramChatButton";
@@ -29,8 +30,9 @@ interface NavbarProps {
 
 const bookLinks = [
   { href: "/book", icon: Home, labelKey: "home" as const, exact: true },
-  { href: "/book/gallery", icon: Users, labelKey: "gallery" as const },
+  { href: "/book/graduates", icon: Users, labelKey: "graduates" as const },
   { href: "/book/departments", icon: Building2, labelKey: "departments" as const },
+  { href: "/book/gallery", icon: Images, labelKey: "gallery" as const },
 ];
 
 function NavbarContent({ variant = "cover" }: NavbarProps) {
@@ -38,7 +40,6 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
   const { isManager, logout: managerLogout } = useManagerAuth();
   const { t } = useLanguage();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -51,11 +52,11 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
   };
 
   const isCover = variant === "cover";
-  const showBookLinks = pathname.startsWith("/book");
+  const showBookLinks =
+    pathname.startsWith("/book") ||
+    pathname === "/profile" ||
+    (isLoggedIn && pathname === "/");
   const isDepartmentsPage = pathname.startsWith("/book/departments");
-  const activeDepartment =
-    FELLOWSHIP_DEPARTMENTS.find((d) => d === searchParams.get("dept")) ??
-    FELLOWSHIP_DEPARTMENTS[0];
   const navBg = isCover
     ? "border-white/10 bg-navy/40 backdrop-blur-md lg:border-transparent lg:bg-transparent lg:backdrop-blur-none"
     : "border-paper-edge/80 bg-paper/95 backdrop-blur-md shadow-sm";
@@ -146,7 +147,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
         )}
 
         {showBookLinks && (
-          <div className="hidden flex-1 items-center justify-center gap-1 overflow-x-auto lg:flex lg:gap-2">
+          <div className="hidden flex-1 items-center justify-center gap-1 overflow-x-auto sm:flex sm:gap-2">
             {bookLinks.map(({ href, icon: Icon, labelKey, exact }) => {
               const isActive = exact
                 ? pathname === href
@@ -205,7 +206,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
             >
               {showBookLinks && (
                 <div
-                  className={`border-b py-2 lg:hidden ${
+                  className={`border-b py-2 sm:hidden ${
                     isCover ? "border-white/15" : "border-navy/10"
                   }`}
                 >
@@ -250,28 +251,18 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   >
                     {t.departments.title}
                   </p>
-                  {FELLOWSHIP_DEPARTMENTS.map((dept) => {
-                    const isActive = activeDepartment === dept;
-
-                    return (
+                  {FELLOWSHIP_DEPARTMENTS.map((dept) => (
                       <Link
                         key={dept}
-                        href={`/book/departments?dept=${encodeURIComponent(dept)}`}
+                        href={`/book/departments#${fellowshipDepartmentSlug(dept)}`}
                         onClick={() => setMenuOpen(false)}
                         className={`block px-4 py-2 text-sm transition-colors ${
-                          isActive
-                            ? isCover
-                              ? "bg-gold/20 font-medium text-gold-light"
-                              : "bg-gold/15 font-medium text-navy"
-                            : isCover
-                              ? "hover:bg-white/10"
-                              : "hover:bg-navy/5"
+                          isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
                         }`}
                       >
                         {dept}
                       </Link>
-                    );
-                  })}
+                    ))}
                 </div>
               )}
 

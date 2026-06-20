@@ -3,8 +3,8 @@
 import Link from "next/link";
 import {
   Building2,
-  Facebook,
   Home,
+  Images,
   Instagram,
   MessageCircle,
   User,
@@ -12,19 +12,24 @@ import {
   Youtube,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SITE_BRAND_NAME, TELEGRAM_GROUP_URL } from "@/lib/constants";
+import {
+  INSTAGRAM_URL,
+  SITE_BRAND_NAME,
+  TELEGRAM_GROUP_URL,
+  YOUTUBE_URL,
+} from "@/lib/constants";
 
 const footerLinks = [
   { href: "/book", icon: Home, labelKey: "home" as const },
-  { href: "/book/gallery", icon: Users, labelKey: "gallery" as const },
+  { href: "/book/graduates", icon: Users, labelKey: "graduates" as const },
   { href: "/book/departments", icon: Building2, labelKey: "departments" as const },
+  { href: "/book/gallery", icon: Images, labelKey: "gallery" as const },
   { href: "/profile", icon: User, labelKey: "myProfile" as const },
 ];
 
 const socialLinks = [
-  { icon: Facebook, label: "Facebook", href: "#" },
-  { icon: Instagram, label: "Instagram", href: "#" },
-  { icon: Youtube, label: "YouTube", href: "#" },
+  { icon: Instagram, label: "Instagram", href: INSTAGRAM_URL },
+  { icon: Youtube, label: "YouTube", href: YOUTUBE_URL },
   { icon: MessageCircle, label: "Telegram", href: TELEGRAM_GROUP_URL },
 ];
 

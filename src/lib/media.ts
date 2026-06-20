@@ -7,7 +7,8 @@
  *   event-gallery:{slug}:{n}    → event gallery photo at index n
  *   gc-committee:1              → first GC committee photo
  *   gc-committee:2              → second GC committee photo
- *   leaders:{name}              → leader photo
+ *   leaders:{n}                 → leader message photo
+ *   site-gallery:{n}            → fellowship photo gallery slot
  */
 
 import {
@@ -53,6 +54,18 @@ export function buildSlotKey(dest: {
     case "event-gallery": return `event-gallery:${dest.slug}:${dest.index ?? 0}`;
     case "gc-committee":  return `gc-committee:${dest.index ?? 1}`;
     case "leaders":       return `leaders:${dest.index ?? 1}`;
+    case "site-gallery":  return `site-gallery:${dest.index ?? 1}`;
     default:              return dest.type;
   }
+}
+
+export function getSiteGalleryPhotos(media: Record<string, string>): string[] {
+  return Object.entries(media)
+    .filter(([key]) => key.startsWith("site-gallery:"))
+    .sort(([a], [b]) => {
+      const ai = parseInt(a.split(":")[1] ?? "0", 10);
+      const bi = parseInt(b.split(":")[1] ?? "0", 10);
+      return ai - bi;
+    })
+    .map(([, url]) => url);
 }

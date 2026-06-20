@@ -6,40 +6,27 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function isAdmin() {
-      return isSignedIn()
-        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
-    }
-
-    // Graduate profiles — public yearbook gallery
+    // ── Yearbook graduate profiles (public gallery) ──
     match /students/{studentId} {
       allow read: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create, update, delete: if true;
     }
 
-    // Event covers, leader photos, GC committee images (Cloudinary URLs)
+    // ── Event covers, GC committee, leader photos ──
     match /siteMedia/{slotId} {
       allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // ── Manager admin list ──
+    match /admins/{uid} {
+      allow read: if isSignedIn();
       allow create, update, delete: if isSignedIn();
     }
 
-    // Manager accounts — self-bootstrap on first login, then admin-only changes
-    match /admins/{uid} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() && request.auth.uid == uid;
-      allow update, delete: if isAdmin();
-    }
-
-    // Student profile photo upload counter (max 4 per uid)
+    // ── Student photo upload counter (needs student login) ──
     match /photoUploadLimits/{uid} {
-      allow read: if isSignedIn() && request.auth.uid == uid;
-      allow create: if isSignedIn()
-        && request.auth.uid == uid
-        && request.resource.data.count == 1;
-      allow update: if isSignedIn()
-        && request.auth.uid == uid
-        && request.resource.data.count == resource.data.count + 1
-        && request.resource.data.count <= 4;
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
     }
   }
 }

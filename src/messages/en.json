@@ -3,10 +3,11 @@
     "login": "Login",
     "signup": "Sign Up",
     "logout": "Logout",
-    "openBook": "Open Yearbook",
+    "openBook": "Open Home",
     "myProfile": "My Profile",
     "home": "Home",
-    "gallery": "Graduates",
+    "graduates": "Graduates",
+    "gallery": "Gallery",
     "gcSpeech": "GC Message",
     "departments": "Departments"
   },
@@ -14,13 +15,13 @@
     "title": "Arba Minch University",
     "subtitle": "Christian Fellowship",
     "year": "Graduating Class of 2026",
-    "tagline": "A digital yearbook of faith, friendship, and farewell",
-    "openBook": "Open the Yearbook",
+    "tagline": "A digital celebration of faith, friendship, and farewell",
+    "openBook": "Enter GC ቤንሃናን",
     "flipHint": "Turn the page to begin your journey"
   },
   "auth": {
     "loginTitle": "Welcome Back",
-    "signupTitle": "Join the Yearbook",
+    "signupTitle": "Join GC ቤንሃናን",
     "email": "Email Address",
     "password": "Password",
     "confirmPassword": "Confirm Password",
@@ -30,7 +31,7 @@
     "hasAccount": "Already have an account?",
     "loginError": "Invalid email or password",
     "signupError": "Could not create account",
-    "authMethodDisabled": "Email sign-in is not enabled. In Firebase Console go to Authentication → Sign-in method and enable Email/Password (and Anonymous if managers need to save data).",
+    "authMethodDisabled": "Email sign-in is not enabled in Firebase. Open Firebase Console → Authentication → Sign-in method → enable Email/Password, then try again.",
     "firebaseNotConfigured": "Firebase is not configured correctly. Check NEXT_PUBLIC_FIREBASE_* values in .env.local and restart the dev server.",
     "emailInUse": "This email is already registered. Try signing in instead.",
     "invalidEmail": "Please enter a valid email address.",
@@ -50,7 +51,9 @@
     "managerLoginButton": "Sign In to Managers",
     "managerNotAuthorized": "This email is not authorized for manager access",
     "managerUseLogin": "Managers sign in on the Login page — use Sign Up only for student accounts.",
-    "backToBook": "Back to yearbook"
+    "firestoreAccessRequired": "Could not connect to the database. In Firebase Console enable Authentication → Anonymous sign-in, then publish the Firestore rules from this project.",
+    "siteSubtitle": "GC ቤንሃናን · Class of 2026",
+    "backToBook": "Back to home"
   },
   "profile": {
     "title": "Complete Your Profile",
@@ -72,7 +75,8 @@
     "otherDepartment": "Other",
     "otherDepartmentPlaceholder": "Type your department name…",
     "required": "Please fill in all required fields and upload both photos.",
-    "completeRequired": "Complete your profile and upload your photo before you can access the yearbook.",
+    "completeRequired": "Complete your profile and upload your photo before you can access the site.",
+    "saveFailed": "Could not save your profile. Sign out and sign in again, or ask a manager if the problem continues.",
     "uploadLimitReached": "You have used all 4 photo uploads. Contact a manager if you need help.",
     "uploadsRemaining": "{remaining} of {max} photo uploads remaining"
   },
@@ -91,19 +95,25 @@
     "academicDept": "Academic Department",
     "fellowshipDept": "Fellowship Department"
   },
+  "photoGallery": {
+    "title": "Photo Gallery",
+    "subtitle": "Memories from our fellowship year",
+    "noPhotos": "No photos yet — check back soon.",
+    "addPhotosHint": "Managers can upload photos from Managers → Upload → Photo Gallery."
+  },
   "gcSpeech": {
     "title": "Message from GC ቤንሃናን",
     "subtitle": "A word of blessing to the graduating class",
     "speech": "Dear beloved graduates of 2026,\n\nAs you step into a new chapter of life, remember the foundation laid here in fellowship — in prayer, in worship, and in service. You have been shaped not only by your studies but by the love of this community.\n\nGo forth with courage, carry Christ in your hearts, and let your light shine wherever you go. The fellowship family is proud of each one of you.\n\nMay God bless you abundantly.\n\nWith love,\nGC ቤንሃናን"
   },
   "home": {
-    "welcome": "Welcome to the Yearbook",
+    "welcome": "Welcome to GC ቤንሃናን",
     "guestName": "Fellowship Family",
     "completeProfile": "Complete your profile to appear in the graduate gallery.",
     "gcCommitteeTitle": "GC Committee Message",
     "berketName": "Engineer Berket",
     "berketRole": "GC Committee Representative",
-    "berketSpeech": "Dear graduating class of 2026,\n\nOn behalf of the GC committee, I congratulate each of you for reaching this milestone. Your faith, discipline, and service in fellowship have prepared you for the journey ahead.\n\nMay you continue to walk with Christ and serve your community with excellence.\n\nWith blessings,\nEngineer Berket",
+    "berketSpeech": "\"The Lord is a friend to those who fear him; he makes his covenant known to them.\" — Psalm 25:14\n\nTo our 2018 graduating class, GC Benhanans — may the Lord continue to help you in all things. This site was prepared for GC Benhanans, where our graduation memories and final words are gathered together.\n\nOur brothers and sisters of the 2018 Batch 14 and Batch 15 — may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things — to him alone be glory.\n\n\"You will all remain in our hearts, together with your memories, as we have loved you.\"\n\nGC Benhanan loves you ❤️",
     "leaderTitle": "Fellowship Leader's Message",
     "semagagnName": "Semagegn",
     "semagagnRole": "Fellowship Leader",
@@ -124,8 +134,8 @@
     "selihom2018": "Selihom Committee 2018",
     "socialsTitle": "Connect With Us",
     "socialsSubtitle": "Follow the fellowship on social media",
-    "explorePages": "Explore the Yearbook",
-    "footerTagline": "Christian Fellowship Yearbook"
+    "explorePages": "Explore",
+    "footerTagline": "Christian Fellowship · Class of 2026"
   },
   "events": {
     "backToHome": "Back to home",
@@ -139,7 +149,9 @@
     "subtitle": "Memories from our ministry teams",
     "highlights": "Department Highlights",
     "memories": "Shared Memories",
-    "noPhotos": "No photos yet for this department"
+    "noPhotos": "No photos yet for this department",
+    "searchPlaceholder": "Search by name or department…",
+    "noResults": "No members found"
   },
   "common": {
     "loading": "Loading...",

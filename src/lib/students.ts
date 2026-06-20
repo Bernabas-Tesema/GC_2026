@@ -90,6 +90,21 @@ export async function getAllStudents(): Promise<Student[]> {
     .sort((a, b) => a.fullName.localeCompare(b.fullName));
 }
 
+/** Students with a name and fellowship department — for department pages. */
+export async function getDepartmentStudents(): Promise<Student[]> {
+  const db = getClientDb();
+  const snapshot = await getDocs(collection(db, STUDENTS_COLLECTION));
+  return snapshot.docs
+    .map((d) => ({ id: d.id, ...d.data() }) as Student)
+    .filter(
+      (s) =>
+        Boolean(s.fullName?.trim()) &&
+        Boolean(s.fellowshipDepartment?.trim()) &&
+        s.fellowshipDepartment !== DEPARTMENT_OTHER
+    )
+    .sort((a, b) => a.fullName.localeCompare(b.fullName));
+}
+
 export async function saveStudent(
   uid: string,
   data: Omit<Student, "id" | "uid" | "createdAt" | "updatedAt">

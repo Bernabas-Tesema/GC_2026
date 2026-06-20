@@ -11,6 +11,7 @@ import {
   isPhotoUploadLimitReached,
   recordStudentPhotoUpload,
 } from "@/lib/photoUploadLimit";
+import { parseJsonResponse } from "@/lib/parseJsonResponse";
 
 interface PhotoUploadProps {
   label: string;
@@ -65,10 +66,16 @@ export default function PhotoUpload({
         body: formData,
       });
 
-      const data = await response.json();
+      const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(
+        response
+      );
 
       if (!response.ok) {
         throw new Error(data.details ?? data.error ?? "Upload failed");
+      }
+
+      if (!data.url) {
+        throw new Error("Upload failed");
       }
 
       if (enforceLimit && userId) {

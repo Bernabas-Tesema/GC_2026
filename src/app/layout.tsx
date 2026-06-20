@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { Inter, Playfair_Display } from "next/font/google";
+import Providers from "@/components/Providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,21 +13,10 @@ const playfair = Playfair_Display({
   variable: "--font-serif",
 });
 
-const Providers = dynamic(() => import("@/components/Providers"), {
-  loading: () => (
-    <div className="flex min-h-screen items-center justify-center bg-paper-warm">
-      <div
-        className="h-8 w-8 animate-spin rounded-full border-4 border-gold border-t-transparent"
-        aria-hidden
-      />
-    </div>
-  ),
-});
-
 export const metadata: Metadata = {
-  title: "GC ቤንሃናን | Christian Fellowship Yearbook",
+  title: "GC ቤንሃናን | Christian Fellowship",
   description:
-    "Digital yearbook for the 2026 graduating class of Arba Minch University Christian Fellowship",
+    "Digital home for the 2026 graduating class of Arba Minch University Christian Fellowship",
 };
 
 export const viewport = {

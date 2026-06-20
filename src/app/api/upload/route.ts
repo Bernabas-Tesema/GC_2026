@@ -37,19 +37,47 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       console.error("[upload] Cloudinary error:", response.status, body);
       let parsed: Record<string, unknown> = {};
-      try { parsed = JSON.parse(body); } catch { /* not json */ }
+      if (body.trim()) {
+        try {
+          parsed = JSON.parse(body);
+        } catch {
+          /* not json */
+        }
+      }
       return NextResponse.json(
         {
           error: "Cloudinary upload failed",
           status: response.status,
-          // surface the cloudinary error message directly
           details: (parsed?.error as { message?: string })?.message ?? body,
         },
         { status: 500 }
       );
     }
 
-    const result = JSON.parse(body);
+    if (!body.trim()) {
+      return NextResponse.json(
+        { error: "Cloudinary returned an empty response" },
+        { status: 502 }
+      );
+    }
+
+    let result: { secure_url?: string; public_id?: string };
+    try {
+      result = JSON.parse(body);
+    } catch {
+      return NextResponse.json(
+        { error: "Cloudinary returned invalid JSON" },
+        { status: 502 }
+      );
+    }
+
+    if (!result.secure_url) {
+      return NextResponse.json(
+        { error: "Cloudinary response missing image URL" },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json({
       url: result.secure_url,
       publicId: result.public_id,

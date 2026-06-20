@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import {
   GraduationCap,
   HandHeart,
-  Loader2,
   Mail,
   MessageSquareQuote,
   Phone,
@@ -17,13 +16,17 @@ import { useAuth } from "@/contexts/AuthContext";
 import IconLabel from "@/components/IconLabel";
 import DepartmentSelect from "@/components/DepartmentSelect";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getClientAuth } from "@/lib/firebase";
 import { isStudentProfileComplete, saveStudent } from "@/lib/students";
 import {
   ACADEMIC_DEPARTMENTS,
   FELLOWSHIP_DEPARTMENTS,
+  normalizeFellowshipDepartment,
 } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import PhotoUpload from "@/components/PhotoUpload";
+import PageHero from "@/components/ui/PageHero";
+import Button from "@/components/ui/Button";
 import { getPhotoUploadCount } from "@/lib/photoUploadLimit";
 
 export default function ProfilePage() {
@@ -101,13 +104,19 @@ export default function ProfilePage() {
     setSaving(true);
     setError("");
 
+    if (!getClientAuth().currentUser) {
+      setError(t.auth.loginError);
+      setSaving(false);
+      return;
+    }
+
     try {
       await saveStudent(user.uid, {
         fullName,
         email: user.email || "",
         phone,
         academicDepartment,
-        fellowshipDepartment,
+        fellowshipDepartment: normalizeFellowshipDepartment(fellowshipDepartment),
         lastWords,
         largePhotoUrl,
         smallPhotoUrl,
@@ -116,7 +125,7 @@ export default function ProfilePage() {
       await refreshStudent();
       router.push("/book");
     } catch {
-      setError(t.common.error);
+      setError(t.profile.saveFailed);
     } finally {
       setSaving(false);
     }
@@ -134,28 +143,21 @@ export default function ProfilePage() {
     <main className="book-surface min-h-screen pt-16">
       <Navbar variant="light" />
 
-      <div className="mx-auto max-w-3xl px-3 py-8 sm:px-4 sm:py-12">
+      <div className="mx-auto max-w-3xl space-y-6 px-3 py-8 sm:px-4 sm:py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
         >
-          <div className="mb-8 text-center">
-            <h1 className="font-serif text-2xl font-bold text-navy sm:text-3xl">
-              {t.profile.title}
-            </h1>
-            <p className="mt-2 text-navy/60">{t.profile.subtitle}</p>
-          </div>
+          <PageHero title={t.profile.title} subtitle={t.profile.subtitle} icon={User} />
 
           {!authLoading && !student && (
-            <p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm text-amber-800">
+            <p className="rounded-xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-center text-sm text-amber-800 shadow-sm">
               {t.profile.completeRequired}
             </p>
           )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="book-page space-y-6 rounded-3xl border border-gold/20 p-4 sm:p-6 md:p-8 book-shadow"
-          >
+          <form onSubmit={handleSubmit} className="glass-card space-y-6 rounded-3xl p-4 sm:p-6 md:p-8">
             <div className="grid gap-6 sm:grid-cols-2">
               <PhotoUpload
                 label={t.profile.largePhoto}
@@ -191,7 +193,7 @@ export default function ProfilePage() {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/20"
+                  className="input-field"
                 />
               </div>
 
@@ -201,7 +203,7 @@ export default function ProfilePage() {
                   type="email"
                   disabled
                   value={user?.email || ""}
-                  className="w-full rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy/60"
+                  className="input-field text-navy/60"
                 />
               </div>
 
@@ -212,7 +214,7 @@ export default function ProfilePage() {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/20"
+                  className="input-field"
                 />
               </div>
 
@@ -247,7 +249,7 @@ export default function ProfilePage() {
                   value={lastWords}
                   onChange={(e) => setLastWords(e.target.value)}
                   placeholder={t.profile.lastWordsPlaceholder}
-                  className="w-full resize-none rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/20"
+                  className="input-field resize-none"
                 />
               </div>
             </div>
@@ -258,24 +260,10 @@ export default function ProfilePage() {
               </p>
             )}
 
-            <button
-              type="submit"
-              disabled={saving}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-semibold text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50"
-              style={{ background: "linear-gradient(135deg, #0f172a, #1e3a8a)" }}
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  {t.profile.saving}
-                </>
-              ) : (
-                <>
-                  <Save className="h-5 w-5" />
-                  {t.profile.save}
-                </>
-              )}
-            </button>
+            <Button type="submit" fullWidth loading={saving}>
+              <Save className="h-5 w-5" />
+              {saving ? t.profile.saving : t.profile.save}
+            </Button>
           </form>
         </motion.div>
       </div>
