@@ -19,15 +19,13 @@ export default function TelegramChatButton({
       href={TELEGRAM_GROUP_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className={`nav-btn-hover inline-flex max-w-[11rem] shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-semibold shadow-sm transition-colors sm:max-w-none sm:gap-2 sm:px-3 sm:py-2 sm:text-sm ${
-        isCover
-          ? "border-gold/60 bg-navy/80 text-white hover:bg-navy"
-          : "border-gold bg-navy text-white hover:bg-navy-light"
+      className={`nav-btn-hover btn-chat-chocolate inline-flex max-w-[11rem] shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold sm:max-w-none sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-xs ${
+        isCover ? "border-white/25" : ""
       }`}
       aria-label={t.common.chatWithBenhanan}
     >
-      <MessageCircle className="h-4 w-4 shrink-0 text-gold" />
       <span className="truncate">{t.common.chatWithBenhanan}</span>
+      <MessageCircle className="h-3.5 w-3.5 shrink-0 text-amber-200" aria-hidden />
     </a>
   );
 }

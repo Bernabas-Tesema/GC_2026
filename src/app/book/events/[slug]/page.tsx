@@ -34,7 +34,7 @@ function EventGalleryPhoto({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 0.04 }}
       onClick={onSelect}
-      className="group cursor-zoom-in overflow-hidden rounded-xl border border-gold/20 bg-white text-left shadow-sm transition-shadow hover:shadow-md"
+      className="group card-box cursor-zoom-in rounded-xl text-left"
       aria-label={alt}
     >
       <div className="relative aspect-square w-full overflow-hidden">
@@ -209,11 +209,11 @@ export default function EventGalleryPage() {
       <motion.header
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full border-b border-gold/25 bg-gradient-to-r from-navy via-navy-light to-burgundy px-3 py-1.5 text-white sm:px-4"
+        className="chocolate-box w-full border-b border-white/10 px-3 py-1 sm:px-4"
       >
         <Link
           href="/book"
-          className="mb-0.5 inline-flex items-center gap-1 text-[10px] font-medium text-gold-light hover:text-gold hover:underline sm:text-xs"
+          className="mb-0.5 inline-flex items-center gap-1 text-[10px] font-medium text-amber-200 hover:text-white hover:underline sm:text-xs"
         >
           <ArrowLeft className="h-3 w-3" />
           {t.events.backToHome}
@@ -230,9 +230,11 @@ export default function EventGalleryPage() {
         transition={{ delay: 0.03 }}
         className="flex w-full flex-1 flex-col"
       >
-        <div className="flex w-full items-center gap-1 border-b border-gold/20 bg-white/60 px-3 py-1 sm:px-4">
-          <Images className="h-3.5 w-3.5 shrink-0 text-gold" />
-          <h2 className="font-serif text-xs font-bold text-navy">{t.events.galleryTitle}</h2>
+        <div className="filter-box flex w-full items-center gap-1.5 rounded-none border-x-0 border-t-0 px-3 py-1 sm:px-4">
+          <h2 className="min-w-0 flex-1 font-serif text-xs font-bold text-white">
+            {t.events.galleryTitle}
+          </h2>
+          <Images className="h-3.5 w-3.5 shrink-0 text-amber-200" aria-hidden />
         </div>
 
         <div className="w-full flex-1 px-4 py-3 sm:px-6 md:px-8 md:py-4">

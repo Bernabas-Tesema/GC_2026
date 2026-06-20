@@ -17,35 +17,30 @@ export default function LanguageSwitcher({
 
   const toggle = (lang: Language) => setLanguage(lang);
 
+  const activeBtn =
+    "chocolate-nav-active rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm";
+  const inactiveCover =
+    "rounded-full px-3 py-1 text-xs font-medium text-white/80 transition-all hover:-translate-y-0.5 chocolate-hover chocolate-hover-cover hover:text-white";
+  const inactiveLight =
+    "rounded-full px-3 py-1 text-xs font-medium text-navy/65 transition-all hover:-translate-y-0.5 chocolate-hover hover:text-navy";
+
   return (
     <div
       className={`flex items-center justify-center rounded-full border p-0.5 ${
         isCover
-          ? "border-gold/30 bg-white/10"
-          : "border-paper-edge bg-white shadow-sm"
+          ? "border-white/25 bg-navy/40 backdrop-blur-sm"
+          : "border-[#6b4423]/25 bg-cream shadow-sm"
       } ${className || "w-full"}`}
     >
       <button
         onClick={() => toggle("en")}
-        className={`rounded-full px-3 py-1 text-xs font-medium transition-all hover:-translate-y-0.5 ${
-          language === "en"
-            ? "bg-gold text-navy shadow-sm"
-            : isCover
-              ? "text-white/80 hover:bg-white/10 hover:text-white"
-              : "text-navy/60 hover:bg-navy/5 hover:text-navy"
-        }`}
+        className={language === "en" ? activeBtn : isCover ? inactiveCover : inactiveLight}
       >
         EN
       </button>
       <button
         onClick={() => toggle("am")}
-        className={`rounded-full px-3 py-1 text-xs font-medium transition-all hover:-translate-y-0.5 ${
-          language === "am"
-            ? "bg-gold text-navy shadow-sm"
-            : isCover
-              ? "text-white/80 hover:bg-white/10 hover:text-white"
-              : "text-navy/60 hover:bg-navy/5 hover:text-navy"
-        }`}
+        className={language === "am" ? activeBtn : isCover ? inactiveCover : inactiveLight}
       >
         አማ
       </button>

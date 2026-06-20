@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Users } from "lucide-react";
+import { GraduationCap, Heart, Search, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getAllStudents } from "@/lib/students";
 import PageHero from "@/components/ui/PageHero";
@@ -88,9 +88,9 @@ export default function GraduatesPage() {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-12 z-20 rounded-xl border border-gold/15 bg-white/80 px-2 py-2 backdrop-blur-sm sm:px-3"
+        className="sticky top-12 z-20 filter-bar"
       >
-        <label className="flex w-full items-center gap-1.5 text-[11px] text-navy">
+        <label className="flex w-full items-center gap-2 text-[11px] text-navy">
           <span className="sr-only">{t.gallery.searchName}</span>
           <Search className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
           <input
@@ -102,13 +102,14 @@ export default function GraduatesPage() {
           />
         </label>
 
-        <div className="mt-1.5 flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3">
-          <label className="flex min-w-0 flex-1 items-center gap-1 text-[10px] text-navy sm:max-w-[11rem]">
+        <div className="mt-1.5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+          <label className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-[14rem]">
+            <Heart className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
             <span className="sr-only">{t.gallery.filterFellowship}</span>
             <select
               value={fellowshipFilter}
               onChange={(e) => setFellowshipFilter(e.target.value)}
-              className="select-field min-w-0 flex-1 py-1.5 text-xs"
+              className="select-field w-full min-w-0"
             >
               <option value="">{t.gallery.filterFellowship}: {t.gallery.all}</option>
               {FELLOWSHIP_DEPARTMENTS.map((dept) => (
@@ -120,12 +121,13 @@ export default function GraduatesPage() {
             </select>
           </label>
 
-          <label className="flex min-w-0 flex-1 items-center gap-1 text-[10px] text-navy sm:max-w-[11rem]">
+          <label className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-[14rem]">
+            <GraduationCap className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
             <span className="sr-only">{t.gallery.filterAcademic}</span>
             <select
               value={academicFilter}
               onChange={(e) => setAcademicFilter(e.target.value)}
-              className="select-field min-w-0 flex-1 py-1.5 text-xs"
+              className="select-field w-full min-w-0"
             >
               <option value="">{t.gallery.filterAcademic}: {t.gallery.all}</option>
               {ACADEMIC_DEPARTMENTS.map((dept) => (

@@ -93,9 +93,11 @@ export default function DepartmentSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-left text-navy outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-gold/20"
+        className="flex w-full items-center justify-between gap-3 rounded-lg border border-navy/15 bg-cream px-3 py-2.5 text-left text-navy outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-gold/20 sm:px-4"
       >
-        <span className={select ? "text-navy" : "text-navy/45"}>{displayLabel}</span>
+        <span className={`min-w-0 flex-1 truncate ${select ? "text-navy" : "text-navy/45"}`}>
+          {displayLabel}
+        </span>
         <ChevronDown
           className={`h-4 w-4 shrink-0 text-gold transition-transform ${open ? "rotate-180" : ""}`}
         />

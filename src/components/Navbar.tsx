@@ -100,14 +100,14 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   <>
                     <Link
                       href="/book"
-                      className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-white/10"
+                      className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors chocolate-hover chocolate-hover-cover"
                     >
                       <Home className="h-4 w-4 text-gold" />
                       {t.nav.openBook}
                     </Link>
                     <Link
                       href="/profile"
-                      className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-white/10"
+                      className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors chocolate-hover chocolate-hover-cover"
                     >
                       <User className="h-4 w-4 text-gold" />
                       {t.nav.myProfile}
@@ -117,7 +117,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-white/10"
+                  className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors chocolate-hover chocolate-hover-cover"
                 >
                   <LogOut className="h-4 w-4 text-gold" />
                   {t.nav.logout}
@@ -127,7 +127,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
               <>
                 <Link
                   href="/login"
-                  className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/40 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-white/10"
+                  className="nav-btn-hover inline-flex items-center gap-1 rounded-full border border-white/40 px-3 py-1 text-xs font-medium text-white transition-colors chocolate-hover chocolate-hover-cover"
                 >
                   <LogIn className="h-4 w-4 text-gold" />
                   {t.nav.login}
@@ -157,18 +157,18 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                 <Link
                   key={href}
                   href={href}
-                  className={`nav-btn-hover flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 sm:px-3 ${
+                  className={`nav-btn-hover flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium transition-all duration-200 sm:px-2.5 sm:text-xs ${
                     isActive
                       ? isCover
-                        ? "bg-gold text-navy shadow-md"
-                        : "bg-navy text-white shadow-md"
+                        ? "chocolate-nav-active"
+                        : "chocolate-nav-active"
                       : isCover
-                        ? "text-white/80 hover:bg-white/10 hover:text-white"
-                        : "text-navy/70 hover:bg-white/70 hover:text-navy"
+                        ? "text-white/80 chocolate-hover chocolate-hover-cover hover:text-white"
+                        : "text-navy/70 chocolate-hover hover:text-navy"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
                   <span>{t.nav[labelKey]}</span>
+                  <Icon className="h-3.5 w-3.5" />
                 </Link>
               );
             })}
@@ -185,8 +185,8 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
             onClick={() => setMenuOpen((open) => !open)}
             className={`nav-btn-hover rounded-lg border p-1.5 transition-colors ${
               isCover
-                ? "border-white/30 text-white hover:bg-white/10"
-                : "border-navy/15 text-navy hover:bg-navy/5"
+                ? "border-white/30 text-white chocolate-hover chocolate-hover-cover"
+                : "border-navy/15 text-navy chocolate-hover"
             }`}
             aria-label="Menu"
             aria-expanded={menuOpen}
@@ -201,7 +201,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
               } ${
                 isCover
                   ? "border-white/20 bg-navy text-white"
-                  : "border-navy/15 bg-white text-navy"
+                  : "border-[#6b4423]/20 bg-cream text-navy"
               }`}
             >
               {showBookLinks && (
@@ -223,15 +223,15 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                         className={`flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${
                           isActive
                             ? isCover
-                              ? "bg-gold/20 font-medium text-gold-light"
-                              : "bg-gold/15 font-medium text-navy"
+                              ? "chocolate-nav-active font-medium"
+                              : "chocolate-nav-active font-medium"
                             : isCover
-                              ? "hover:bg-white/10"
-                              : "hover:bg-navy/5"
+                              ? "chocolate-hover chocolate-hover-cover"
+                              : "chocolate-hover"
                         }`}
                       >
-                        <Icon className="h-4 w-4 text-gold" />
-                        {t.nav[labelKey]}
+                        <span>{t.nav[labelKey]}</span>
+                        <Icon className="h-3.5 w-3.5 text-gold" />
                       </Link>
                     );
                   })}
@@ -257,7 +257,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                         href={`/book/departments#${fellowshipDepartmentSlug(dept)}`}
                         onClick={() => setMenuOpen(false)}
                         className={`block px-4 py-2 text-sm transition-colors ${
-                          isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
+                          isCover ? "chocolate-hover chocolate-hover-cover" : "chocolate-hover"
                         }`}
                       >
                         {dept}
@@ -272,7 +272,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                     <Link
                       href="/managers"
                       className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                        isCover ? "hover:bg-white/10" : "hover:bg-gold/10 text-gold"
+                        isCover ? "chocolate-hover chocolate-hover-cover" : "chocolate-hover text-gold"
                       }`}
                     >
                       <Shield className="h-4 w-4 text-gold" />
@@ -283,7 +283,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                       {isCover && (
                         <Link
                           href="/book"
-                          className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors hover:bg-white/10 lg:hidden"
+                          className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors chocolate-hover chocolate-hover-cover lg:hidden"
                         >
                           <Home className="h-4 w-4 text-gold" />
                           {t.nav.openBook}
@@ -292,7 +292,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                       <Link
                         href="/profile"
                         className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                          isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
+                          isCover ? "chocolate-hover chocolate-hover-cover lg:hidden" : "chocolate-hover"
                         }`}
                       >
                         <User className="h-4 w-4 text-gold" />
@@ -304,7 +304,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                     type="button"
                     onClick={handleLogout}
                     className={`flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10" : "hover:bg-navy/5"
+                      isCover ? "chocolate-hover chocolate-hover-cover" : "chocolate-hover"
                     }`}
                   >
                     <LogOut className="h-4 w-4 text-gold" />
@@ -316,7 +316,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   <Link
                     href="/login"
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
+                      isCover ? "chocolate-hover chocolate-hover-cover lg:hidden" : "chocolate-hover"
                     }`}
                   >
                     <LogIn className="h-4 w-4 text-gold" />
@@ -325,7 +325,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                   <Link
                     href="/signup"
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                      isCover ? "hover:bg-white/10 lg:hidden" : "hover:bg-navy/5"
+                      isCover ? "chocolate-hover chocolate-hover-cover lg:hidden" : "chocolate-hover"
                     }`}
                   >
                     <UserPlus className="h-4 w-4 text-gold" />

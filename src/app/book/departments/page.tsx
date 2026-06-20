@@ -58,7 +58,7 @@ function DepartmentPhotoGrid({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.03 }}
-            className="overflow-hidden rounded-lg border border-gold/20 bg-white"
+            className="overflow-hidden rounded-lg card-box"
           >
             <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-paper to-paper-warm">
               {primaryPhoto ? (
@@ -77,7 +77,7 @@ function DepartmentPhotoGrid({
                 </div>
               )}
 
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/85 via-navy/50 to-transparent px-1.5 pt-7 pb-1.5 sm:px-2 sm:pb-2">
+              <div className="absolute inset-x-0 bottom-0 chocolate-overlay px-1.5 pt-7 pb-1.5 sm:px-2 sm:pb-2">
                 <figcaption className="line-clamp-2 text-center font-serif text-[10px] font-bold text-white sm:text-xs">
                   {name}
                 </figcaption>
@@ -129,9 +129,9 @@ export default function DepartmentsPage() {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-12 z-20 rounded-xl border border-gold/15 bg-white/80 px-2 py-2 backdrop-blur-sm sm:px-3"
+        className="sticky top-12 z-20 filter-bar"
       >
-        <label className="flex w-full items-center gap-1.5 text-[11px] text-navy">
+        <label className="flex w-full items-center gap-2 text-[11px] text-navy">
           <span className="sr-only">{t.gallery.searchName}</span>
           <Search className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
           <input
@@ -142,7 +142,7 @@ export default function DepartmentsPage() {
             className="input-field min-w-0 flex-1 py-1.5 text-xs sm:text-sm"
           />
         </label>
-        <p className="mt-1 text-[10px] text-navy/40">
+        <p className="mt-1 text-[10px] text-navy/45">
           {departmentSections.length} {t.nav.departments.toLowerCase()} · {totalMembers}{" "}
           {totalMembers === 1 ? "member" : "members"}
         </p>
@@ -162,9 +162,9 @@ export default function DepartmentsPage() {
               id={fellowshipDepartmentSlug(dept)}
               className="scroll-mt-16"
             >
-              <div className="mb-2 flex flex-wrap items-baseline gap-x-1.5 border-b border-gold/15 pb-1">
-                <h2 className="font-serif text-xs font-bold text-navy sm:text-sm">{dept}</h2>
-                <span className="text-[10px] text-navy/35">
+              <div className="mb-2 inline-flex max-w-full flex-wrap items-baseline gap-x-1 rounded-md chocolate-box px-2 py-1">
+                <h2 className="font-serif text-[11px] font-bold text-white sm:text-xs">{dept}</h2>
+                <span className="text-[10px] text-amber-100/75">
                   · {members.length} {members.length === 1 ? "member" : "members"}
                 </span>
               </div>

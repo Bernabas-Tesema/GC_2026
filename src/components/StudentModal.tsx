@@ -98,8 +98,7 @@ export default function StudentModal({ student, onClose }: StudentModalProps) {
 
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div
-                className="shrink-0 px-5 py-4 sm:px-8 sm:py-6"
-                style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)" }}
+                className="section-header shrink-0 px-5 py-4 sm:px-8 sm:py-6"
               >
                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/80">
                   Class of 2026
@@ -112,7 +111,7 @@ export default function StudentModal({ student, onClose }: StudentModalProps) {
 
               <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-8 sm:py-7">
                 <div className="space-y-3 sm:space-y-4">
-                  <div className="flex items-start gap-3 rounded-2xl border border-gold/20 bg-white/60 p-4 shadow-sm">
+                  <div className="flex items-start gap-3 rounded-2xl border border-gold/20 bg-paper p-4 shadow-sm">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/10">
                       <GraduationCap className="h-5 w-5 text-gold" />
                     </div>
@@ -126,7 +125,7 @@ export default function StudentModal({ student, onClose }: StudentModalProps) {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 rounded-2xl border border-burgundy/15 bg-white/60 p-4 shadow-sm">
+                  <div className="flex items-start gap-3 rounded-2xl border border-gold/20 bg-paper p-4 shadow-sm">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-burgundy/10">
                       <Heart className="h-5 w-5 text-burgundy" />
                     </div>
@@ -141,7 +140,7 @@ export default function StudentModal({ student, onClose }: StudentModalProps) {
                   </div>
 
                   {student.phone && (
-                    <div className="flex items-center gap-3 rounded-2xl border border-navy/10 bg-white/60 px-4 py-3.5 shadow-sm">
+                    <div className="flex items-center gap-3 rounded-2xl border border-gold/15 bg-paper px-4 py-3.5 shadow-sm">
                       <Phone className="h-5 w-5 shrink-0 text-gold" />
                       <span className="text-sm font-medium text-navy/75 sm:text-base lg:text-lg">
                         {student.phone}
@@ -150,7 +149,7 @@ export default function StudentModal({ student, onClose }: StudentModalProps) {
                   )}
 
                   {student.lastWords && (
-                    <div className="relative rounded-2xl border border-gold/25 bg-white/60 px-5 pb-6 pt-8 shadow-sm">
+                    <div className="relative rounded-2xl border border-gold/25 bg-paper px-5 pb-6 pt-8 shadow-sm">
                       <span className="absolute top-2 left-4 select-none font-serif text-5xl leading-none text-gold/20">
                         &ldquo;
                       </span>

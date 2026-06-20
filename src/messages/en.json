@@ -113,11 +113,11 @@
     "gcCommitteeTitle": "GC Committee Message",
     "berketName": "Engineer Berket",
     "berketRole": "GC Committee Representative",
-    "berketSpeech": "\"The Lord is a friend to those who fear him; he makes his covenant known to them.\" — Psalm 25:14\n\nTo our 2018 graduating class, GC Benhanans — may the Lord continue to help you in all things. This site was prepared for GC Benhanans, where our graduation memories and final words are gathered together.\n\nOur brothers and sisters of the 2018 Batch 14 and Batch 15 — may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things — to him alone be glory.\n\n\"You will all remain in our hearts, together with your memories, as we have loved you.\"\n\nGC Benhanan loves you ❤️",
+    "berketSpeech": "To our graduating class, GC Benhanans, the Scripture reminds us that the Lord is a friend to those who fear him and makes his covenant known to them (Psalm 25:14). May the Lord continue to help you in all things. This site was prepared for GC Benhanans as a home where our graduation memories and final words are gathered together. To our brothers and sisters of Batch 14 and Batch 15, may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things, to him alone be glory. You will all remain in our hearts, together with your memories, as we have loved you. GC Benhanan loves you.\n\nWith love,\nEngineer Berket",
     "leaderTitle": "Fellowship Leader's Message",
     "semagagnName": "Semagegn",
     "semagagnRole": "Fellowship Leader",
-    "semagagnSpeech": "Beloved brothers and sisters,\n\nIt has been a joy to serve alongside you in this fellowship family. Through worship, prayer, and ministry, we have grown together in faith and friendship.\n\nAs you graduate, carry the love of this community and the light of Christ wherever you go.\n\nIn Christ,\nSemagegn",
+    "semagagnSpeech": "Beloved brothers and sisters of our graduating class, it has been one of the greatest privileges of my life to walk with you through this season of preparation, worship, and fellowship at Arba Minch University Christian Fellowship. I have watched you grow in prayer, in service, and in love for one another, and I have seen how the Lord has faithfully shaped each heart for the paths that lie ahead. As you leave these halls, do not leave behind the foundation we built together: the habit of seeking God early, the joy of gathering as one family, and the courage to shine Christ's light in every workplace, every home, and every community you enter. Remember the songs we sang, the conferences we shared, the trainings that stretched us, and the quiet moments when God's presence was real among us. Carry those memories not as nostalgia alone, but as proof that you are never alone, for the same God who sustained us here will go with you. Wherever you are sent, serve humbly, love generously, stay connected to one another, and remain rooted in the Word. The fellowship family believes in you, prays for you, and will always welcome you home. May the Lord bless you, keep you, and use your lives for his glory.\n\nIn Christ,\nSemagegn",
     "eventsTitle": "GC Events",
     "eventsSubtitle": "Memories from our graduating class fellowship year",
     "events": [
@@ -129,6 +129,7 @@
       { "slug": "gc-dinner", "name": "GC Dinner", "desc": "Fellowship dinner and celebration with the graduating class", "image": "/events/gc-dinner/cover.jpg" }
     ],
     "gcCommitteePhotoTitle": "GC Committee 2026",
+    "groupPhotoCaption": "GC ቤንሃናን",
     "selihomTitle": "Selihom Committee",
     "selihom2026": "Selihom Committee 2026",
     "selihom2018": "Selihom Committee 2018",

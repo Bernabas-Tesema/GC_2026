@@ -16,11 +16,20 @@
   --color-burgundy:     #1d4ed8;   /* deep blue — replaces burgundy accent */
   --color-burgundy-light: #2563eb; /* blue — lighter accent */
 
-  /* ── Surface / background tones — crisp white & blue tints ── */
-  --color-cream:        #ffffff;   /* pure white */
-  --color-paper:        #f8faff;   /* very light blue-white */
-  --color-paper-warm:   #eff6ff;   /* soft blue tint background */
-  --color-paper-edge:   #bfdbfe;   /* light blue border */
+  /* ── Surface / background tones — warm cream ── */
+  --color-cream:        #faf6f0;
+  --color-paper:        #fdf9f3;
+  --color-paper-warm:   #f5efe6;
+  --color-paper-edge:   rgba(107, 68, 35, 0.35);
+
+  /* ── Chocolate box palette ── */
+  --color-chocolate-dark:  #2c1810;
+  --color-chocolate:       #4a2c2a;
+  --color-chocolate-light: #6b4423;
+  --chocolate-gradient: linear-gradient(135deg, #2c1810 0%, #4a2c2a 45%, #6b4423 100%);
+  --chocolate-gradient-dim: linear-gradient(135deg, #4a2c2a 0%, #6b4423 55%, #7d5a3a 100%);
+  --color-chocolate-hover: rgba(74, 44, 42, 0.14);
+  --color-chocolate-hover-strong: rgba(74, 44, 42, 0.22);
 }
 
 @layer base {
@@ -29,7 +38,7 @@
   }
 
   body {
-    @apply bg-paper-warm text-navy antialiased;
+    @apply bg-cream text-navy antialiased;
     font-family: var(--font-sans);
   }
 }
@@ -37,10 +46,7 @@
 @layer utilities {
   /* ── Page / background surfaces ── */
   .book-surface {
-    background:
-      radial-gradient(ellipse at 20% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 100%, rgba(29, 78, 216, 0.06) 0%, transparent 50%),
-      linear-gradient(160deg, #ffffff 0%, #eff6ff 50%, #dbeafe 100%);
+    background-color: var(--color-cream);
   }
 
   .book-shadow {
@@ -51,22 +57,7 @@
   }
 
   .book-page {
-    background-color: var(--color-paper);
-    background-image:
-      linear-gradient(
-        90deg,
-        rgba(37, 99, 235, 0.05) 0%,
-        transparent 2%,
-        transparent 98%,
-        rgba(37, 99, 235, 0.05) 100%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.8) 0%,
-        transparent 20%,
-        transparent 80%,
-        rgba(219, 234, 254, 0.15) 100%
-      );
+    background-color: var(--color-cream);
   }
 
   /* ── Interactive hover lift ── */
@@ -76,23 +67,24 @@
 
   /* ── Card component ── */
   .section-card {
-    @apply overflow-hidden rounded-2xl border border-blue-200/60 bg-white/95;
+    @apply overflow-hidden rounded-2xl border bg-cream/95;
+    border-color: rgba(107, 68, 35, 0.35);
     box-shadow:
-      0 8px 32px -8px rgba(15, 23, 42, 0.10),
+      0 8px 32px -8px rgba(74, 44, 42, 0.12),
       0 2px 0 rgba(255, 255, 255, 0.9) inset,
-      0 -1px 0 rgba(191, 219, 254, 0.3) inset;
+      0 -1px 0 rgba(107, 68, 35, 0.15) inset;
   }
 
   .section-card:hover {
     box-shadow:
-      0 14px 40px -10px rgba(37, 99, 235, 0.15),
+      0 14px 40px -10px rgba(74, 44, 42, 0.2),
       0 2px 0 rgba(255, 255, 255, 0.9) inset,
-      0 -1px 0 rgba(191, 219, 254, 0.3) inset;
+      0 -1px 0 rgba(107, 68, 35, 0.15) inset;
   }
 
   /* ── Card header band ── */
   .section-header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+    background: var(--chocolate-gradient);
     @apply px-4 py-3 text-white sm:px-5 sm:py-4;
   }
 
@@ -102,7 +94,8 @@
 
   /* ── Book home: full-bleed section bands ── */
   .home-section {
-    @apply w-full border-y border-blue-200/50;
+    @apply w-full border-y;
+    border-color: rgba(107, 68, 35, 0.2);
   }
 
   .home-section-inner {
@@ -110,24 +103,100 @@
   }
 
   .home-section-paper {
-    background: linear-gradient(180deg, #f8faff 0%, #eff6ff 100%);
+    background-color: var(--color-cream);
   }
 
   .home-section-white {
-    @apply bg-white;
+    @apply bg-cream;
   }
 
   .home-section-warm {
-    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+    background-color: var(--color-paper-warm);
   }
 
   .home-section-navy {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
-    @apply border-blue-900/30 text-white;
+    background: var(--chocolate-gradient);
+    border-color: rgba(107, 68, 35, 0.45);
+    @apply text-white;
   }
 
   .home-panel {
-    @apply overflow-hidden rounded-xl border border-blue-200/50 bg-white/95 shadow-sm;
+    @apply overflow-hidden rounded-xl border bg-cream/95 shadow-sm;
+    border-color: rgba(107, 68, 35, 0.3);
+  }
+
+  /* ── Chocolate boxes (heroes, cards, filters) ── */
+  .chocolate-box {
+    background: var(--chocolate-gradient);
+    box-shadow: 0 6px 18px -12px rgba(74, 44, 42, 0.45);
+    @apply text-white;
+  }
+
+  .card-box {
+    @apply overflow-hidden border bg-cream shadow-md transition-all duration-300;
+    border-color: rgba(107, 68, 35, 0.35);
+    box-shadow: 0 8px 24px -10px rgba(74, 44, 42, 0.18);
+  }
+
+  .card-box:hover {
+    border-color: rgba(107, 68, 35, 0.55);
+    box-shadow: 0 14px 32px -12px rgba(74, 44, 42, 0.28);
+  }
+
+  .filter-box {
+    background: var(--chocolate-gradient);
+    box-shadow: 0 6px 18px -10px rgba(74, 44, 42, 0.4);
+    @apply rounded-lg border border-white/10 px-2 py-1.5 text-white backdrop-blur-sm sm:px-3;
+  }
+
+  .filter-box .input-field,
+  .filter-box .select-field {
+    @apply border-white/25 bg-cream/95 text-navy;
+  }
+
+  .filter-bar {
+    @apply rounded-lg border border-gold/15 bg-cream/90 px-2 py-1.5 text-navy shadow-sm backdrop-blur-sm sm:px-3;
+  }
+
+  .filter-bar .input-field,
+  .filter-bar .select-field {
+    @apply border-navy/12 bg-paper/95;
+  }
+
+  .filter-bar .input-field {
+    @apply py-1.5 text-xs sm:text-sm;
+  }
+
+  .chocolate-overlay {
+    @apply bg-gradient-to-t from-[#2c1810]/90 via-[#4a2c2a]/45 to-transparent;
+  }
+
+  .chocolate-hover {
+    @apply transition-colors duration-200;
+  }
+
+  .chocolate-hover:hover {
+    background-color: var(--color-chocolate-hover);
+  }
+
+  .chocolate-hover-cover:hover {
+    background-color: rgba(74, 44, 42, 0.35);
+  }
+
+  .chocolate-nav-active {
+    background: var(--chocolate-gradient-dim);
+    @apply text-white shadow-md;
+  }
+
+  .btn-chat-chocolate {
+    background: var(--chocolate-gradient-dim);
+    border-color: rgba(107, 68, 35, 0.45);
+    @apply border font-semibold text-white shadow-sm transition-all duration-200;
+  }
+
+  .btn-chat-chocolate:hover {
+    background: linear-gradient(135deg, #3d2314 0%, #5a3828 50%, #6b4423 100%);
+    @apply shadow-md;
   }
 
   /* ── Blue accent border ── */
@@ -150,12 +219,12 @@
 
   /* ── Primary blue button ── */
   .btn-gold {
-    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    background: var(--chocolate-gradient);
     @apply text-white font-semibold shadow-md transition-all duration-200;
   }
 
   .btn-gold:hover {
-    background: linear-gradient(135deg, #2563eb, #60a5fa);
+    background: linear-gradient(135deg, #4a2c2a 0%, #6b4423 50%, #8b6914 100%);
     @apply shadow-lg -translate-y-0.5;
   }
 
@@ -166,38 +235,43 @@
 
   /* ── Glass card (auth & forms) ── */
   .glass-card {
-    @apply border border-white/60 bg-white/80 backdrop-blur-xl;
+    @apply border bg-cream/90 backdrop-blur-xl;
+    border-color: rgba(107, 68, 35, 0.3);
     box-shadow:
-      0 25px 50px -20px rgba(15, 23, 42, 0.15),
-      0 0 0 1px rgba(191, 219, 254, 0.5) inset;
+      0 25px 50px -20px rgba(74, 44, 42, 0.15),
+      0 0 0 1px rgba(107, 68, 35, 0.2) inset;
   }
 
   /* ── Hero band for inner pages ── */
   .hero-band {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%);
-    box-shadow: 0 12px 40px -16px rgba(37, 99, 235, 0.45);
+    background: var(--chocolate-gradient);
+    box-shadow: 0 6px 20px -12px rgba(74, 44, 42, 0.45);
   }
 
   /* ── Form inputs ── */
   .input-field {
-    @apply w-full rounded-xl border border-navy/12 bg-white/90 px-4 py-3 text-navy outline-none transition-all;
+    @apply w-full rounded-xl border border-navy/12 bg-cream/90 px-4 py-3 text-navy outline-none transition-all;
     @apply placeholder:text-navy/35 focus:border-gold focus:ring-4 focus:ring-gold/15;
   }
 
   .select-field {
-    @apply rounded-xl border border-navy/12 bg-white/90 px-3 py-2.5 text-sm text-navy outline-none transition-all;
+    @apply rounded-xl border border-navy/12 bg-cream/90 py-2.5 pl-3 pr-9 text-sm text-navy outline-none transition-all;
     @apply focus:border-gold focus:ring-4 focus:ring-gold/15;
+  }
+
+  .filter-bar .select-field {
+    @apply py-1.5 pl-2.5 pr-8 text-xs sm:pr-9;
   }
 
   /* ── Buttons ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-semibold text-white shadow-md transition-all duration-200;
     @apply hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:hover:translate-y-0;
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+    background: var(--chocolate-gradient);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-gold/35 bg-white px-5 py-3 text-sm font-semibold text-navy transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-gold/35 bg-cream px-5 py-3 text-sm font-semibold text-navy transition-all duration-200;
     @apply hover:border-gold hover:bg-gold/5;
   }
 

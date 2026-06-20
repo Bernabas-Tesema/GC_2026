@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Edit2,
   FolderOpen,
+  Image as ImageIcon,
   Loader2,
   LogOut,
   Plus,
@@ -24,7 +25,7 @@ import {
   adminSaveStudent,
   deleteStudent,
 } from "@/lib/students";
-import { setMediaSlot, buildSlotKey, getAllMedia } from "@/lib/media";
+import { setMediaSlot, buildSlotKey, getAllMedia, deleteMediaSlot, listMediaEntries, groupMediaEntries } from "@/lib/media";
 import {
   ACADEMIC_DEPARTMENTS,
   DEPARTMENT_OTHER,
@@ -102,7 +103,7 @@ export default function ManagersPage() {
 
   if (managerLoading || !isManager) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper-warm">
+      <div className="flex min-h-screen items-center justify-center bg-cream">
         <Loader2 className="h-8 w-8 animate-spin text-gold" />
       </div>
     );
@@ -114,7 +115,7 @@ export default function ManagersPage() {
   };
 
   return (
-    <main className="min-h-screen bg-paper-warm">
+    <main className="min-h-screen bg-cream">
       <Navbar variant="light" />
 
       <div className="mx-auto max-w-7xl px-4 pt-28 pb-12 sm:px-6 sm:pt-32 md:px-10">
@@ -616,8 +617,23 @@ function UploadTab() {
   const previewSlot =
     destType === "gc-committee" || destType === "leaders" || destType === "site-gallery"
       ? buildSlotKey({ type: destType, index: galleryIndex })
-      : null;
+      : destType === "event-cover"
+        ? buildSlotKey({ type: "event-cover", slug: selectedEventSlug })
+        : destType === "event-gallery"
+          ? buildSlotKey({ type: "event-gallery", slug: selectedEventSlug, index: galleryIndex })
+          : null;
   const previewUrl = previewSlot ? siteMedia[previewSlot] : undefined;
+
+  const handleDeleteSlot = async (slot: string) => {
+    try {
+      await ensureFirestoreWriteAccess();
+      await deleteMediaSlot(slot);
+      refreshSiteMedia();
+      if (result && previewSlot === slot) setResult(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete photo.");
+    }
+  };
 
   const slotHint =
     destType === "gc-committee"
@@ -631,6 +647,7 @@ function UploadTab() {
           : null;
 
   return (
+    <div className="space-y-6">
     <div className="grid gap-6 lg:grid-cols-2">
       {/* Left: destination config */}
       <div className="space-y-5 rounded-3xl border border-gold/20 bg-white/80 p-6 shadow-sm">
@@ -737,9 +754,19 @@ function UploadTab() {
             </p>
             {previewUrl && (
               <div className="mt-3 overflow-hidden rounded-xl border border-gold/25 bg-white">
-                <p className="border-b border-gold/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-navy/45">
-                  Current photo in this slot
-                </p>
+                <div className="flex items-center justify-between border-b border-gold/15 px-3 py-1.5">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-navy/45">
+                    Current photo in this slot
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => previewSlot && handleDeleteSlot(previewSlot)}
+                    className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-0.5 text-[10px] font-semibold text-red-500 transition-colors hover:bg-red-50"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    Delete
+                  </button>
+                </div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={previewUrl}
@@ -748,6 +775,31 @@ function UploadTab() {
                 />
               </div>
             )}
+          </div>
+        )}
+
+        {/* Event cover / gallery preview when slot index picker is hidden */}
+        {!needsIndex && needsEvent && previewUrl && (
+          <div className="overflow-hidden rounded-xl border border-gold/25 bg-white">
+            <div className="flex items-center justify-between border-b border-gold/15 px-3 py-1.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-navy/45">
+                Current photo in this slot
+              </p>
+              <button
+                type="button"
+                onClick={() => previewSlot && handleDeleteSlot(previewSlot)}
+                className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-0.5 text-[10px] font-semibold text-red-500 transition-colors hover:bg-red-50"
+              >
+                <Trash2 className="h-3 w-3" />
+                Delete
+              </button>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewUrl}
+              alt="Current upload preview"
+              className="max-h-40 w-full object-cover object-center"
+            />
           </div>
         )}
 
@@ -831,6 +883,241 @@ function UploadTab() {
         )}
       </div>
     </div>
+
+    <PostedPhotosPanel
+      siteMedia={siteMedia}
+      students={students}
+      onRefreshSiteMedia={refreshSiteMedia}
+      onRefreshStudents={() => {
+        getAllStudents().then(setStudents).catch(() => setStudents([]));
+      }}
+    />
+  </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// POSTED PHOTOS PANEL
+// ═══════════════════════════════════════════════════════
+type DeleteMediaTarget =
+  | { kind: "slot"; slot: string; label: string }
+  | { kind: "student"; studentId: string; studentName: string; field: "largePhotoUrl" | "smallPhotoUrl" };
+
+function PostedPhotosPanel({
+  siteMedia,
+  students,
+  onRefreshSiteMedia,
+  onRefreshStudents,
+}: {
+  siteMedia: Record<string, string>;
+  students: Student[];
+  onRefreshSiteMedia: () => void;
+  onRefreshStudents: () => void;
+}) {
+  const [deleteTarget, setDeleteTarget] = useState<DeleteMediaTarget | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [filter, setFilter] = useState("");
+
+  const mediaEntries = listMediaEntries(siteMedia);
+  const filteredEntries = mediaEntries.filter(
+    (entry) =>
+      entry.label.toLowerCase().includes(filter.toLowerCase()) ||
+      entry.slot.toLowerCase().includes(filter.toLowerCase())
+  );
+  const grouped = groupMediaEntries(filteredEntries);
+
+  const studentPhotos = students.flatMap((student) => {
+    const items: {
+      id: string;
+      studentId: string;
+      studentName: string;
+      field: "largePhotoUrl" | "smallPhotoUrl";
+      label: string;
+      url: string;
+    }[] = [];
+    if (student.largePhotoUrl) {
+      items.push({
+        id: `${student.id}-large`,
+        studentId: student.id,
+        studentName: student.fullName,
+        field: "largePhotoUrl",
+        label: `${student.fullName} — large photo`,
+        url: student.largePhotoUrl,
+      });
+    }
+    if (student.smallPhotoUrl) {
+      items.push({
+        id: `${student.id}-small`,
+        studentId: student.id,
+        studentName: student.fullName,
+        field: "smallPhotoUrl",
+        label: `${student.fullName} — small photo`,
+        url: student.smallPhotoUrl,
+      });
+    }
+    return items;
+  }).filter(
+    (item) =>
+      item.label.toLowerCase().includes(filter.toLowerCase()) ||
+      item.studentName.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const totalCount = mediaEntries.length + studentPhotos.length;
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await ensureFirestoreWriteAccess();
+      if (deleteTarget.kind === "slot") {
+        await deleteMediaSlot(deleteTarget.slot);
+        onRefreshSiteMedia();
+      } else {
+        const student = students.find((s) => s.id === deleteTarget.studentId);
+        if (student) {
+          await adminSaveStudent({
+            ...student,
+            [deleteTarget.field]: "",
+            ...(deleteTarget.field === "largePhotoUrl" && student.coverPhotoUrl === student.largePhotoUrl
+              ? { coverPhotoUrl: student.smallPhotoUrl || "" }
+              : {}),
+          });
+          onRefreshStudents();
+        }
+      }
+      setDeleteTarget(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-5 rounded-3xl border border-gold/20 bg-white/80 p-6 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <ImageIcon className="h-5 w-5 text-gold" aria-hidden />
+          <div>
+            <h2 className="font-serif text-lg font-bold text-navy">All Posted Photos</h2>
+            <p className="text-xs text-navy/45">
+              {totalCount} photo{totalCount === 1 ? "" : "s"} across site media and student profiles
+            </p>
+          </div>
+        </div>
+        <input
+          type="search"
+          placeholder="Search photos…"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full rounded-xl border border-navy/15 bg-white px-4 py-2.5 text-sm text-navy outline-none placeholder:text-navy/35 focus:border-gold focus:ring-2 focus:ring-gold/15 sm:max-w-xs"
+        />
+      </div>
+
+      {totalCount === 0 ? (
+        <p className="py-8 text-center text-sm text-navy/45">No photos posted yet.</p>
+      ) : (
+        <div className="space-y-8">
+          {grouped.map((group) => (
+            <section key={group.category}>
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-navy/45">
+                {group.title} ({group.items.length})
+              </h3>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {group.items.map((entry) => (
+                  <PostedPhotoCard
+                    key={entry.slot}
+                    label={entry.label}
+                    sublabel={entry.slot}
+                    url={entry.url}
+                    onDelete={() =>
+                      setDeleteTarget({ kind: "slot", slot: entry.slot, label: entry.label })
+                    }
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+
+          {studentPhotos.length > 0 && (
+            <section>
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-navy/45">
+                Student profile photos ({studentPhotos.length})
+              </h3>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {studentPhotos.map((item) => (
+                  <PostedPhotoCard
+                    key={item.id}
+                    label={item.label}
+                    sublabel="Student profile"
+                    url={item.url}
+                    onDelete={() =>
+                      setDeleteTarget({
+                        kind: "student",
+                        studentId: item.studentId,
+                        studentName: item.studentName,
+                        field: item.field,
+                      })
+                    }
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+
+      <AnimatePresence>
+        {deleteTarget && (
+          <ConfirmModal
+            title="Delete photo?"
+            message={
+              deleteTarget.kind === "slot"
+                ? `Remove "${deleteTarget.label}" from the site? This cannot be undone.`
+                : `Remove ${deleteTarget.field === "largePhotoUrl" ? "large" : "small"} photo for "${deleteTarget.studentName}"?`
+            }
+            confirmLabel="Delete"
+            danger
+            loading={deleting}
+            onConfirm={handleConfirmDelete}
+            onCancel={() => setDeleteTarget(null)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function PostedPhotoCard({
+  label,
+  sublabel,
+  url,
+  onDelete,
+}: {
+  label: string;
+  sublabel: string;
+  url: string;
+  onDelete: () => void;
+}) {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-gold/20 bg-white shadow-sm">
+      <div className="relative aspect-[4/3] bg-paper">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={url} alt={label} className="h-full w-full object-cover object-center" />
+        <button
+          type="button"
+          onClick={onDelete}
+          className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-lg border border-red-200 bg-white/95 px-2 py-1 text-[10px] font-semibold text-red-500 shadow-sm transition-colors hover:bg-red-50"
+        >
+          <Trash2 className="h-3 w-3" />
+          Delete
+        </button>
+      </div>
+      <div className="space-y-0.5 px-3 py-2">
+        <p className="line-clamp-2 text-xs font-semibold text-navy">{label}</p>
+        <p className="truncate text-[10px] text-navy/40">{sublabel}</p>
+      </div>
+    </article>
   );
 }
 

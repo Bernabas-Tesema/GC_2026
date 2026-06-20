@@ -33,8 +33,8 @@ export default function StudentCard({
       onClick={onClick}
       className={`group flex w-full cursor-pointer flex-col overflow-hidden text-left transition-all duration-300 ${
         compact
-          ? "rounded-lg border border-gold/20 bg-white shadow-sm hover:border-gold/35 hover:shadow-md"
-          : "rounded-2xl border border-blue-200/50 bg-white shadow-md hover:-translate-y-2 hover:border-gold/40 hover:shadow-2xl hover:shadow-blue-500/10"
+          ? "card-box rounded-lg hover:-translate-y-0.5"
+          : "card-box rounded-2xl hover:-translate-y-2"
       }`}
     >
       <div
@@ -64,7 +64,7 @@ export default function StudentCard({
 
         <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5" />
         {compact && (
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/80 via-navy/35 to-transparent px-1.5 pt-6 pb-1.5">
+          <div className="absolute inset-x-0 bottom-0 chocolate-overlay px-1.5 pt-6 pb-1.5">
             <h3 className="line-clamp-2 text-center font-serif text-[10px] font-bold leading-tight text-white sm:text-[11px]">
               {student.fullName || "Student"}
             </h3>

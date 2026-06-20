@@ -69,3 +69,85 @@ export function getSiteGalleryPhotos(media: Record<string, string>): string[] {
     })
     .map(([, url]) => url);
 }
+
+export type MediaEntry = {
+  slot: string;
+  url: string;
+  label: string;
+  category: string;
+};
+
+/** Human-readable label for a siteMedia slot key */
+export function parseMediaSlotLabel(slot: string): string {
+  if (slot.startsWith("event-cover:")) {
+    return `Event cover — ${slot.slice("event-cover:".length)}`;
+  }
+  if (slot.startsWith("event-gallery:")) {
+    const [, slug, index] = slot.split(":");
+    return `Event gallery — ${slug} #${index ?? "?"}`;
+  }
+  if (slot.startsWith("gc-committee:")) {
+    return `GC Committee group photo — slot ${slot.split(":")[1] ?? "?"}`;
+  }
+  if (slot.startsWith("leaders:")) {
+    const index = slot.split(":")[1];
+    if (index === "1") return "Leader message photo — Fellowship Leader";
+    if (index === "2") return "Leader message photo — GC Committee Rep";
+    return `Leader message photo — slot ${index ?? "?"}`;
+  }
+  if (slot.startsWith("site-gallery:")) {
+    return `Photo gallery — #${slot.split(":")[1] ?? "?"}`;
+  }
+  return slot;
+}
+
+export function listMediaEntries(media: Record<string, string>): MediaEntry[] {
+  return Object.entries(media)
+    .map(([slot, url]) => ({
+      slot,
+      url,
+      label: parseMediaSlotLabel(slot),
+      category: slot.split(":")[0] ?? slot,
+    }))
+    .sort((a, b) => a.slot.localeCompare(b.slot, undefined, { numeric: true }));
+}
+
+const MEDIA_CATEGORY_ORDER = [
+  "event-cover",
+  "event-gallery",
+  "gc-committee",
+  "leaders",
+  "site-gallery",
+] as const;
+
+export function groupMediaEntries(
+  entries: MediaEntry[]
+): { category: string; title: string; items: MediaEntry[] }[] {
+  const titles: Record<string, string> = {
+    "event-cover": "Event covers",
+    "event-gallery": "Event gallery photos",
+    "gc-committee": "GC Committee",
+    leaders: "Leader message photos",
+    "site-gallery": "Photo gallery",
+  };
+
+  const byCategory = new Map<string, MediaEntry[]>();
+  for (const entry of entries) {
+    const list = byCategory.get(entry.category) ?? [];
+    list.push(entry);
+    byCategory.set(entry.category, list);
+  }
+
+  const groups: { category: string; title: string; items: MediaEntry[] }[] = [];
+  for (const category of MEDIA_CATEGORY_ORDER) {
+    const items = byCategory.get(category);
+    if (items?.length) {
+      groups.push({ category, title: titles[category] ?? category, items });
+      byCategory.delete(category);
+    }
+  }
+  for (const [category, items] of byCategory) {
+    groups.push({ category, title: titles[category] ?? category, items });
+  }
+  return groups;
+}

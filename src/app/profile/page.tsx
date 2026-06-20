@@ -149,7 +149,7 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          <PageHero title={t.profile.title} subtitle={t.profile.subtitle} icon={User} />
+          <PageHero title={t.profile.title} subtitle={t.profile.subtitle} icon={User} compact />
 
           {!authLoading && !student && (
             <p className="rounded-xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-center text-sm text-amber-800 shadow-sm">
