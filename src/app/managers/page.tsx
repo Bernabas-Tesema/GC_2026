@@ -28,7 +28,6 @@ import {
 import { setMediaSlot, buildSlotKey, getAllMedia, deleteMediaSlot, listMediaEntries, groupMediaEntries } from "@/lib/media";
 import {
   ACADEMIC_DEPARTMENTS,
-  DEPARTMENT_OTHER,
   FELLOWSHIP_DEPARTMENTS,
   GRADUATION_YEAR,
   SITE_BRAND_NAME,
@@ -38,7 +37,6 @@ import type { EventSlug } from "@/lib/events";
 import { parseJsonResponse } from "@/lib/parseJsonResponse";
 import type { Student } from "@/lib/types";
 import Navbar from "@/components/Navbar";
-import IconLabel from "@/components/IconLabel";
 import DepartmentSelect from "@/components/DepartmentSelect";
 import { GraduationCap, HandHeart } from "lucide-react";
 
