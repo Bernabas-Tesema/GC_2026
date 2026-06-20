@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "GC ቤንሃናን | Christian Fellowship",
   description:
     "Digital home for the 2026 graduating class of Arba Minch University Christian Fellowship",
+  icons: {
+    icon: "/gc-logo.png",
+    apple: "/gc-logo.png",
+  },
 };
 
 export const viewport = {
