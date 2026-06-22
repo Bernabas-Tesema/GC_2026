@@ -22,8 +22,10 @@ import {
   ACADEMIC_DEPARTMENTS,
   FELLOWSHIP_DEPARTMENTS,
   isValidDepartmentValue,
+  MAX_LAST_WORDS,
   normalizeFellowshipDepartment,
 } from "@/lib/constants";
+import { countWords, limitToMaxWords } from "@/lib/lastWords";
 import { uploadPhotoToCloudinary } from "@/lib/uploadPhoto";
 import Navbar from "@/components/Navbar";
 import PhotoUpload from "@/components/PhotoUpload";
@@ -63,7 +65,7 @@ export default function ProfilePage() {
       setPhone(student.phone);
       setAcademicDepartment(student.academicDepartment);
       setFellowshipDepartment(student.fellowshipDepartment);
-      setLastWords(student.lastWords);
+      setLastWords(limitToMaxWords(student.lastWords));
       setLargePhotoUrl(student.largePhotoUrl);
       setSmallPhotoUrl(student.smallPhotoUrl);
       setCoverPhotoUrl(
@@ -158,7 +160,7 @@ export default function ProfilePage() {
         phone,
         academicDepartment,
         fellowshipDepartment: normalizeFellowshipDepartment(fellowshipDepartment),
-        lastWords,
+        lastWords: limitToMaxWords(lastWords),
         largePhotoUrl: finalLarge,
         smallPhotoUrl: finalSmall,
         coverPhotoUrl: coverPhotoUrl || finalLarge || finalSmall,
@@ -284,10 +286,21 @@ export default function ProfilePage() {
                 <textarea
                   rows={4}
                   value={lastWords}
-                  onChange={(e) => setLastWords(e.target.value)}
+                  onChange={(e) => setLastWords(limitToMaxWords(e.target.value))}
                   placeholder={t.profile.lastWordsPlaceholder}
                   className="input-field resize-none"
                 />
+                <p
+                  className={`mt-1.5 text-right text-xs ${
+                    countWords(lastWords) >= MAX_LAST_WORDS
+                      ? "font-medium text-chocolate"
+                      : "text-navy/45"
+                  }`}
+                >
+                  {t.profile.lastWordsLimit
+                    .replace("{count}", String(countWords(lastWords)))
+                    .replace("{max}", String(MAX_LAST_WORDS))}
+                </p>
               </div>
             </div>
 

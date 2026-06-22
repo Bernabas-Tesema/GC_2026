@@ -67,7 +67,8 @@
     "academicDept": "የትምህርት ክፍል",
     "fellowshipDept": "የፌሎውሺፕ ክፍል",
     "lastWords": "የመጨረሻ ቃል / መልዕክት",
-    "lastWordsPlaceholder": "የሰላምታ መልዕክትዎን፣ ምስክርነትዎን ወይም ማበረታቻዎን ያጋሩ...",
+    "lastWordsPlaceholder": "የሰላምታ መልዕክትዎን፣ ምስክርነትዎን ወይም ማበረታቻዎን ያጋሩ (ከፍተኛው 20 ቃላት)…",
+    "lastWordsLimit": "{count} ከ {max} ቃላት",
     "largePhoto": "ትልቅ የመገለጫ ፎቶ",
     "smallPhoto": "ትንሽ የመገለጫ ፎቶ",
     "uploadPhoto": "ፎቶ ይጭኑ",
@@ -81,7 +82,9 @@
     "completeRequired": "ሳይቱን ከመጠቀምዎ በፊት መገለጫዎን ያጠናቅቁ እና ፎቶዎን ይጭኑ።",
     "saveFailed": "መገለጫ መቀመጥ አልተቻለም። ይውጡ እና እንደገና ይግቡ፣ ወይም ችግሩ ከቀጠለ ማነጅር ያግኙ።",
     "uploadLimitReached": "ሁሉንም 4 የፎቶ ስቀላዎች ተጠቅመዋል። እገዛ ከፈለጉ ከማነጅር ጋር ያገናኙ።",
-    "uploadsRemaining": "{remaining} ከ {max} የፎቶ ስቀላዎች ቀርተዋል"
+    "uploadsRemaining": "{remaining} ከ {max} የፎቶ ስቀላዎች ቀርተዋል",
+    "processingPhoto": "ፎቶ በማቀናበር ላይ…",
+    "photoProcessFailed": "ይህን ፎቶ ማቀናበር አልተቻለም። JPEG ወይም PNG ይሞክሩ፣ ወይም ሌላ ምስል ይምረጡ።"
   },
   "gallery": {
     "title": "የሚመረቁ ተማሪዎች",

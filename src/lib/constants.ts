@@ -187,3 +187,6 @@ export const GRADUATION_YEAR = "2026";
 
 /** Max profile photo uploads per student (large + small combined). */
 export const MAX_STUDENT_PHOTO_UPLOADS = 4;
+
+/** Max words allowed in a student's last words / farewell message. */
+export const MAX_LAST_WORDS = 20;

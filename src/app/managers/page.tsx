@@ -30,11 +30,14 @@ import {
   ACADEMIC_DEPARTMENTS,
   FELLOWSHIP_DEPARTMENTS,
   GRADUATION_YEAR,
+  MAX_LAST_WORDS,
   SITE_BRAND_NAME,
 } from "@/lib/constants";
+import { countWords, limitToMaxWords } from "@/lib/lastWords";
 import { EVENT_SLUGS } from "@/lib/events";
 import type { EventSlug } from "@/lib/events";
 import { parseJsonResponse } from "@/lib/parseJsonResponse";
+import { ACCEPTED_IMAGE_INPUT, normalizeImageFile } from "@/lib/imageUpload";
 import type { Student } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import DepartmentSelect from "@/components/DepartmentSelect";
@@ -487,9 +490,19 @@ function StudentFormModal({
               <textarea
                 rows={3}
                 value={student.lastWords ?? ""}
-                onChange={(e) => set("lastWords")(e.target.value)}
+                onChange={(e) => set("lastWords")(limitToMaxWords(e.target.value))}
+                placeholder={`Max ${MAX_LAST_WORDS} words`}
                 className="w-full resize-none rounded-xl border border-navy/15 bg-white px-4 py-2.5 text-sm text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/15"
               />
+              <p
+                className={`mt-1.5 text-right text-xs ${
+                  countWords(student.lastWords ?? "") >= MAX_LAST_WORDS
+                    ? "font-medium text-chocolate"
+                    : "text-navy/45"
+                }`}
+              >
+                {countWords(student.lastWords ?? "")} / {MAX_LAST_WORDS} words
+              </p>
             </div>
           </div>
         </div>
@@ -567,8 +580,9 @@ function UploadTab() {
     setError("");
     setResult(null);
     try {
+      const uploadFile = await normalizeImageFile(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", uploadFile);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(res);
       if (!res.ok) throw new Error(data.details ?? data.error ?? "Upload failed");
@@ -848,7 +862,7 @@ function UploadTab() {
               </div>
               <div>
                 <p className="font-semibold text-navy">Click to choose a photo</p>
-                <p className="mt-0.5 text-xs text-navy/45">JPG, PNG, WEBP · max 10MB</p>
+                <p className="mt-0.5 text-xs text-navy/45">JPG, PNG, WEBP, HEIC · max 10MB</p>
               </div>
             </>
           )}
@@ -857,7 +871,7 @@ function UploadTab() {
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept={ACCEPTED_IMAGE_INPUT}
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
@@ -1165,8 +1179,9 @@ function AdminPhotoUpload({
   const handleFile = async (file: File) => {
     setUploading(true);
     try {
+      const uploadFile = await normalizeImageFile(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", uploadFile);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(res);
       if (!res.ok) throw new Error(data.details ?? data.error ?? "Upload failed");
@@ -1209,7 +1224,7 @@ function AdminPhotoUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={ACCEPTED_IMAGE_INPUT}
         className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }}
       />

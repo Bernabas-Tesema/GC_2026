@@ -67,7 +67,8 @@
     "academicDept": "Academic Department",
     "fellowshipDept": "Fellowship Department",
     "lastWords": "Last Words / Message",
-    "lastWordsPlaceholder": "Share your farewell message, testimony, or encouragement...",
+    "lastWordsPlaceholder": "Share your farewell message, testimony, or encouragement (max 20 words)…",
+    "lastWordsLimit": "{count} of {max} words",
     "largePhoto": "Large Profile Photo",
     "smallPhoto": "Small Profile Photo",
     "uploadPhoto": "Upload Photo",
@@ -81,7 +82,9 @@
     "completeRequired": "Complete your profile and upload your photo before you can access the site.",
     "saveFailed": "Could not save your profile. Sign out and sign in again, or ask a manager if the problem continues.",
     "uploadLimitReached": "You have used all 4 photo uploads. Contact a manager if you need help.",
-    "uploadsRemaining": "{remaining} of {max} photo uploads remaining"
+    "uploadsRemaining": "{remaining} of {max} photo uploads remaining",
+    "processingPhoto": "Processing photo…",
+    "photoProcessFailed": "Could not process this photo. Try a JPEG or PNG, or choose a different image."
   },
   "gallery": {
     "title": "Graduating Students",

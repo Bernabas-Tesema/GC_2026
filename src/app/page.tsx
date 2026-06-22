@@ -206,12 +206,12 @@ export default function CoverPage() {
       </div>
 
       {/* ── Main content ── */}
-      <div className="relative z-10 flex h-full min-h-0 flex-col items-center px-4 pt-8 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:px-6 sm:pt-10 md:px-16 md:pt-12 md:pb-8">
+      <div className="relative z-10 flex h-full min-h-0 flex-col items-center gap-6 px-4 pt-8 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:gap-8 sm:px-6 sm:pt-10 md:gap-10 md:px-16 md:pt-12 md:pb-8">
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 text-center md:gap-7"
+          className="flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-3 text-center md:gap-5"
         >
           {/* Logo medallion */}
           <motion.div
@@ -250,7 +250,7 @@ export default function CoverPage() {
           </motion.div>
 
           {/* Text block */}
-          <div className="space-y-3 md:space-y-4">
+          <div className="space-y-2 md:space-y-3">
             <motion.p
               initial={{ opacity: 0, letterSpacing: "0.3em" }}
               animate={{ opacity: 1, letterSpacing: "0.2em" }}
@@ -264,7 +264,7 @@ export default function CoverPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.52 }}
-              className="font-serif text-3xl font-bold text-navy drop-shadow-sm sm:text-4xl md:text-6xl lg:text-7xl"
+              className="font-serif text-3xl font-bold text-navy drop-shadow-sm sm:text-4xl md:text-5xl lg:text-6xl"
             >
               {t.cover.subtitle}
             </motion.h1>
@@ -275,9 +275,9 @@ export default function CoverPage() {
               transition={{ delay: 0.68, type: "spring", stiffness: 100 }}
             >
               <p
-                className="font-serif font-black leading-none tracking-tight text-transparent md:text-[120px] lg:text-[150px]"
+                className="font-serif font-black leading-none tracking-tight text-transparent"
                 style={{
-                  fontSize: "clamp(56px, 14vw, 150px)",
+                  fontSize: "clamp(52px, 11vw, 112px)",
                   background: "linear-gradient(135deg, #6b4423 0%, #4a2c2a 45%, #2c1810 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -288,15 +288,6 @@ export default function CoverPage() {
                 {GRADUATION_YEAR}
               </p>
             </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.82 }}
-              className="text-[11px] font-medium uppercase tracking-[0.25em] text-chocolate/70 md:text-xs"
-            >
-              {t.cover.year}
-            </motion.p>
           </div>
         </motion.div>
 
@@ -305,8 +296,16 @@ export default function CoverPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1 }}
-          className="mt-auto w-full max-w-lg shrink-0 pt-4"
+          className="w-full max-w-lg shrink-0 space-y-4 md:space-y-5"
         >
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.82 }}
+            className="text-center text-[11px] font-medium uppercase tracking-[0.25em] text-chocolate/70 md:text-xs"
+          >
+            {t.cover.year}
+          </motion.p>
           {isLoggedIn ? (
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
               {isManager ? (
