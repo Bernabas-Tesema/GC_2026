@@ -1,0 +1,11 @@
+# Render Web Service (NOT Static Site) — Next.js needs Node to run.
+services:
+  - type: web
+    name: gc-2026-yearbook
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"

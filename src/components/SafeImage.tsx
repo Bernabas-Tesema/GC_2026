@@ -5,6 +5,7 @@ import Image, { ImageProps } from "next/image";
 
 interface SafeImageProps extends Omit<ImageProps, "onError"> {
   fallback: React.ReactNode;
+  onError?: () => void;
 }
 
 export default function SafeImage({
@@ -14,10 +15,16 @@ export default function SafeImage({
   fill,
   className,
   sizes,
+  onError,
   ...props
 }: SafeImageProps) {
   const [error, setError] = useState(false);
   const isLocalAsset = typeof src === "string" && src.startsWith("/");
+
+  const handleError = () => {
+    setError(true);
+    onError?.();
+  };
 
   if (error) {
     return <>{fallback}</>;
@@ -34,7 +41,7 @@ export default function SafeImage({
             ? `absolute inset-0 h-full w-full ${className ?? ""}`
             : className
         }
-        onError={() => setError(true)}
+        onError={handleError}
       />
     );
   }
@@ -47,7 +54,7 @@ export default function SafeImage({
       fill={fill}
       className={className}
       sizes={sizes}
-      onError={() => setError(true)}
+      onError={handleError}
     />
   );
 }

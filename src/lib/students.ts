@@ -7,7 +7,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { DEPARTMENT_OTHER } from "./constants";
+import { DEPARTMENT_OTHER, isValidDepartmentValue } from "./constants";
 import { getClientDb } from "./firebase";
 import type { Student } from "./types";
 
@@ -32,11 +32,13 @@ export function getStudentPrimaryPhoto(
   return getStudentCoverPhoto(student);
 }
 
-/** @deprecated Second inset photo removed from UI */
+/** Small inset photo — second upload when different from the main photo. */
 export function getStudentSecondaryPhoto(
   student: Pick<Student, "coverPhotoUrl" | "largePhotoUrl" | "smallPhotoUrl">
 ): string {
-  void student;
+  const primary = getStudentPrimaryPhoto(student);
+  const small = student.smallPhotoUrl?.trim();
+  if (small && small !== primary) return small;
   return "";
 }
 
@@ -56,10 +58,10 @@ export function isStudentProfileComplete(
 
   if (!fullName?.trim()) return false;
   if (!phone?.trim()) return false;
-  if (!academicDepartment?.trim() || academicDepartment === DEPARTMENT_OTHER) {
+  if (!isValidDepartmentValue(academicDepartment)) {
     return false;
   }
-  if (!fellowshipDepartment?.trim() || fellowshipDepartment === DEPARTMENT_OTHER) {
+  if (!isValidDepartmentValue(fellowshipDepartment)) {
     return false;
   }
   if (!largePhotoUrl?.trim()) return false;

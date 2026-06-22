@@ -21,6 +21,7 @@ import { isStudentProfileComplete, saveStudent } from "@/lib/students";
 import {
   ACADEMIC_DEPARTMENTS,
   FELLOWSHIP_DEPARTMENTS,
+  isValidDepartmentValue,
   normalizeFellowshipDepartment,
 } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
@@ -79,6 +80,14 @@ export default function ProfilePage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    if (
+      !isValidDepartmentValue(academicDepartment) ||
+      !isValidDepartmentValue(fellowshipDepartment)
+    ) {
+      setError(t.profile.required);
+      return;
+    }
 
     if (
       !isStudentProfileComplete({
@@ -143,7 +152,7 @@ export default function ProfilePage() {
     <main className="book-surface min-h-screen pt-16">
       <Navbar variant="light" />
 
-      <div className="mx-auto max-w-3xl space-y-6 px-3 py-8 sm:px-4 sm:py-12">
+      <div className="mx-auto w-full max-w-lg space-y-6 px-3 py-6 sm:px-4 sm:py-8 md:max-w-md md:py-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -157,8 +166,8 @@ export default function ProfilePage() {
             </p>
           )}
 
-          <form onSubmit={handleSubmit} className="glass-card space-y-6 rounded-3xl p-4 sm:p-6 md:p-8">
-            <div className="grid gap-6 sm:grid-cols-2">
+          <form onSubmit={handleSubmit} noValidate className="glass-card space-y-6 rounded-2xl p-3 sm:rounded-3xl sm:p-5 md:space-y-5 md:p-5">
+            <div className="grid grid-cols-1 gap-6 min-[520px]:grid-cols-2 min-[520px]:items-start">
               <PhotoUpload
                 label={t.profile.largePhoto}
                 value={largePhotoUrl}

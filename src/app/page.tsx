@@ -1,10 +1,21 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { BookOpen, ChevronRight, LogIn, LogOut, Shield, UserPlus } from "lucide-react";
-import { GRADUATION_YEAR, SITE_LOGO_PATH } from "@/lib/constants";
+import {
+  BookOpen,
+  ChevronRight,
+  LogIn,
+  LogOut,
+  Menu,
+  MessageCircle,
+  Shield,
+  UserPlus,
+  X,
+} from "lucide-react";
+import { GRADUATION_YEAR, SITE_LOGO_PATH, TELEGRAM_GROUP_URL } from "@/lib/constants";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import TelegramChatButton from "@/components/TelegramChatButton";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,11 +27,33 @@ export default function CoverPage() {
   const { user, logout } = useAuth();
   const { isManager, logout: managerLogout } = useManagerAuth();
   const isLoggedIn = Boolean(user) || isManager;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => {
-    if (isManager) managerLogout();
-    if (user) logout();
+  const handleLogout = async () => {
+    try {
+      if (isManager) managerLogout();
+      if (user) await logout();
+    } catch {
+      // Ignore sign-out errors; user can refresh if needed.
+    } finally {
+      setMenuOpen(false);
+    }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
 
   return (
     <main className="relative h-[100dvh] min-h-screen w-full overflow-hidden bg-cream">
@@ -47,19 +80,82 @@ export default function CoverPage() {
         </motion.div>
       </div>
 
-      <div className="absolute top-4 right-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:top-6 sm:right-6">
-        {isLoggedIn && (
+      <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
+        <div className="hidden items-center gap-2 sm:flex">
+          {isLoggedIn && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1 rounded-full border border-chocolate/25 bg-paper/90 px-3 py-1.5 text-xs font-medium text-navy/75 transition-colors chocolate-hover hover:text-navy"
+            >
+              <LogOut className="h-3.5 w-3.5 text-chocolate-light" />
+              {t.nav.logout}
+            </button>
+          )}
+          <TelegramChatButton variant="light" />
+          <LanguageSwitcher variant="light" className="w-auto shrink-0" />
+        </div>
+
+        <div className="relative sm:hidden" ref={menuRef}>
           <button
             type="button"
-            onClick={handleLogout}
-            className="inline-flex items-center gap-1 rounded-full border border-chocolate/25 bg-paper/90 px-3 py-1.5 text-xs font-medium text-navy/75 transition-colors chocolate-hover hover:text-navy"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="nav-btn-hover rounded-lg border border-chocolate/25 bg-paper/90 p-1.5 text-navy chocolate-hover"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
           >
-            <LogOut className="h-3.5 w-3.5 text-chocolate-light" />
-            {t.nav.logout}
+            {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
-        )}
-        <TelegramChatButton variant="light" />
-        <LanguageSwitcher variant="light" className="w-auto shrink-0" />
+
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-chocolate/20 bg-cream text-navy shadow-lg">
+              <a
+                href={TELEGRAM_GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 px-4 py-3 text-sm transition-colors chocolate-hover"
+              >
+                <MessageCircle className="h-4 w-4 text-chocolate-light" />
+                {t.common.chatWithBenhanan}
+              </a>
+
+              {isLoggedIn ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium transition-colors chocolate-hover"
+                >
+                  <LogOut className="h-4 w-4 text-chocolate-light" />
+                  {t.nav.logout}
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors chocolate-hover"
+                  >
+                    <LogIn className="h-4 w-4 text-chocolate-light" />
+                    {t.nav.login}
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors chocolate-hover"
+                  >
+                    <UserPlus className="h-4 w-4 text-chocolate-light" />
+                    {t.nav.signup}
+                  </Link>
+                </>
+              )}
+
+              <div className="border-t border-chocolate/15 px-4 py-3">
+                <LanguageSwitcher variant="light" />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Warm cream background ── */}

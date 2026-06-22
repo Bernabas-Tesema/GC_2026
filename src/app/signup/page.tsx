@@ -10,7 +10,6 @@ import PasswordInput from "@/components/PasswordInput";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getAuthErrorKey } from "@/lib/authErrors";
 import { isManagerEmail } from "@/lib/admin";
-import Navbar from "@/components/Navbar";
 import AuthShell from "@/components/ui/AuthShell";
 import Button from "@/components/ui/Button";
 
@@ -57,56 +56,54 @@ export default function SignupPage() {
   };
 
   return (
-    <>
-      <Navbar variant="light" />
-      <AuthShell
-        title={t.auth.signupTitle}
-        subtitle={t.auth.siteSubtitle}
-      >
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <IconLabel icon={Mail}>{t.auth.email}</IconLabel>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field mt-1.5"
-            />
-          </div>
-
-          <div>
-            <IconLabel icon={Lock}>{t.auth.password}</IconLabel>
-            <PasswordInput value={password} onChange={setPassword} />
-          </div>
-
-          <div>
-            <IconLabel icon={KeyRound}>{t.auth.confirmPassword}</IconLabel>
-            <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
-          </div>
-
-          {error && (
-            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-              {error}
-            </p>
-          )}
-
-          <Button type="submit" fullWidth loading={loading}>
-            <UserPlus className="h-5 w-5" />
-            {t.auth.signupButton}
-          </Button>
-        </form>
-
-        <div className="mt-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-navy/10" />
-          <p className="text-xs text-navy/40">{t.auth.hasAccount}</p>
-          <div className="h-px flex-1 bg-navy/10" />
+    <AuthShell title={t.auth.signupTitle} subtitle={t.auth.siteSubtitle}>
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
+        <div>
+          <IconLabel icon={Mail}>{t.auth.email}</IconLabel>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input-field mt-1.5 min-h-11 text-base sm:text-sm"
+          />
         </div>
 
-        <Link href="/login" className="btn-secondary mt-4 w-full">
-          {t.nav.login}
-        </Link>
-      </AuthShell>
-    </>
+        <div>
+          <IconLabel icon={Lock}>{t.auth.password}</IconLabel>
+          <PasswordInput value={password} onChange={setPassword} />
+        </div>
+
+        <div>
+          <IconLabel icon={KeyRound}>{t.auth.confirmPassword}</IconLabel>
+          <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
+        </div>
+
+        {error && (
+          <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-600 sm:px-4 sm:py-3">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" fullWidth loading={loading} className="auth-touch-target min-h-11 md:min-h-0">
+          <UserPlus className="h-5 w-5 shrink-0" />
+          {t.auth.signupButton}
+        </Button>
+      </form>
+
+      <div className="mt-4 flex items-center gap-3 sm:mt-5 md:mt-3">
+        <div className="h-px flex-1 bg-navy/10" />
+        <p className="shrink-0 text-[11px] text-navy/40 sm:text-xs">{t.auth.hasAccount}</p>
+        <div className="h-px flex-1 bg-navy/10" />
+      </div>
+
+      <Link
+        href="/login"
+        className="btn-secondary auth-touch-target mt-3 flex min-h-11 w-full items-center justify-center gap-2 md:mt-2.5 md:min-h-0"
+      >
+        {t.nav.login}
+      </Link>
+    </AuthShell>
   );
 }

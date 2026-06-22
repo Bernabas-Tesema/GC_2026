@@ -102,7 +102,7 @@ export default function GraduatesPage() {
           />
         </label>
 
-        <div className="mt-1.5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+        <div className="mt-1.5 hidden flex-col gap-2 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
           <label className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-[14rem]">
             <Heart className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
             <span className="sr-only">{t.gallery.filterFellowship}</span>
@@ -160,7 +160,7 @@ export default function GraduatesPage() {
               {studentPages.map((pageStudents, pageIndex) => (
                 <div
                   key={pageIndex}
-                  className="grid grid-cols-4 gap-x-2 gap-y-2 sm:gap-x-3 sm:gap-y-3 md:gap-x-4 md:gap-y-4"
+                  className="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-4 md:grid-cols-4 md:gap-x-5"
                 >
                   {pageStudents.map((student, index) => (
                     <StudentCard

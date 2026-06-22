@@ -1,13 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Student } from "@/lib/types";
-import {
-  getStudentInitial,
-  getStudentPrimaryPhoto,
-} from "@/lib/students";
+import StudentPhotoFrame from "@/components/StudentPhotoFrame";
 
 interface StudentCardProps {
   student: Student;
@@ -23,7 +19,6 @@ export default function StudentCard({
   compact = false,
 }: StudentCardProps) {
   const { t } = useLanguage();
-  const coverPhoto = getStudentPrimaryPhoto(student);
 
   return (
     <motion.button
@@ -37,40 +32,14 @@ export default function StudentCard({
           : "card-box rounded-2xl hover:-translate-y-2"
       }`}
     >
-      <div
-        className={`relative w-full overflow-hidden bg-gradient-to-br from-paper to-paper-warm ${
-          compact ? "aspect-[4/5]" : "aspect-[5/6]"
+      <StudentPhotoFrame
+        student={student}
+        insetSize="sm"
+        showNameOverlay={compact}
+        className={`relative w-full ${
+          compact ? "aspect-square" : "aspect-[5/6]"
         }`}
-      >
-        {coverPhoto ? (
-          <Image
-            src={coverPhoto}
-            alt={student.fullName || "Student"}
-            fill
-            className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-            sizes={compact ? "(max-width: 768px) 25vw, 20vw" : "(max-width: 768px) 50vw, 25vw"}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span
-              className={`font-serif font-bold text-navy/15 ${
-                compact ? "text-3xl" : "text-5xl"
-              }`}
-            >
-              {getStudentInitial(student.fullName)}
-            </span>
-          </div>
-        )}
-
-        <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5" />
-        {compact && (
-          <div className="absolute inset-x-0 bottom-0 chocolate-overlay px-1.5 pt-6 pb-1.5">
-            <h3 className="line-clamp-2 text-center font-serif text-[10px] font-bold leading-tight text-white sm:text-[11px]">
-              {student.fullName || "Student"}
-            </h3>
-          </div>
-        )}
-      </div>
+      />
 
       {!compact && (
         <div className="space-y-1.5 px-3 py-3 sm:px-4 sm:py-3.5">

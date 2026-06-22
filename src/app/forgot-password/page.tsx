@@ -2,13 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowLeft, Loader2, Mail, Send } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import IconLabel from "@/components/IconLabel";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getAuthErrorKey } from "@/lib/authErrors";
-import Navbar from "@/components/Navbar";
+import AuthShell from "@/components/ui/AuthShell";
 
 export default function ForgotPasswordPage() {
   const { resetPassword } = useAuth();
@@ -36,89 +35,74 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="book-surface min-h-screen pt-16">
-      <Navbar variant="light" />
-
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md"
-        >
-          <div className="book-page rounded-2xl border border-gold/20 p-8 book-shadow">
-            <h1 className="mb-2 text-center font-serif text-3xl font-bold text-navy">
-              {t.auth.forgotPasswordTitle}
-            </h1>
-            <p className="mb-8 text-center text-sm text-navy/60">
-              {t.auth.forgotPasswordSubtitle}
-            </p>
-
-            {success ? (
-              <div className="space-y-6">
-                <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
-                  {t.auth.resetEmailSent}
-                </p>
-                <Link
-                  href="/login"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-navy py-3 font-semibold text-white transition-colors hover:bg-navy-light"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                  {t.auth.backToLogin}
-                </Link>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <IconLabel icon={Mail}>{t.auth.email}</IconLabel>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-lg border border-navy/15 bg-white px-4 py-2.5 text-navy outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-gold/20"
-                  />
-                </div>
-
-                {error && (
-                  <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600">
-                    {error}
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-navy py-3 font-semibold text-white transition-colors hover:bg-navy-light disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      {t.common.loading}
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-5 w-5" />
-                      {t.auth.sendResetLink}
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-
-            {!success && (
-              <p className="mt-6 text-center text-sm text-navy/60">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center gap-1 font-medium text-gold hover:underline"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  {t.auth.backToLogin}
-                </Link>
-              </p>
-            )}
+    <AuthShell
+      title={t.auth.forgotPasswordTitle}
+      subtitle={t.auth.forgotPasswordSubtitle}
+    >
+      {success ? (
+        <div className="space-y-4 sm:space-y-6">
+          <p className="rounded-xl border border-green-200 bg-green-50 px-3 py-2.5 text-sm text-green-700 sm:px-4 sm:py-3">
+            {t.auth.resetEmailSent}
+          </p>
+          <Link
+            href="/login"
+            className="inline-flex auth-touch-target min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-navy py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-light md:min-h-0 md:py-2.5"
+          >
+            <ArrowLeft className="h-5 w-5 shrink-0" />
+            {t.auth.backToLogin}
+          </Link>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
+          <div>
+            <IconLabel icon={Mail}>{t.auth.email}</IconLabel>
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-field mt-1.5 min-h-11 text-base sm:text-sm"
+            />
           </div>
-        </motion.div>
-      </div>
-    </main>
+
+          {error && (
+            <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-600 sm:px-4 sm:py-3">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex auth-touch-target min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-navy py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-light disabled:opacity-50 md:min-h-0 md:py-2.5"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 shrink-0 animate-spin" />
+                {t.common.loading}
+              </>
+            ) : (
+              <>
+                <Send className="h-5 w-5 shrink-0" />
+                {t.auth.sendResetLink}
+              </>
+            )}
+          </button>
+        </form>
+      )}
+
+      {!success && (
+        <p className="mt-5 text-center text-sm text-navy/60 sm:mt-6">
+          <Link
+            href="/login"
+            className="inline-flex min-h-11 items-center justify-center gap-1 font-medium text-gold hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4 shrink-0" />
+            {t.auth.backToLogin}
+          </Link>
+        </p>
+      )}
+    </AuthShell>
   );
 }

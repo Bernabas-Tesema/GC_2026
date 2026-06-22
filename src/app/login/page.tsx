@@ -1,9 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 import { LogIn, Lock, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useManagerAuth } from "@/contexts/ManagerAuthContext";
@@ -14,7 +13,6 @@ import { getClientAuth } from "@/lib/firebase";
 import { getAuthErrorKey } from "@/lib/authErrors";
 import { isValidManagerCredentials } from "@/lib/admin";
 import { getStudentByUid, isStudentProfileComplete } from "@/lib/students";
-import Navbar from "@/components/Navbar";
 import AuthShell from "@/components/ui/AuthShell";
 import Button from "@/components/ui/Button";
 
@@ -68,67 +66,63 @@ function LoginForm() {
   };
 
   return (
-    <>
-      <Navbar variant="light" />
-      <AuthShell
-        title={t.auth.loginTitle}
-        subtitle={t.auth.siteSubtitle}
-        footer={
-          <p className="mt-6 text-center text-xs text-navy/45">
-            {t.cover.tagline}
-          </p>
-        }
-      >
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <IconLabel icon={Mail}>{t.auth.email}</IconLabel>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field mt-1.5"
-            />
-          </div>
-
-          <div>
-            <div className="mb-1.5 flex items-center justify-between">
-              <IconLabel icon={Lock} className="mb-0">
-                {t.auth.password}
-              </IconLabel>
-              <Link
-                href="/forgot-password"
-                className="text-xs font-medium text-gold hover:underline"
-              >
-                {t.auth.forgotPassword}
-              </Link>
-            </div>
-            <PasswordInput value={password} onChange={setPassword} />
-          </div>
-
-          {error && (
-            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-              {error}
-            </p>
-          )}
-
-          <Button type="submit" fullWidth loading={loading}>
-            <LogIn className="h-5 w-5" />
-            {t.auth.loginButton}
-          </Button>
-        </form>
-
-        <div className="mt-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-navy/10" />
-          <p className="text-xs text-navy/40">{t.auth.noAccount}</p>
-          <div className="h-px flex-1 bg-navy/10" />
+    <AuthShell
+      title={t.auth.loginTitle}
+      subtitle={t.auth.siteSubtitle}
+    >
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
+        <div>
+          <IconLabel icon={Mail}>{t.auth.email}</IconLabel>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input-field mt-1.5 min-h-11 text-base sm:text-sm"
+          />
         </div>
 
-        <Link href="/signup" className="btn-secondary mt-4 w-full">
-          {t.nav.signup}
-        </Link>
-      </AuthShell>
-    </>
+        <div>
+          <div className="mb-1.5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <IconLabel icon={Lock} className="mb-0">
+              {t.auth.password}
+            </IconLabel>
+            <Link
+              href="/forgot-password"
+              className="text-xs font-medium text-gold hover:underline sm:text-right"
+            >
+              {t.auth.forgotPassword}
+            </Link>
+          </div>
+          <PasswordInput value={password} onChange={setPassword} />
+        </div>
+
+        {error && (
+          <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-600 sm:px-4 sm:py-3">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" fullWidth loading={loading} className="auth-touch-target min-h-11 md:min-h-0">
+          <LogIn className="h-5 w-5 shrink-0" />
+          {t.auth.loginButton}
+        </Button>
+      </form>
+
+      <div className="mt-4 flex items-center gap-3 sm:mt-5 md:mt-3">
+        <div className="h-px flex-1 bg-navy/10" />
+        <p className="shrink-0 text-[11px] text-navy/40 sm:text-xs">{t.auth.noAccount}</p>
+        <div className="h-px flex-1 bg-navy/10" />
+      </div>
+
+      <Link
+        href="/signup"
+        className="btn-secondary auth-touch-target mt-3 flex min-h-11 w-full items-center justify-center gap-2 md:mt-2.5 md:min-h-0"
+      >
+        {t.nav.signup}
+      </Link>
+    </AuthShell>
   );
 }
 

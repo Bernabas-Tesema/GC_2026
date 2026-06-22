@@ -116,31 +116,33 @@ export default function ManagersPage() {
     <main className="min-h-screen bg-cream">
       <Navbar variant="light" />
 
-      <div className="mx-auto max-w-7xl px-4 pt-28 pb-12 sm:px-6 sm:pt-32 md:px-10">
+      <div className="mx-auto max-w-7xl px-3 pt-24 pb-10 sm:px-6 sm:pt-32 sm:pb-12 md:px-10">
         {/* ── Page header ── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-11 w-11 items-center justify-center rounded-2xl shadow-md"
-              style={{ background: "linear-gradient(135deg,#0f172a,#1d4ed8)" }}
-            >
-              <Shield className="h-5 w-5 text-gold" />
-            </div>
-            <div>
-              <h1 className="font-serif text-2xl font-bold text-navy sm:text-3xl">
-                Managers (Committees)
-              </h1>
-              <p className="text-sm text-navy/50">
-                {SITE_BRAND_NAME} · Admin Panel · {GRADUATION_YEAR}
-              </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-3">
+              <div
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-md"
+                style={{ background: "linear-gradient(135deg,#0f172a,#1d4ed8)" }}
+              >
+                <Shield className="h-5 w-5 text-gold" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="font-serif text-xl font-bold text-navy sm:text-2xl md:text-3xl">
+                  Managers (Committees)
+                </h1>
+                <p className="text-xs text-navy/50 sm:text-sm">
+                  {SITE_BRAND_NAME} · Admin Panel · {GRADUATION_YEAR}
+                </p>
+              </div>
             </div>
             <button
               onClick={handleLogout}
-              className="ml-auto flex items-center gap-1.5 rounded-full border border-navy/15 px-4 py-2 text-sm font-medium text-navy/70 transition-all hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+              className="flex min-h-11 w-full shrink-0 items-center justify-center gap-1.5 rounded-full border border-navy/15 px-4 py-2.5 text-sm font-medium text-navy/70 transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-600 sm:ml-auto sm:w-auto sm:py-2"
             >
               <LogOut className="h-4 w-4" />
               Logout
@@ -149,12 +151,12 @@ export default function ManagersPage() {
         </motion.div>
 
         {/* ── Tabs ── */}
-        <div className="mb-6 flex gap-2 rounded-2xl border border-gold/20 bg-white/70 p-1.5 w-fit shadow-sm">
+        <div className="mb-6 flex w-full flex-col gap-2 rounded-2xl border border-gold/20 bg-white/70 p-1.5 shadow-sm sm:w-fit sm:flex-row">
           {(["users", "upload"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all ${
+              className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all sm:flex-none sm:px-5 ${
                 tab === t
                   ? "text-white shadow-md"
                   : "text-navy/60 hover:text-navy"
@@ -406,7 +408,7 @@ function StudentFormModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 backdrop-blur-md sm:items-center sm:p-4"
       style={{ background: "rgba(15,31,61,0.65)" }}
       onClick={onClose}
     >
@@ -416,31 +418,31 @@ function StudentFormModal({
         exit={{ scale: 0.95, y: 20 }}
         transition={{ type: "spring", stiffness: 280, damping: 26 }}
         onClick={(e) => e.stopPropagation()}
-        className="book-page w-full max-w-2xl overflow-hidden rounded-3xl book-shadow"
+        className="book-page flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-3xl book-shadow sm:max-h-[85dvh] sm:max-w-2xl sm:rounded-3xl"
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between px-6 py-4"
+          className="flex shrink-0 items-center justify-between px-4 py-3 sm:px-6 sm:py-4"
           style={{ background: "linear-gradient(135deg,#0f172a,#1e3a8a 60%,#1d4ed8)" }}
         >
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-gold" />
-            <h2 className="font-serif text-lg font-bold text-white">
+          <div className="flex min-w-0 items-center gap-2">
+            <Users className="h-5 w-5 shrink-0 text-gold" />
+            <h2 className="truncate font-serif text-base font-bold text-white sm:text-lg">
               {isNew ? "Add Student" : "Edit Student"}
             </h2>
           </div>
-          <button onClick={onClose} className="rounded-full p-1.5 text-white/70 hover:bg-white/10 hover:text-white">
+          <button type="button" onClick={onClose} className="shrink-0 rounded-full p-1.5 text-white/70 hover:bg-white/10 hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="max-h-[75vh] overflow-y-auto px-6 py-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 py-4 sm:px-6 sm:py-6">
           <div className="grid gap-4 sm:grid-cols-2">
 
             {/* Photos row */}
             <div className="sm:col-span-2">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2">
                 <AdminPhotoUpload
                   label="Large Photo (portrait)"
                   value={student.largePhotoUrl ?? ""}
@@ -493,14 +495,15 @@ function StudentFormModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-gold/15 px-6 py-4">
-          <button onClick={onClose} className="rounded-xl border border-navy/15 px-5 py-2.5 text-sm font-medium text-navy hover:bg-navy/5">
+        <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-gold/15 px-4 py-3 sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-6 sm:py-4">
+          <button type="button" onClick={onClose} className="min-h-11 w-full rounded-xl border border-navy/15 px-5 py-2.5 text-sm font-medium text-navy hover:bg-navy/5 sm:w-auto">
             Cancel
           </button>
           <button
+            type="button"
             onClick={onSave}
             disabled={saving || !student.fullName?.trim()}
-            className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50 sm:w-auto"
             style={{ background: "linear-gradient(135deg,#0f172a,#1e3a8a)" }}
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
@@ -637,7 +640,7 @@ function UploadTab() {
     destType === "gc-committee"
       ? "Use slot 1 for the GC Committee group photo on the home page"
       : destType === "leaders"
-        ? "1 = Fellowship Leader message photo (Semagegn) · 2 = GC Committee message photo (Berket)"
+        ? "1 = Fellowship Leader message photo (Semagegn) · 2 = GC Committee message photo (Berketeab Masresh)"
         : destType === "site-gallery"
           ? "Photo position on Gallery page (1, 2, 3…)"
           : destType === "event-gallery"
@@ -646,9 +649,9 @@ function UploadTab() {
 
   return (
     <div className="space-y-6">
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
       {/* Left: destination config */}
-      <div className="space-y-5 rounded-3xl border border-gold/20 bg-white/80 p-6 shadow-sm">
+      <div className="space-y-5 rounded-2xl border border-gold/20 bg-white/80 p-4 shadow-sm sm:rounded-3xl sm:p-6">
         <div className="flex items-center gap-2">
           <FolderOpen className="h-5 w-5 text-gold" />
           <h2 className="font-serif text-lg font-bold text-navy">Upload Destination</h2>
@@ -659,7 +662,7 @@ function UploadTab() {
           <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-navy/45">
             Where to upload
           </label>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:grid-cols-3">
             {([
               { val: "student-large",  label: "Student Photo\n(Large)" },
               { val: "student-small",  label: "Student Photo\n(Small)" },
@@ -671,8 +674,9 @@ function UploadTab() {
             ] as const).map(({ val, label }) => (
               <button
                 key={val}
+                type="button"
                 onClick={() => setDestType(val)}
-                className={`rounded-xl border px-3 py-2.5 text-center text-xs font-semibold transition-all whitespace-pre-line ${
+                className={`min-h-11 touch-manipulation rounded-xl border px-3 py-2.5 text-center text-xs font-semibold transition-all whitespace-pre-line sm:text-sm ${
                   destType === val
                     ? "border-gold bg-gold/10 text-gold shadow-sm"
                     : "border-navy/10 text-navy/55 hover:border-gold/40 hover:text-navy"
@@ -809,16 +813,24 @@ function UploadTab() {
       </div>
 
       {/* Right: upload area */}
-      <div className="space-y-5 rounded-3xl border border-gold/20 bg-white/80 p-6 shadow-sm">
+      <div className="space-y-4 rounded-2xl border border-gold/20 bg-white/80 p-4 shadow-sm sm:space-y-5 sm:rounded-3xl sm:p-6">
         <div className="flex items-center gap-2">
-          <Camera className="h-5 w-5 text-gold" />
-          <h2 className="font-serif text-lg font-bold text-navy">Upload Photo</h2>
+          <Camera className="h-5 w-5 shrink-0 text-gold" />
+          <h2 className="font-serif text-base font-bold text-navy sm:text-lg">Upload Photo</h2>
         </div>
 
         {/* Drop zone */}
         <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if ((e.key === "Enter" || e.key === " ") && !uploading) {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
           onClick={() => !uploading && inputRef.current?.click()}
-          className={`flex min-h-48 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed p-8 text-center transition-all ${
+          className={`flex min-h-44 touch-manipulation cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed p-4 text-center transition-all sm:min-h-48 sm:p-8 ${
             uploading
               ? "border-gold/40 bg-gold/5"
               : "border-navy/20 hover:border-gold hover:bg-gold/5"
@@ -872,8 +884,9 @@ function UploadTab() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={result.url} alt="uploaded" className="h-40 w-full rounded-xl object-contain bg-paper" />
             <button
+              type="button"
               onClick={() => navigator.clipboard.writeText(result.url)}
-              className="w-full rounded-xl border border-gold/30 px-4 py-2 text-xs font-medium text-navy hover:bg-gold/10 transition-colors"
+              className="min-h-11 w-full touch-manipulation rounded-xl border border-gold/30 px-4 py-2.5 text-xs font-medium text-navy transition-colors hover:bg-gold/10 sm:py-2"
             >
               Copy URL
             </button>
@@ -992,7 +1005,7 @@ function PostedPhotosPanel({
   };
 
   return (
-    <div className="space-y-5 rounded-3xl border border-gold/20 bg-white/80 p-6 shadow-sm">
+    <div className="space-y-5 rounded-2xl border border-gold/20 bg-white/80 p-4 shadow-sm sm:rounded-3xl sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <ImageIcon className="h-5 w-5 text-gold" aria-hidden />
@@ -1168,19 +1181,23 @@ function AdminPhotoUpload({
   };
 
   return (
-    <div className="space-y-1.5">
-      <p className="text-[11px] font-semibold text-navy/55">{label}</p>
-      <div
+    <div className="w-full min-w-0 space-y-2">
+      <p className="text-xs font-semibold text-navy/55 sm:text-[11px]">{label}</p>
+      <button
+        type="button"
         onClick={() => !uploading && inputRef.current?.click()}
-        className="relative cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-gold/30 bg-paper hover:border-gold transition-colors"
-        style={{ aspectRatio: aspect }}
+        disabled={uploading}
+        aria-label={label}
+        className="relative w-full touch-manipulation cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-gold/30 bg-paper transition-colors hover:border-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 disabled:cursor-not-allowed"
+        style={{ aspectRatio: aspect, minHeight: "10rem" }}
       >
         {value ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={value} alt="" className="h-full w-full object-contain" />
         ) : (
-          <div className="flex h-full items-center justify-center">
-            <Camera className="h-6 w-6 text-navy/25" />
+          <div className="flex h-full min-h-[10rem] flex-col items-center justify-center gap-2 p-3 text-navy/35">
+            <Camera className="h-7 w-7 sm:h-6 sm:w-6" />
+            <span className="text-[11px]">Tap to upload</span>
           </div>
         )}
         {uploading && (
@@ -1188,7 +1205,7 @@ function AdminPhotoUpload({
             <Loader2 className="h-6 w-6 animate-spin text-gold" />
           </div>
         )}
-      </div>
+      </button>
       <input
         ref={inputRef}
         type="file"

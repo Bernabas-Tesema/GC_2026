@@ -24,8 +24,8 @@ export default function TelegramChatButton({
       }`}
       aria-label={t.common.chatWithBenhanan}
     >
-      <span className="truncate">{t.common.chatWithBenhanan}</span>
       <MessageCircle className="h-3.5 w-3.5 shrink-0 text-amber-200" aria-hidden />
+      <span className="truncate">{t.common.chatWithBenhanan}</span>
     </a>
   );
 }

@@ -10,6 +10,7 @@ import {
   LogIn,
   LogOut,
   Menu,
+  MessageCircle,
   Shield,
   User,
   UserPlus,
@@ -19,7 +20,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useManagerAuth } from "@/contexts/ManagerAuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FELLOWSHIP_DEPARTMENTS, fellowshipDepartmentSlug } from "@/lib/constants";
+import { FELLOWSHIP_DEPARTMENTS, fellowshipDepartmentSlug, TELEGRAM_GROUP_URL } from "@/lib/constants";
 import LanguageSwitcher from "./LanguageSwitcher";
 import BrandTitle from "./BrandTitle";
 import TelegramChatButton from "./TelegramChatButton";
@@ -45,10 +46,15 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
 
   const isLoggedIn = Boolean(user) || isManager;
 
-  const handleLogout = () => {
-    if (isManager) managerLogout();
-    if (user) logout();
-    setMenuOpen(false);
+  const handleLogout = async () => {
+    try {
+      if (isManager) managerLogout();
+      if (user) await logout();
+    } catch {
+      // Ignore sign-out errors; user can refresh if needed.
+    } finally {
+      setMenuOpen(false);
+    }
   };
 
   const isCover = variant === "cover";
@@ -167,8 +173,8 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                         : "text-navy/70 chocolate-hover hover:text-navy"
                   }`}
                 >
-                  <span>{t.nav[labelKey]}</span>
                   <Icon className="h-3.5 w-3.5" />
+                  <span>{t.nav[labelKey]}</span>
                 </Link>
               );
             })}
@@ -178,7 +184,9 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
         <div
           className={`ml-auto flex shrink-0 items-center gap-2 ${isCover ? "lg:hidden" : ""}`}
         >
-          <TelegramChatButton variant={variant} />
+          <div className="hidden sm:block">
+            <TelegramChatButton variant={variant} />
+          </div>
           <div className="relative" ref={menuRef}>
           <button
             type="button"
@@ -230,8 +238,8 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                               : "chocolate-hover"
                         }`}
                       >
-                        <span>{t.nav[labelKey]}</span>
                         <Icon className="h-3.5 w-3.5 text-gold" />
+                        <span>{t.nav[labelKey]}</span>
                       </Link>
                     );
                   })}
@@ -265,6 +273,25 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
                     ))}
                 </div>
               )}
+
+              <div
+                className={`border-b py-2 sm:hidden ${
+                  isCover ? "border-white/15" : "border-navy/10"
+                }`}
+              >
+                <a
+                  href={TELEGRAM_GROUP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className={`flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${
+                    isCover ? "chocolate-hover chocolate-hover-cover" : "chocolate-hover"
+                  }`}
+                >
+                  <MessageCircle className="h-4 w-4 text-gold" />
+                  {t.common.chatWithBenhanan}
+                </a>
+              </div>
 
               {isLoggedIn ? (
                 <>

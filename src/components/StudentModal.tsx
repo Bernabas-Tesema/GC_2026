@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Phone, GraduationCap, Heart, BookOpen } from "lucide-react";
 import type { Student } from "@/lib/types";
 import { getStudentInitial, getStudentPrimaryPhoto } from "@/lib/students";
 import { useLanguage } from "@/contexts/LanguageContext";
+import StudentPhotoFrame from "@/components/StudentPhotoFrame";
 
 interface StudentModalProps {
   student: Student | null;
@@ -13,32 +13,34 @@ interface StudentModalProps {
 }
 
 function PanelPhoto({
-  src,
-  alt,
+  student,
   initial,
 }: {
-  src: string;
-  alt: string;
+  student: Pick<Student, "fullName" | "coverPhotoUrl" | "largePhotoUrl" | "smallPhotoUrl">;
   initial: string;
 }) {
-  return (
-    <div className="relative h-full min-h-[220px] w-full overflow-hidden rounded-3xl border-4 border-white bg-paper shadow-xl ring-2 ring-gold/30 sm:min-h-0">
-      {src ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-contain object-center"
-          sizes="(max-width: 640px) 100vw, 42vw"
-          priority
-        />
-      ) : (
+  const mainPhoto = getStudentPrimaryPhoto(student);
+
+  if (!mainPhoto) {
+    return (
+      <div className="relative h-full min-h-[220px] w-full overflow-hidden rounded-3xl border-4 border-white bg-paper shadow-xl ring-2 ring-gold/30 sm:min-h-0">
         <div className="flex h-full min-h-[220px] items-center justify-center sm:min-h-0">
           <span className="font-serif text-7xl font-bold text-navy/20 sm:text-8xl">
             {initial}
           </span>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-full min-h-[220px] w-full overflow-hidden rounded-3xl border-4 border-white bg-paper shadow-xl ring-2 ring-gold/30 sm:min-h-0">
+      <StudentPhotoFrame
+        student={student}
+        insetSize="md"
+        className="h-full min-h-[220px] sm:min-h-0"
+        imageClassName="object-contain object-center"
+      />
     </div>
   );
 }
@@ -85,8 +87,7 @@ export default function StudentModal({ student, onClose }: StudentModalProps) {
                     className="absolute inset-0"
                   >
                     <PanelPhoto
-                      src={mainPhoto}
-                      alt={student.fullName || "Student"}
+                      student={student}
                       initial={getStudentInitial(student.fullName)}
                     />
                   </motion.div>

@@ -111,9 +111,9 @@
     "guestName": "Fellowship Family",
     "completeProfile": "Complete your profile to appear in the graduate gallery.",
     "gcCommitteeTitle": "GC Committee Message",
-    "berketName": "Engineer Berket",
+    "berketName": "Berketeab Masresh",
     "berketRole": "GC Committee Representative",
-    "berketSpeech": "To our graduating class, GC Benhanans, the Scripture reminds us that the Lord is a friend to those who fear him and makes his covenant known to them (Psalm 25:14). May the Lord continue to help you in all things. This site was prepared for GC Benhanans as a home where our graduation memories and final words are gathered together. To our brothers and sisters of Batch 14 and Batch 15, may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things, to him alone be glory. You will all remain in our hearts, together with your memories, as we have loved you. GC Benhanan loves you.\n\nWith love,\nEngineer Berket",
+    "berketSpeech": "To our graduating class, GC Benhanans, the Scripture reminds us that the Lord is a friend to those who fear him and makes his covenant known to them (Psalm 25:14). May the Lord continue to help you in all things. This site was prepared for GC Benhanans as a home where our graduation memories and final words are gathered together. To our brothers and sisters of Batch 14 and Batch 15, may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things, to him alone be glory. You will all remain in our hearts, together with your memories, as we have loved you. GC Benhanan loves you.\n\nWith love,\nBerketeab Masresh",
     "leaderTitle": "Fellowship Leader's Message",
     "semagagnName": "Semagegn",
     "semagagnRole": "Fellowship Leader",
@@ -136,6 +136,8 @@
     "socialsTitle": "Connect With Us",
     "socialsSubtitle": "Follow the fellowship on social media",
     "explorePages": "Explore",
+    "footerCongratulations": "Congratulations!",
+    "footerCongratulationsLine": "Class of 2026 · GC ቤንሃናን",
     "footerTagline": "Christian Fellowship · Class of 2026"
   },
   "events": {
@@ -152,6 +154,8 @@
     "memories": "Shared Memories",
     "noPhotos": "No photos yet for this department",
     "searchPlaceholder": "Search by name or department…",
+    "selectDepartment": "Select the department",
+    "allDepartments": "All departments",
     "noResults": "No members found"
   },
   "common": {

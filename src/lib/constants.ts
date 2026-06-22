@@ -8,6 +8,7 @@ export const FELLOWSHIP_DEPARTMENTS = [
   "Prayer",
   "Evangelism",
   "Literature",
+  "Counseling",
   "Fund",
 ] as const;
 
@@ -25,6 +26,8 @@ export const ACADEMIC_DEPARTMENTS = [
   "Pharmacy",
   "Architecture",
   "Economics",
+  "Education",
+  "Information Technology",
   "Law",
   "Natural Resources Management",
   "Water Resources and Irrigation Engineering",
@@ -38,6 +41,17 @@ export const ACADEMIC_DEPARTMENTS = [
 
 export const DEPARTMENT_OTHER = "Other";
 
+export function isValidDepartmentValue(value: string | undefined): boolean {
+  const trimmed = value?.trim();
+  return Boolean(trimmed) && trimmed !== DEPARTMENT_OTHER;
+}
+
+function expandAcademicSearchQuery(query: string): string {
+  const q = query.trim().toLowerCase();
+  if (q === "it") return "information technology";
+  return q;
+}
+
 /** Map common misspellings / custom entries to a fellowship department. */
 const FELLOWSHIP_DEPARTMENT_ALIASES: Record<string, (typeof FELLOWSHIP_DEPARTMENTS)[number]> = {
   choirs: "Choirs",
@@ -46,10 +60,16 @@ const FELLOWSHIP_DEPARTMENT_ALIASES: Record<string, (typeof FELLOWSHIP_DEPARTMEN
   chior: "Choirs",
   "choir department": "Choirs",
   "education dept": "Education Department",
+  "education department": "Education Department",
   "education": "Education Department",
   "digital media": "Digital Strategy",
   "love share": "Love Sharing",
   "loves sharing": "Love Sharing",
+  counseling: "Counseling",
+  councelning: "Counseling",
+  counselning: "Counseling",
+  counselling: "Counseling",
+  "counseling department": "Counseling",
 };
 
 function fellowshipDepartmentKey(value: string): string {
@@ -90,9 +110,63 @@ export function fellowshipDepartmentSlug(department: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/** Whether a fellowship department label matches a search query (name + aliases). */
+export function fellowshipDepartmentMatchesSearch(
+  department: (typeof FELLOWSHIP_DEPARTMENTS)[number],
+  query: string
+): boolean {
+  const q = fellowshipDepartmentKey(query);
+  if (!q) return true;
+
+  const deptKey = fellowshipDepartmentKey(department);
+  if (deptKey.includes(q) || q.includes(deptKey)) return true;
+  if (normalizeFellowshipDepartment(query) === department) return true;
+
+  if (department === "Education Department") {
+    const educationSearchTerms = ["information technology", "information tech", "it"];
+    if (educationSearchTerms.some((term) => term.includes(q) || q.includes(term))) {
+      return true;
+    }
+  }
+
+  for (const [alias, canonical] of Object.entries(FELLOWSHIP_DEPARTMENT_ALIASES)) {
+    if (canonical === department && (alias.includes(q) || q.includes(alias))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/** Match student name, academic department, or fellowship department against a query. */
+export function studentMatchesDepartmentSearch(
+  student: { fullName?: string; academicDepartment?: string; fellowshipDepartment?: string },
+  query: string
+): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+
+  const academicQuery = expandAcademicSearchQuery(q);
+  const name = student.fullName?.toLowerCase() ?? "";
+  const academic = student.academicDepartment?.toLowerCase() ?? "";
+  const fellowship = fellowshipDepartmentKey(student.fellowshipDepartment ?? "");
+
+  return (
+    name.includes(q) ||
+    academic.includes(academicQuery) ||
+    fellowship.includes(fellowshipDepartmentKey(query)) ||
+    normalizeFellowshipDepartment(student.fellowshipDepartment ?? "")
+      .toLowerCase()
+      .includes(q)
+  );
+}
+
 export const SITE_BRAND_NAME = "GC ቤንሃናን";
 
 export const SITE_LOGO_PATH = "/gc-logo.png";
+
+export const DEVELOPER_NAME = "berambi";
+export const DEVELOPER_PHOTO_PATH = "/berambi.png";
 
 /** Telegram group — set NEXT_PUBLIC_TELEGRAM_GROUP_URL in .env.local */
 export const TELEGRAM_GROUP_URL =

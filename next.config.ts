@@ -14,6 +14,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // OneDrive on Windows can corrupt webpack's filesystem cache under .next/cache.
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.cache = { type: "memory" };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

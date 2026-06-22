@@ -26,14 +26,15 @@ export default function PasswordInput({
         id={id}
         type={visible ? "text" : "password"}
         required={required}
+        autoComplete="current-password"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="input-field pr-11"
+        className="input-field min-h-11 pr-11 text-base sm:text-sm"
       />
       <button
         type="button"
         onClick={() => setVisible((prev) => !prev)}
-        className="absolute top-1/2 right-3 -translate-y-1/2 text-navy/40 transition-colors hover:text-navy"
+        className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-navy/40 transition-colors hover:text-navy"
         aria-label={visible ? t.auth.hidePassword : t.auth.showPassword}
       >
         {visible ? (
