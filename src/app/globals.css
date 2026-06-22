@@ -43,6 +43,8 @@
     font-family: var(--font-sans);
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
   }
 }
 
@@ -251,29 +253,55 @@
     box-shadow: 0 6px 20px -12px rgba(74, 44, 42, 0.45);
   }
 
-  /* ── Auth pages: compact box, touch-friendly on mobile ── */
+  /* ── Auth pages: touch-friendly on phone, compact on larger screens ── */
   .auth-panel form,
   .auth-panel .auth-form {
-    @apply space-y-[7px];
+    @apply space-y-4;
   }
 
   .auth-panel .input-field {
-    @apply min-h-[33px] px-[7px] py-[7px] text-sm;
+    @apply min-h-11 px-3 py-2.5 text-base;
   }
 
   .auth-panel .btn-primary,
   .auth-panel .btn-secondary {
-    @apply py-[7px] text-sm;
+    @apply min-h-11 py-3 text-base;
   }
 
   .auth-panel .auth-touch-target {
-    @apply min-h-[33px];
+    @apply min-h-11;
+  }
+
+  @media (min-width: 640px) {
+    .auth-panel form,
+    .auth-panel .auth-form {
+      @apply space-y-[7px];
+    }
+
+    .auth-panel .input-field {
+      @apply min-h-[33px] px-[7px] py-[7px] text-sm;
+    }
+
+    .auth-panel .btn-primary,
+    .auth-panel .btn-secondary {
+      @apply min-h-0 py-[7px] text-sm;
+    }
+
+    .auth-panel .auth-touch-target {
+      @apply min-h-[33px];
+    }
   }
 
   /* ── Form inputs ── */
   .input-field {
-    @apply w-full rounded-xl border border-navy/12 bg-cream/90 px-4 py-3 text-navy outline-none transition-all;
+    @apply w-full rounded-xl border border-navy/12 bg-cream/90 px-4 py-3 text-base text-navy outline-none transition-all;
     @apply placeholder:text-navy/35 focus:border-gold focus:ring-4 focus:ring-gold/15;
+  }
+
+  @media (min-width: 640px) {
+    .input-field {
+      @apply py-2.5 text-sm;
+    }
   }
 
   .select-field {

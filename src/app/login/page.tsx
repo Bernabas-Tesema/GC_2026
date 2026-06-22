@@ -90,7 +90,7 @@ function LoginForm() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="input-field mt-[7px]"
+            className="input-field mt-1.5"
           />
         </div>
 
@@ -121,7 +121,7 @@ function LoginForm() {
         </Button>
       </form>
 
-      <div className="mt-[9px] flex items-center gap-[7px]">
+      <div className="mt-4 flex items-center gap-3 sm:mt-[9px] sm:gap-[7px]">
         <div className="h-px flex-1 bg-navy/10" />
         <p className="shrink-0 text-[11px] text-navy/40 sm:text-xs">{t.auth.noAccount}</p>
         <div className="h-px flex-1 bg-navy/10" />
@@ -129,7 +129,7 @@ function LoginForm() {
 
       <Link
         href="/signup"
-        className="btn-secondary auth-touch-target mt-[7px] flex w-full items-center justify-center gap-2"
+        className="btn-secondary auth-touch-target mt-4 flex w-full items-center justify-center gap-2 sm:mt-[7px]"
       >
         {t.nav.signup}
       </Link>

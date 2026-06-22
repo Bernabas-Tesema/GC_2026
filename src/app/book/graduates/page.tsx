@@ -88,7 +88,7 @@ export default function GraduatesPage() {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-12 z-20 filter-bar"
+        className="sticky top-[calc(3rem+env(safe-area-inset-top,0px))] z-20 filter-bar"
       >
         <label className="flex w-full items-center gap-2 text-[11px] text-navy">
           <span className="sr-only">{t.gallery.searchName}</span>
@@ -102,7 +102,7 @@ export default function GraduatesPage() {
           />
         </label>
 
-        <div className="mt-1.5 hidden flex-col gap-2 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+        <div className="mt-2 flex flex-col gap-2 sm:mt-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
           <label className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-[14rem]">
             <Heart className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
             <span className="sr-only">{t.gallery.filterFellowship}</span>

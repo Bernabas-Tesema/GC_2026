@@ -149,10 +149,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="book-surface min-h-screen pt-16">
+    <main className="book-surface min-h-screen pt-[calc(4rem+env(safe-area-inset-top,0px))]">
       <Navbar variant="light" />
 
-      <div className="mx-auto w-full max-w-lg space-y-6 px-3 py-6 sm:px-4 sm:py-8 md:max-w-md md:py-10">
+      <div className="mx-auto w-full max-w-lg space-y-6 px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:px-5 sm:py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -166,8 +166,8 @@ export default function ProfilePage() {
             </p>
           )}
 
-          <form onSubmit={handleSubmit} noValidate className="glass-card space-y-6 rounded-2xl p-3 sm:rounded-3xl sm:p-5 md:space-y-5 md:p-5">
-            <div className="grid grid-cols-1 gap-6 min-[520px]:grid-cols-2 min-[520px]:items-start">
+          <form onSubmit={handleSubmit} noValidate className="glass-card space-y-5 rounded-2xl p-4 sm:space-y-6 sm:rounded-3xl sm:p-5">
+            <div className="grid grid-cols-1 gap-5 min-[520px]:grid-cols-2 min-[520px]:items-start sm:gap-6">
               <PhotoUpload
                 label={t.profile.largePhoto}
                 value={largePhotoUrl}

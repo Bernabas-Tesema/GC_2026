@@ -86,8 +86,8 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
   }, [menuOpen]);
 
   return (
-    <nav className={`fixed top-0 right-0 left-0 z-50 border-b ${navBg}`}>
-      <div className="flex w-full items-center gap-2 px-3 py-1.5 md:px-6 lg:px-8">
+    <nav className={`fixed top-0 right-0 left-0 z-50 border-b pt-[env(safe-area-inset-top,0px)] ${navBg}`}>
+      <div className="flex w-full items-center gap-2 px-3 py-2 md:px-6 lg:px-8">
         <BrandTitle variant={variant} asLink />
 
         {isCover && (
@@ -191,7 +191,7 @@ function NavbarContent({ variant = "cover" }: NavbarProps) {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className={`nav-btn-hover rounded-lg border p-1.5 transition-colors ${
+            className={`nav-btn-hover flex min-h-11 min-w-11 items-center justify-center rounded-lg border p-2.5 transition-colors ${
               isCover
                 ? "border-white/30 text-white chocolate-hover chocolate-hover-cover"
                 : "border-navy/15 text-navy chocolate-hover"

@@ -56,8 +56,8 @@ export default function CoverPage() {
   }, [menuOpen]);
 
   return (
-    <main className="relative h-[100dvh] min-h-screen w-full overflow-hidden bg-cream">
-      <div className="absolute top-4 left-4 z-20 sm:top-6 sm:left-6">
+    <main className="relative h-[100dvh] min-h-screen w-full overflow-hidden bg-cream pt-[env(safe-area-inset-top,0px)]">
+      <div className="absolute top-[max(1rem,env(safe-area-inset-top,0px))] left-4 z-20 sm:left-6">
         <motion.div
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
@@ -80,7 +80,7 @@ export default function CoverPage() {
         </motion.div>
       </div>
 
-      <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
+      <div className="absolute top-[max(1rem,env(safe-area-inset-top,0px))] right-4 z-20 sm:right-6">
         <div className="hidden items-center gap-2 sm:flex">
           {isLoggedIn && (
             <button
@@ -100,7 +100,7 @@ export default function CoverPage() {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="nav-btn-hover rounded-lg border border-chocolate/25 bg-paper/90 p-1.5 text-navy chocolate-hover"
+            className="nav-btn-hover flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-chocolate/25 bg-paper/90 p-2.5 text-navy chocolate-hover"
             aria-label="Menu"
             aria-expanded={menuOpen}
           >
@@ -206,7 +206,7 @@ export default function CoverPage() {
       </div>
 
       {/* ── Main content ── */}
-      <div className="relative z-10 flex h-full min-h-0 flex-col items-center px-6 pt-10 pb-6 md:px-16 md:pt-12 md:pb-8">
+      <div className="relative z-10 flex h-full min-h-0 flex-col items-center px-4 pt-8 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:px-6 sm:pt-10 md:px-16 md:pt-12 md:pb-8">
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}

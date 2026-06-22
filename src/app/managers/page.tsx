@@ -113,10 +113,10 @@ export default function ManagersPage() {
   };
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="min-h-screen bg-cream pt-[env(safe-area-inset-top,0px)]">
       <Navbar variant="light" />
 
-      <div className="mx-auto max-w-7xl px-3 pt-24 pb-10 sm:px-6 sm:pt-32 sm:pb-12 md:px-10">
+      <div className="mx-auto max-w-7xl px-4 pt-20 pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] sm:px-6 sm:pt-28 sm:pb-12 md:px-10 md:pt-32">
         {/* ── Page header ── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
