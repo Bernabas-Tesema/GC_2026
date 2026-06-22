@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -24,11 +24,11 @@ import {
   isValidDepartmentValue,
   normalizeFellowshipDepartment,
 } from "@/lib/constants";
+import { uploadPhotoToCloudinary } from "@/lib/uploadPhoto";
 import Navbar from "@/components/Navbar";
 import PhotoUpload from "@/components/PhotoUpload";
 import PageHero from "@/components/ui/PageHero";
 import Button from "@/components/ui/Button";
-import { getPhotoUploadCount } from "@/lib/photoUploadLimit";
 
 export default function ProfilePage() {
   const { user, student, loading: authLoading, refreshStudent } = useAuth();
@@ -43,9 +43,13 @@ export default function ProfilePage() {
   const [largePhotoUrl, setLargePhotoUrl] = useState("");
   const [smallPhotoUrl, setSmallPhotoUrl] = useState("");
   const [coverPhotoUrl, setCoverPhotoUrl] = useState("");
-  const [photoUploadCount, setPhotoUploadCount] = useState(0);
+  const [largePhotoFile, setLargePhotoFile] = useState<File | null>(null);
+  const [smallPhotoFile, setSmallPhotoFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const largeBlobRef = useRef<string | null>(null);
+  const smallBlobRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -65,17 +69,35 @@ export default function ProfilePage() {
       setCoverPhotoUrl(
         student.coverPhotoUrl || student.largePhotoUrl || student.smallPhotoUrl || ""
       );
+      setLargePhotoFile(null);
+      setSmallPhotoFile(null);
     } else if (user) {
       setFullName(user.displayName || "");
     }
   }, [student, user]);
 
   useEffect(() => {
-    if (!user) return;
-    getPhotoUploadCount(user.uid)
-      .then(setPhotoUploadCount)
-      .catch(() => setPhotoUploadCount(0));
-  }, [user]);
+    return () => {
+      if (largeBlobRef.current) URL.revokeObjectURL(largeBlobRef.current);
+      if (smallBlobRef.current) URL.revokeObjectURL(smallBlobRef.current);
+    };
+  }, []);
+
+  const handleLargePick = (file: File, preview: string) => {
+    if (largeBlobRef.current) URL.revokeObjectURL(largeBlobRef.current);
+    largeBlobRef.current = preview.startsWith("blob:") ? preview : null;
+    setLargePhotoFile(file);
+    setLargePhotoUrl(preview);
+    setCoverPhotoUrl((c) => c || preview);
+  };
+
+  const handleSmallPick = (file: File, preview: string) => {
+    if (smallBlobRef.current) URL.revokeObjectURL(smallBlobRef.current);
+    smallBlobRef.current = preview.startsWith("blob:") ? preview : null;
+    setSmallPhotoFile(file);
+    setSmallPhotoUrl(preview);
+    setCoverPhotoUrl((c) => c || preview);
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -120,6 +142,16 @@ export default function ProfilePage() {
     }
 
     try {
+      let finalLarge = largePhotoUrl;
+      let finalSmall = smallPhotoUrl;
+
+      if (largePhotoFile) {
+        finalLarge = await uploadPhotoToCloudinary(largePhotoFile);
+      }
+      if (smallPhotoFile) {
+        finalSmall = await uploadPhotoToCloudinary(smallPhotoFile);
+      }
+
       await saveStudent(user.uid, {
         fullName,
         email: user.email || "",
@@ -127,14 +159,20 @@ export default function ProfilePage() {
         academicDepartment,
         fellowshipDepartment: normalizeFellowshipDepartment(fellowshipDepartment),
         lastWords,
-        largePhotoUrl,
-        smallPhotoUrl,
-        coverPhotoUrl: coverPhotoUrl || largePhotoUrl || smallPhotoUrl,
+        largePhotoUrl: finalLarge,
+        smallPhotoUrl: finalSmall,
+        coverPhotoUrl: coverPhotoUrl || finalLarge || finalSmall,
       });
+
+      setLargePhotoFile(null);
+      setSmallPhotoFile(null);
+      setLargePhotoUrl(finalLarge);
+      setSmallPhotoUrl(finalSmall);
+
       await refreshStudent();
       router.push("/book");
-    } catch {
-      setError(t.profile.saveFailed);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t.profile.saveFailed);
     } finally {
       setSaving(false);
     }
@@ -170,27 +208,17 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 gap-5 min-[520px]:grid-cols-2 min-[520px]:items-start sm:gap-6">
               <PhotoUpload
                 label={t.profile.largePhoto}
-                value={largePhotoUrl}
-                onChange={(url) => {
-                  setLargePhotoUrl(url);
-                  setCoverPhotoUrl((c) => c || url);
-                }}
+                previewUrl={largePhotoUrl}
+                onPick={handleLargePick}
                 aspect="portrait"
-                userId={user?.uid}
-                uploadCount={photoUploadCount}
-                onUploadCountChange={setPhotoUploadCount}
+                disabled={saving}
               />
               <PhotoUpload
                 label={t.profile.smallPhoto}
-                value={smallPhotoUrl}
-                onChange={(url) => {
-                  setSmallPhotoUrl(url);
-                  setCoverPhotoUrl((c) => c || url);
-                }}
+                previewUrl={smallPhotoUrl}
+                onPick={handleSmallPick}
                 aspect="square"
-                userId={user?.uid}
-                uploadCount={photoUploadCount}
-                onUploadCountChange={setPhotoUploadCount}
+                disabled={saving}
               />
             </div>
 

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import { ArrowLeft, Images, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   EVENT_GALLERY_PHOTOS,
@@ -76,76 +76,84 @@ function EventPhotoLightbox({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onClose, onPrev, onNext]);
 
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
+
   const src = photos[index];
   const hasMultiple = photos.length > 1;
+
+  const navButtonClass =
+    "z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/90 font-serif text-xl leading-none text-navy shadow-md ring-1 ring-navy/10 transition-all hover:scale-105 hover:bg-white sm:static sm:h-12 sm:w-12 sm:translate-y-0 sm:text-3xl";
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
-      style={{ background: "rgba(15,31,61,0.82)" }}
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(15,31,61,0.94)] backdrop-blur-md sm:p-4"
       onClick={onClose}
     >
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow-md ring-1 ring-navy/10 transition-all hover:bg-white sm:top-4 sm:right-4"
+        className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-3 z-10 rounded-full bg-white/90 p-2 shadow-md ring-1 ring-navy/10 transition-all hover:bg-white sm:top-4 sm:right-4"
         aria-label="Close"
       >
         <X className="h-5 w-5 text-navy" />
       </button>
 
-      {hasMultiple && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onPrev();
-          }}
-          className="absolute left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-navy shadow-md ring-1 ring-navy/10 transition-all hover:bg-white sm:left-4 sm:h-11 sm:w-11"
-          aria-label="Previous photo"
-        >
-          <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-        </button>
-      )}
-
-      <motion.div
-        key={src}
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.2 }}
+      <div
+        className="relative flex h-full w-full items-center justify-center sm:h-auto sm:max-w-[min(96vw,1180px)] sm:gap-4"
         onClick={(e) => e.stopPropagation()}
-        className="relative h-[min(85dvh,820px)] w-[min(92vw,1100px)]"
       >
-        <Image
-          src={src}
-          alt={`${altPrefix} ${index + 1}`}
-          fill
-          className="object-contain object-center"
-          sizes="100vw"
-          priority
-        />
-      </motion.div>
+        {hasMultiple && (
+          <button
+            type="button"
+            onClick={onPrev}
+            className={`absolute top-1/2 left-2 -translate-y-1/2 sm:left-auto ${navButtonClass}`}
+            aria-label="Previous photo"
+          >
+            &lt;
+          </button>
+        )}
 
-      {hasMultiple && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onNext();
-          }}
-          className="absolute right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-navy shadow-md ring-1 ring-navy/10 transition-all hover:bg-white sm:right-4 sm:h-11 sm:w-11"
-          aria-label="Next photo"
+        <motion.div
+          key={src}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.2 }}
+          className="relative h-full w-full sm:h-[min(85dvh,820px)] sm:min-w-0 sm:flex-1"
         >
-          <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-        </button>
-      )}
+          <Image
+            src={src}
+            alt={`${altPrefix} ${index + 1}`}
+            fill
+            className="object-contain object-center"
+            sizes="100vw"
+            priority
+          />
+        </motion.div>
+
+        {hasMultiple && (
+          <button
+            type="button"
+            onClick={onNext}
+            className={`absolute top-1/2 right-2 -translate-y-1/2 sm:right-auto ${navButtonClass}`}
+            aria-label="Next photo"
+          >
+            &gt;
+          </button>
+        )}
+      </div>
 
       {hasMultiple && (
-        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-navy/70 shadow-sm">
+        <p className="pointer-events-none absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1 text-[11px] font-medium text-white/90 sm:bottom-4 sm:bg-white/90 sm:text-xs sm:text-navy/70 sm:shadow-sm">
           {index + 1} / {photos.length}
         </p>
       )}

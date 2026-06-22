@@ -1,100 +1,49 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { Camera, ImageIcon, Loader2 } from "lucide-react";
+import { Camera, ImageIcon } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import IconLabel from "@/components/IconLabel";
-import { MAX_STUDENT_PHOTO_UPLOADS } from "@/lib/constants";
-import {
-  getPhotoUploadCount,
-  isPhotoUploadLimitReached,
-  recordStudentPhotoUpload,
-} from "@/lib/photoUploadLimit";
-import { parseJsonResponse } from "@/lib/parseJsonResponse";
 
 interface PhotoUploadProps {
   label: string;
-  value: string;
-  onChange: (url: string) => void;
+  /** Preview URL — existing Cloudinary link or a local blob URL. */
+  previewUrl: string;
+  onPick: (file: File, previewUrl: string) => void;
   aspect?: "square" | "portrait";
   fullWidth?: boolean;
-  /** When set, enforces the student photo upload limit. */
-  userId?: string;
-  uploadCount?: number;
-  onUploadCountChange?: (count: number) => void;
+  disabled?: boolean;
 }
 
 export default function PhotoUpload({
   label,
-  value,
-  onChange,
+  previewUrl,
+  onPick,
   aspect = "portrait",
   fullWidth = false,
-  userId,
-  uploadCount = 0,
-  onUploadCountChange,
+  disabled = false,
 }: PhotoUploadProps) {
   const { t } = useLanguage();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
+  const blobUrlRef = useRef<string | null>(null);
 
-  const enforceLimit = Boolean(userId);
-  const limitReached = enforceLimit && isPhotoUploadLimitReached(uploadCount);
-  const remaining = Math.max(0, MAX_STUDENT_PHOTO_UPLOADS - uploadCount);
-
-  const handleUpload = async (file: File) => {
-    if (enforceLimit && userId) {
-      const count = await getPhotoUploadCount(userId);
-      if (isPhotoUploadLimitReached(count)) {
-        onUploadCountChange?.(count);
-        setError(t.profile.uploadLimitReached);
-        return;
+  useEffect(() => {
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
       }
+    };
+  }, []);
+
+  const handleFile = (file: File) => {
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
     }
-
-    setUploading(true);
-    setError("");
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(
-        response
-      );
-
-      if (!response.ok) {
-        throw new Error(data.details ?? data.error ?? "Upload failed");
-      }
-
-      if (!data.url) {
-        throw new Error("Upload failed");
-      }
-
-      if (enforceLimit && userId) {
-        const nextCount = await recordStudentPhotoUpload(userId);
-        onUploadCountChange?.(nextCount);
-      }
-
-      onChange(data.url);
-    } catch (err) {
-      if (err instanceof Error && err.message === "UPLOAD_LIMIT_REACHED") {
-        onUploadCountChange?.(MAX_STUDENT_PHOTO_UPLOADS);
-        setError(t.profile.uploadLimitReached);
-      } else {
-        setError(err instanceof Error ? err.message : t.common.error);
-      }
-    } finally {
-      setUploading(false);
-      if (inputRef.current) inputRef.current.value = "";
-    }
+    const preview = URL.createObjectURL(file);
+    blobUrlRef.current = preview;
+    onPick(file, preview);
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   const previewClass = fullWidth
@@ -104,6 +53,7 @@ export default function PhotoUpload({
       : "aspect-[3/4] w-full max-w-[min(100%,14rem)] mx-auto sm:max-w-none";
 
   const LabelIcon = aspect === "square" ? Camera : ImageIcon;
+  const isBlob = previewUrl.startsWith("blob:");
 
   return (
     <div className="flex w-full min-w-0 flex-col space-y-2">
@@ -113,29 +63,32 @@ export default function PhotoUpload({
 
       <button
         type="button"
-        onClick={() => !uploading && !limitReached && inputRef.current?.click()}
-        disabled={uploading || limitReached}
-        aria-label={value ? t.profile.changePhoto : t.profile.uploadPhoto}
+        onClick={() => !disabled && inputRef.current?.click()}
+        disabled={disabled}
+        aria-label={previewUrl ? t.profile.changePhoto : t.profile.uploadPhoto}
         className={`relative touch-manipulation overflow-hidden rounded-xl border-2 border-dashed border-gold/40 bg-paper transition-colors hover:border-gold/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 disabled:cursor-not-allowed disabled:opacity-60 ${previewClass}`}
       >
-        {value ? (
-          <Image
-            src={value}
-            alt={label}
-            fill
-            className="object-contain object-center p-1"
-            sizes="(max-width: 640px) 80vw, 240px"
-          />
+        {previewUrl ? (
+          isBlob ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={previewUrl}
+              alt={label}
+              className="absolute inset-0 h-full w-full object-contain object-center p-1"
+            />
+          ) : (
+            <Image
+              src={previewUrl}
+              alt={label}
+              fill
+              className="object-contain object-center p-1"
+              sizes="(max-width: 640px) 80vw, 240px"
+            />
+          )
         ) : (
           <div className="flex h-full min-h-[140px] flex-col items-center justify-center gap-2 p-4 text-navy/40 sm:min-h-0">
             <Camera className="h-8 w-8 sm:h-10 sm:w-10" />
             <span className="px-2 text-center text-xs sm:text-sm">{t.profile.uploadPhoto}</span>
-          </div>
-        )}
-
-        {uploading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <Loader2 className="h-8 w-8 animate-spin text-gold" />
           </div>
         )}
       </button>
@@ -145,33 +98,22 @@ export default function PhotoUpload({
         type="file"
         accept="image/*"
         className="hidden"
+        disabled={disabled}
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) handleUpload(file);
+          if (file) handleFile(file);
         }}
       />
 
-      {enforceLimit && (
-        <p className="text-xs leading-relaxed text-navy/50 sm:text-sm">
-          {limitReached
-            ? t.profile.uploadLimitReached
-            : t.profile.uploadsRemaining
-                .replace("{remaining}", String(remaining))
-                .replace("{max}", String(MAX_STUDENT_PHOTO_UPLOADS))}
-        </p>
-      )}
-
       <button
         type="button"
-        onClick={() => inputRef.current?.click()}
-        disabled={uploading || limitReached}
+        onClick={() => !disabled && inputRef.current?.click()}
+        disabled={disabled}
         className="flex w-full min-h-11 touch-manipulation items-center justify-center gap-2 rounded-lg border border-gold/40 px-4 py-2.5 text-sm font-medium text-navy transition-colors hover:bg-gold/10 disabled:opacity-50 sm:w-auto sm:min-h-0 sm:py-2"
       >
         <Camera className="h-4 w-4 shrink-0 text-gold" />
-        {value ? t.profile.changePhoto : t.profile.uploadPhoto}
+        {previewUrl ? t.profile.changePhoto : t.profile.uploadPhoto}
       </button>
-
-      {error && <p className="text-sm leading-relaxed text-red-600">{error}</p>}
     </div>
   );
 }
