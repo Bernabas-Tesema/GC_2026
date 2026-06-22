@@ -50,7 +50,10 @@
     "managerLoginSubtitle": "Sign in with your manager email and password",
     "managerLoginButton": "Sign In to Managers",
     "managerNotAuthorized": "This email is not authorized for manager access",
-    "managerUseLogin": "Managers sign in on the Login page — use Sign Up only for student accounts.",
+    "managerUseLogin": "This email is for managers. Use Login (not Sign Up) with your manager password.",
+    "managerWrongPassword": "Wrong manager password. Managers must use the exact password from the admin team.",
+    "loginHint": "Students: sign up first, then log in here. Managers: use your manager email and password to open the admin panel.",
+    "signupHint": "For graduating students only. Manager emails cannot sign up here — managers use Login instead.",
     "firestoreAccessRequired": "Could not connect to the database. In Firebase Console enable Authentication → Anonymous sign-in, then publish the Firestore rules from this project.",
     "siteSubtitle": "GC ቤንሃናን · Class of 2026",
     "backToBook": "Back to home"

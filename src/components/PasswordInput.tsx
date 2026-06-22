@@ -29,7 +29,7 @@ export default function PasswordInput({
         autoComplete="current-password"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="input-field min-h-11 pr-11 text-base sm:text-sm"
+        className="input-field mt-[7px] pr-11 text-sm"
       />
       <button
         type="button"

@@ -1,5 +1,12 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
+import {
+  initializeAuth,
+  getAuth,
+  Auth,
+  indexedDBLocalPersistence,
+  browserLocalPersistence,
+  inMemoryPersistence,
+} from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 
 // Each env var must be read with a static `process.env.NEXT_PUBLIC_*` reference.
@@ -45,7 +52,19 @@ function getFirebaseApp(): FirebaseApp {
 
 export function getClientAuth(): Auth {
   if (!auth) {
-    auth = getAuth(getFirebaseApp());
+    const firebaseApp = getFirebaseApp();
+    try {
+      // Fallback chain helps when Edge Tracking Prevention blocks storage.
+      auth = initializeAuth(firebaseApp, {
+        persistence: [
+          indexedDBLocalPersistence,
+          browserLocalPersistence,
+          inMemoryPersistence,
+        ],
+      });
+    } catch {
+      auth = getAuth(firebaseApp);
+    }
   }
   return auth;
 }

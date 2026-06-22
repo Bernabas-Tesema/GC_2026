@@ -66,7 +66,7 @@ export default function SignupPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="input-field mt-1.5 min-h-11 text-base sm:text-sm"
+            className="input-field mt-[7px]"
           />
         </div>
 
@@ -86,13 +86,13 @@ export default function SignupPage() {
           </p>
         )}
 
-        <Button type="submit" fullWidth loading={loading} className="auth-touch-target min-h-11 md:min-h-0">
+        <Button type="submit" fullWidth loading={loading} className="auth-touch-target">
           <UserPlus className="h-5 w-5 shrink-0" />
           {t.auth.signupButton}
         </Button>
       </form>
 
-      <div className="mt-4 flex items-center gap-3 sm:mt-5 md:mt-3">
+      <div className="mt-[9px] flex items-center gap-[7px]">
         <div className="h-px flex-1 bg-navy/10" />
         <p className="shrink-0 text-[11px] text-navy/40 sm:text-xs">{t.auth.hasAccount}</p>
         <div className="h-px flex-1 bg-navy/10" />
@@ -100,7 +100,7 @@ export default function SignupPage() {
 
       <Link
         href="/login"
-        className="btn-secondary auth-touch-target mt-3 flex min-h-11 w-full items-center justify-center gap-2 md:mt-2.5 md:min-h-0"
+        className="btn-secondary auth-touch-target mt-[7px] flex w-full items-center justify-center gap-2"
       >
         {t.nav.login}
       </Link>

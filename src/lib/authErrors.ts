@@ -26,6 +26,15 @@ const RESET_ERROR_KEYS: Record<string, string> = {
   "auth/operation-not-allowed": "authMethodDisabled",
 };
 
+export function isFirebaseAuthError(error: unknown): boolean {
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    "code" in error &&
+    String((error as { code: string }).code).startsWith("auth/")
+  );
+}
+
 export function getAuthErrorKey(error: unknown, action: AuthAction): string {
   const code =
     error && typeof error === "object" && "code" in error

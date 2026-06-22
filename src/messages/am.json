@@ -50,7 +50,10 @@
     "managerLoginSubtitle": "በማነጅር ኢሜይል እና የይለፍ ቃልዎ ይግቡ",
     "managerLoginButton": "ወደ ማነጅሮች ግባ",
     "managerNotAuthorized": "ይህ ኢሜይል ለማነጅር መዳረሻ አልተፈቀደም",
-    "managerUseLogin": "ማነጅሮች በ Login ገጽ ይግቡ — Sign Up ለተማሪ መለያዎች ብቻ ነው።",
+    "managerUseLogin": "ይህ ኢሜይል ለማነጅሮች ነው። Sign Up ሳይሆን Login በማነጅር የይለፍ ቃል ይጠቀሙ።",
+    "managerWrongPassword": "የማነጅር የይለፍ ቃል ትክክል አይደለም። ከአስተዳዳሪ ቡድን የተሰጠውን ትክክለኛ የይለፍ ቃል ይጠቀሙ።",
+    "loginHint": "ተማሪዎች፡ መጀመሪያ Sign Up ያድርጉ፣ ከዚያ እዚህ ይግቡ። ማነጅሮች፡ የማነጅር ኢሜይል እና የይለፍ ቃል በመጠቀም ወደ አስተዳደር ፓነል ይግቡ።",
+    "signupHint": "ለተመራቂ ተማሪዎች ብቻ። የማነጅር ኢሜይሎች እዚህ ሊመዘገቡ አይችሉም — ማነጅሮች Login ይጠቀማሉ።",
     "firestoreAccessRequired": "ከመረጃ ቋት ጋር መገናኘት አልተቻለም። በ Firebase Console Authentication → Anonymous sign-in ያንቁ፣ ከዚያም የዚህ ፕሮጀክት Firestore rules ይለጡ።",
     "siteSubtitle": "GC ቤንሃናን · የ 2026 ተመራቂ ክፍል",
     "backToBook": "ወደ መነሻ ተመለስ"

@@ -11,7 +11,7 @@ import PasswordInput from "@/components/PasswordInput";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getClientAuth } from "@/lib/firebase";
 import { getAuthErrorKey } from "@/lib/authErrors";
-import { isValidManagerCredentials } from "@/lib/admin";
+import { isValidManagerCredentials, isManagerEmail } from "@/lib/admin";
 import { getStudentByUid, isStudentProfileComplete } from "@/lib/students";
 import AuthShell from "@/components/ui/AuthShell";
 import Button from "@/components/ui/Button";
@@ -46,11 +46,22 @@ function LoginForm() {
         return;
       }
 
+      if (isManagerEmail(normalizedEmail)) {
+        setError(t.auth.managerWrongPassword);
+        return;
+      }
+
       await login(normalizedEmail, password);
-      const auth = getClientAuth();
-      const profile = auth.currentUser
-        ? await getStudentByUid(auth.currentUser.uid)
-        : null;
+
+      let profile = null;
+      try {
+        const auth = getClientAuth();
+        if (auth.currentUser) {
+          profile = await getStudentByUid(auth.currentUser.uid);
+        }
+      } catch (profileErr) {
+        console.error("Profile load after login:", profileErr);
+      }
 
       if (isStudentProfileComplete(profile)) {
         router.push(searchParams.get("next") ?? "/book");
@@ -79,7 +90,7 @@ function LoginForm() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="input-field mt-1.5 min-h-11 text-base sm:text-sm"
+            className="input-field mt-[7px]"
           />
         </div>
 
@@ -104,13 +115,13 @@ function LoginForm() {
           </p>
         )}
 
-        <Button type="submit" fullWidth loading={loading} className="auth-touch-target min-h-11 md:min-h-0">
+        <Button type="submit" fullWidth loading={loading} className="auth-touch-target">
           <LogIn className="h-5 w-5 shrink-0" />
           {t.auth.loginButton}
         </Button>
       </form>
 
-      <div className="mt-4 flex items-center gap-3 sm:mt-5 md:mt-3">
+      <div className="mt-[9px] flex items-center gap-[7px]">
         <div className="h-px flex-1 bg-navy/10" />
         <p className="shrink-0 text-[11px] text-navy/40 sm:text-xs">{t.auth.noAccount}</p>
         <div className="h-px flex-1 bg-navy/10" />
@@ -118,7 +129,7 @@ function LoginForm() {
 
       <Link
         href="/signup"
-        className="btn-secondary auth-touch-target mt-3 flex min-h-11 w-full items-center justify-center gap-2 md:mt-2.5 md:min-h-0"
+        className="btn-secondary auth-touch-target mt-[7px] flex w-full items-center justify-center gap-2"
       >
         {t.nav.signup}
       </Link>

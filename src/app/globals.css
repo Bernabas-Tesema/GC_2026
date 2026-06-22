@@ -251,34 +251,23 @@
     box-shadow: 0 6px 20px -12px rgba(74, 44, 42, 0.45);
   }
 
-  /* ── Auth pages: compact on desktop, touch-friendly on mobile ── */
-  .auth-panel form {
-    @apply space-y-4;
+  /* ── Auth pages: compact box, touch-friendly on mobile ── */
+  .auth-panel form,
+  .auth-panel .auth-form {
+    @apply space-y-[7px];
   }
 
-  @media (min-width: 768px) {
-    .auth-panel form {
-      @apply space-y-3;
-    }
+  .auth-panel .input-field {
+    @apply min-h-[33px] px-[7px] py-[7px] text-sm;
+  }
 
-    .auth-panel .input-field {
-      @apply min-h-0 px-3 py-2 text-sm;
-    }
+  .auth-panel .btn-primary,
+  .auth-panel .btn-secondary {
+    @apply py-[7px] text-sm;
+  }
 
-    .auth-panel .btn-primary,
-    .auth-panel .btn-secondary {
-      @apply py-2.5;
-    }
-
-    .auth-panel .auth-touch-target {
-      @apply min-h-0 py-2.5;
-    }
-
-    .auth-panel.glass-card {
-      box-shadow:
-        0 12px 28px -14px rgba(74, 44, 42, 0.12),
-        0 0 0 1px rgba(107, 68, 35, 0.18) inset;
-    }
+  .auth-panel .auth-touch-target {
+    @apply min-h-[33px];
   }
 
   /* ── Form inputs ── */
