@@ -292,6 +292,16 @@
     }
   }
 
+  .social-icon-link {
+    border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
+    background-color: color-mix(in srgb, var(--color-paper) 95%, transparent);
+  }
+
+  .social-icon-link:hover {
+    border-color: color-mix(in srgb, var(--color-gold) 60%, transparent);
+    background-color: color-mix(in srgb, var(--color-gold) 8%, var(--color-paper));
+  }
+
   /* ── Form inputs ── */
   .input-field {
     @apply w-full rounded-xl border border-navy/12 bg-cream/90 px-4 py-3 text-base text-navy outline-none transition-all;

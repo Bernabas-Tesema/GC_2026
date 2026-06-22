@@ -8,6 +8,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getAllMedia } from "@/lib/media";
 import BookFooter from "@/components/BookFooter";
 import PageHero from "@/components/ui/PageHero";
+import am from "@/messages/am.json";
+
+const leaderMessages = am.home;
 
 type HomeSectionTone = "paper" | "white" | "warm" | "navy";
 
@@ -67,31 +70,31 @@ export default function BookHomePage() {
           animate={{ opacity: 1, y: 0 }}
           className="relative z-10 w-full max-w-6xl"
         >
-          <div className="mb-5 overflow-hidden rounded-xl border border-gold/20 bg-cream/90 shadow-md sm:mb-6">
+          <div className="mb-4 overflow-hidden rounded-xl border border-gold/20 bg-cream/90 shadow-md sm:mb-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/g2.jpg"
               alt={t.home.gcCommitteePhotoTitle}
-              className="block h-auto w-full object-contain object-top"
+              className="block h-auto max-h-44 w-full object-cover object-top sm:max-h-56 sm:object-contain md:max-h-72 lg:max-h-none"
             />
           </div>
 
-          <div className="grid w-full grid-cols-1 items-stretch gap-5 md:grid-cols-2 md:gap-6 lg:gap-8">
+          <div className="grid w-full grid-cols-1 items-start gap-5 md:grid-cols-2 md:gap-6 lg:gap-8">
           <LeaderMessageCard
-            title={t.home.leaderTitle}
-            name={t.home.semagagnName}
-            role={t.home.semagagnRole}
-            speech={t.home.semagagnSpeech}
+            title={leaderMessages.leaderTitle}
+            name={leaderMessages.semagagnName}
+            role={leaderMessages.semagagnRole}
+            speech={leaderMessages.semagagnSpeech}
             photoSrc={semagegnPhoto}
             delay={0.1}
             variant="committee"
             parallel
           />
           <LeaderMessageCard
-            title={t.home.gcCommitteeTitle}
-            name={t.home.berketName}
-            role={t.home.berketRole}
-            speech={t.home.berketSpeech}
+            title={leaderMessages.gcCommitteeTitle}
+            name={leaderMessages.berketName}
+            role={leaderMessages.berketRole}
+            speech={leaderMessages.berketSpeech}
             photoSrc={berketPhoto}
             delay={0.15}
             variant="committee"
@@ -190,10 +193,10 @@ function LeaderMessageCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className={`flex h-full flex-col overflow-hidden rounded-3xl border shadow-lg ${className} ${
+      className={`flex flex-col rounded-3xl border shadow-lg ${className} ${
         isCommittee
-          ? "min-h-0 border-gold/25 bg-cream/90 backdrop-blur-md"
-          : "min-h-[28rem] glass-card border-gold/20 sm:min-h-[32rem]"
+          ? "border-gold/25 bg-cream/90 backdrop-blur-md"
+          : "glass-card border-gold/20"
       }`}
     >
       <div
@@ -223,7 +226,7 @@ function LeaderMessageCard({
         />
       </div>
 
-      <div className={`flex flex-1 flex-col ${parallel ? "px-4 py-4 sm:px-5 sm:py-5" : "px-5 py-6 sm:px-6 sm:py-7"}`}>
+      <div className={`flex flex-col ${parallel ? "px-4 py-4 sm:px-5 sm:py-5" : "px-5 py-6 sm:px-6 sm:py-7"}`}>
         {isCommittee ? (
           <div className={`flex shrink-0 items-center ${parallel ? "gap-3" : "gap-4 sm:gap-5"}`}>
             <div
@@ -289,9 +292,9 @@ function LeaderMessageCard({
         )}
 
         <div
-          className={`mt-4 flex-1 space-y-3 border-t border-gold/15 pt-4 ${
-            parallel ? "min-h-0 overflow-y-auto overscroll-y-contain pr-0.5" : ""
-          } ${isCommittee ? "text-left" : "text-center"}`}
+          className={`mt-4 space-y-3 border-t border-gold/15 pt-4 ${
+            isCommittee ? "text-left" : "text-center"
+          }`}
         >
           {paragraphs.map((para, i) => {
             const isSignature = i === paragraphs.length - 1 && paragraphs.length > 1;
@@ -391,7 +394,7 @@ function GcCommitteePhoto({
         <img
           src={imageSrc}
           alt={label}
-          className="block h-72 w-full object-cover object-[center_40%] sm:h-80 md:h-96 lg:h-[28rem]"
+          className="block h-44 w-full object-cover object-[center_40%] sm:h-56 md:h-72 lg:h-96 xl:h-[28rem]"
           onError={() => setError(true)}
         />
       ) : (

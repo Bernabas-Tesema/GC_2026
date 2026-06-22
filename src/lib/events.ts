@@ -5,6 +5,7 @@ export const EVENT_SLUGS = [
   "graduates-training",
   "gc-conference",
   "gc-dinner",
+  "gc-davuk",
 ] as const;
 
 export type EventSlug = (typeof EVENT_SLUGS)[number];
@@ -24,4 +25,5 @@ export const EVENT_GALLERY_PHOTOS: Record<EventSlug, string[]> = {
   "graduates-training": [],
   "gc-conference": [],
   "gc-dinner": [],
+  "gc-davuk": [],
 };

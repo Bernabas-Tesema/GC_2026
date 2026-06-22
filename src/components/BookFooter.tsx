@@ -6,17 +6,14 @@ import {
   Building2,
   Home,
   Images,
-  Instagram,
   User,
   Users,
-  Youtube,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import SocialMediaIcons from "@/components/SocialMediaIcons";
 import {
   DEVELOPER_NAME,
   DEVELOPER_PHOTO_PATH,
-  INSTAGRAM_URL,
-  YOUTUBE_URL,
 } from "@/lib/constants";
 
 const footerLinks = [
@@ -25,11 +22,6 @@ const footerLinks = [
   { href: "/book/departments", icon: Building2, labelKey: "departments" as const },
   { href: "/book/gallery", icon: Images, labelKey: "gallery" as const },
   { href: "/profile", icon: User, labelKey: "myProfile" as const },
-];
-
-const homeSocialLinks = [
-  { icon: Instagram, label: "Instagram", href: INSTAGRAM_URL },
-  { icon: Youtube, label: "YouTube", href: YOUTUBE_URL },
 ];
 
 type BookFooterProps = {
@@ -74,23 +66,13 @@ export default function BookFooter({ includeSocials = false }: BookFooterProps) 
         <FooterCongratulations />
 
         <div className="text-center">
+          <SocialMediaIcons className="mb-4" />
           <h2 className="text-base font-bold text-navy md:text-lg">
             {t.home.socialsTitle}
           </h2>
-          <div className="mt-3 flex flex-wrap justify-center gap-2">
-            {homeSocialLinks.map(({ icon: Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-full border border-gold/35 bg-cream/80 px-2.5 py-1 text-[11px] font-medium text-navy sm:px-3 sm:text-xs"
-              >
-                <Icon className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
-                {label}
-              </a>
-            ))}
-          </div>
+          <p className="mt-1.5 text-xs text-navy/55 sm:text-sm">
+            {t.home.socialsSubtitle}
+          </p>
         </div>
 
         <div className="mt-5 flex flex-col items-center gap-2">

@@ -116,7 +116,7 @@
     "gcCommitteeTitle": "GC Committee Message",
     "berketName": "Berketeab Masresh",
     "berketRole": "GC Committee Representative",
-    "berketSpeech": "To our graduating class, GC Benhanans, the Scripture reminds us that the Lord is a friend to those who fear him and makes his covenant known to them (Psalm 25:14). May the Lord continue to help you in all things. This site was prepared for GC Benhanans as a home where our graduation memories and final words are gathered together. To our brothers and sisters of Batch 14 and Batch 15, may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things, to him alone be glory. You will all remain in our hearts, together with your memories, as we have loved you. GC Benhanan loves you.\n\nWith love,\nBerketeab Masresh",
+    "berketSpeech": "\"The Lord is a friend to those who fear him; he makes his covenant known to them.\"\n— Psalm 25:14\n\nTo our 2018 graduating class, GC Benhanans, may the Lord help you in all things. This website was prepared for GC Benhanans, where all our graduation memory photos and final words are gathered.\n\nTo our brothers and sisters, the 2018 Batch 14 and Batch 15 graduates, may the Lord help you again. God has shown his faithfulness in everything; we lack nothing, for the Lord who helped and sustained us in all things—to him alone be glory.\n\n\"You will all remain in our hearts, together with your memories, as we have loved you.\"\n\nGC Benhanan loves you. ❤️",
     "leaderTitle": "Fellowship Leader's Message",
     "semagagnName": "Semagegn",
     "semagagnRole": "Fellowship Leader",
@@ -129,7 +129,8 @@
       { "slug": "ajora-trip", "name": "Ajora Trip", "desc": "Fellowship outing and memories from the Ajora trip", "image": "/events/ajora-trip/cover.jpg" },
       { "slug": "graduates-training", "name": "Graduates Training", "desc": "Training and preparation sessions for the graduating class", "image": "/events/graduates-training/cover.jpg" },
       { "slug": "gc-conference", "name": "GC Conference", "desc": "The graduating class fellowship conference", "image": "/events/gc-conference/cover.jpg" },
-      { "slug": "gc-dinner", "name": "GC Dinner", "desc": "Fellowship dinner and celebration with the graduating class", "image": "/events/gc-dinner/cover.jpg" }
+      { "slug": "gc-dinner", "name": "GC Dinner", "desc": "Fellowship dinner and celebration with the graduating class", "image": "/events/gc-dinner/cover.jpg" },
+      { "slug": "gc-davuk", "name": "GC Davuk Film", "desc": "The film created by GC 2026 — fellowship memories brought to life on screen", "image": "/events/gc-davuk/cover.jpg" }
     ],
     "gcCommitteePhotoTitle": "GC Committee 2026",
     "groupPhotoCaption": "GC ቤንሃናን",

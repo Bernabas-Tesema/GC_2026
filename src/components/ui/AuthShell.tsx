@@ -21,12 +21,12 @@ export default function AuthShell({ title, subtitle, children, footer }: AuthShe
           <div className="absolute -right-16 bottom-10 h-44 w-44 rounded-full bg-indigo-400/15 blur-3xl sm:h-52 sm:w-52" />
         </div>
 
-        <div className="relative mx-auto flex w-full flex-1 items-center justify-center px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:px-6">
+        <div className="relative mx-auto flex w-full flex-1 items-center justify-center px-3 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
-            className="auth-panel glass-card w-full max-w-sm rounded-2xl p-4 sm:max-w-[297px] sm:p-[13px]"
+            className="auth-panel glass-card w-full max-w-[min(100%,25rem)] rounded-2xl p-4 sm:max-w-[19.5rem] sm:p-[13px]"
           >
             <div className="mb-4 flex flex-col items-center gap-2 text-center sm:mb-[9px] sm:gap-[7px]">
               <div

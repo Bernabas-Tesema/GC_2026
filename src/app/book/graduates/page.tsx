@@ -102,8 +102,8 @@ export default function GraduatesPage() {
           />
         </label>
 
-        <div className="mt-2 flex flex-col gap-2 sm:mt-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
-          <label className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-[14rem]">
+        <div className="mt-1.5 hidden flex-col gap-2 md:mt-1.5 md:flex md:flex-row md:flex-wrap md:items-center md:gap-x-4 md:gap-y-2">
+          <label className="flex min-w-0 flex-1 items-center gap-2 md:max-w-[14rem]">
             <Heart className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
             <span className="sr-only">{t.gallery.filterFellowship}</span>
             <select
@@ -121,7 +121,7 @@ export default function GraduatesPage() {
             </select>
           </label>
 
-          <label className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-[14rem]">
+          <label className="flex min-w-0 flex-1 items-center gap-2 md:max-w-[14rem]">
             <GraduationCap className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
             <span className="sr-only">{t.gallery.filterAcademic}</span>
             <select
@@ -143,6 +143,10 @@ export default function GraduatesPage() {
             {filteredStudents.length}
           </span>
         </div>
+
+        <p className="mt-1 text-right text-[10px] font-medium text-navy/40 md:hidden">
+          {filteredStudents.length}
+        </p>
       </motion.div>
 
       <div>
