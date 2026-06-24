@@ -222,6 +222,9 @@ export default function ProfilePage() {
                 aspect="square"
                 disabled={saving}
               />
+              <p className="text-center text-xs text-navy/50 min-[520px]:col-span-2">
+                {t.profile.photoSizeHint}
+              </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">

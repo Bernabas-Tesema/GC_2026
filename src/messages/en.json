@@ -73,6 +73,7 @@
     "smallPhoto": "Small Profile Photo",
     "uploadPhoto": "Upload Photo",
     "changePhoto": "Change Photo",
+    "photoSizeHint": "Please add a photo smaller than 10 MB.",
     "save": "Save Profile",
     "saving": "Saving...",
     "selectDepartment": "Select a department",

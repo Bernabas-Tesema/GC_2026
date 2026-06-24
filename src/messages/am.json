@@ -73,6 +73,7 @@
     "smallPhoto": "ትንሽ የመገለጫ ፎቶ",
     "uploadPhoto": "ፎቶ ይጭኑ",
     "changePhoto": "ፎቶ ይቀይሩ",
+    "photoSizeHint": "እባክዎ ከ 10 MB ያነሰ ፎቶ ይጭኑ።",
     "save": "መገለጫ አስቀምጥ",
     "saving": "በማስቀመጥ ላይ...",
     "selectDepartment": "ክፍል ይምረጡ",

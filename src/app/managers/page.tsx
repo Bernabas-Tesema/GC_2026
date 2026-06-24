@@ -855,7 +855,7 @@ function UploadTab() {
               </div>
               <div>
                 <p className="font-semibold text-navy">Click to choose a photo</p>
-                <p className="mt-0.5 text-xs text-navy/45">JPG, PNG, WEBP, HEIC · max 10MB</p>
+                <p className="mt-0.5 text-xs text-navy/45">Please add a photo smaller than 10 MB · JPG, PNG, WEBP, HEIC</p>
               </div>
             </>
           )}
@@ -1215,6 +1215,7 @@ function AdminPhotoUpload({
         className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }}
       />
+      <p className="text-center text-[11px] text-navy/45">Please add a photo smaller than 10 MB</p>
     </div>
   );
 }
