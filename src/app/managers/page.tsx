@@ -36,8 +36,8 @@ import {
 import { countWords, limitToMaxWords } from "@/lib/lastWords";
 import { EVENT_SLUGS } from "@/lib/events";
 import type { EventSlug } from "@/lib/events";
-import { parseJsonResponse } from "@/lib/parseJsonResponse";
-import { ACCEPTED_IMAGE_INPUT, normalizeImageFile } from "@/lib/imageUpload";
+import { ACCEPTED_IMAGE_INPUT } from "@/lib/imageUpload";
+import { uploadPhotoToCloudinary } from "@/lib/uploadPhoto";
 import type { Student } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import DepartmentSelect from "@/components/DepartmentSelect";
@@ -580,16 +580,9 @@ function UploadTab() {
     setError("");
     setResult(null);
     try {
-      const uploadFile = await normalizeImageFile(file);
-      const fd = new FormData();
-      fd.append("file", uploadFile);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(res);
-      if (!res.ok) throw new Error(data.details ?? data.error ?? "Upload failed");
-      if (!data.url) throw new Error("Upload failed");
+      const url = await uploadPhotoToCloudinary(file);
 
       const dest = buildDest();
-      const url = data.url;
 
       await ensureFirestoreWriteAccess();
 
@@ -1179,14 +1172,8 @@ function AdminPhotoUpload({
   const handleFile = async (file: File) => {
     setUploading(true);
     try {
-      const uploadFile = await normalizeImageFile(file);
-      const fd = new FormData();
-      fd.append("file", uploadFile);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = await parseJsonResponse<{ url?: string; error?: string; details?: string }>(res);
-      if (!res.ok) throw new Error(data.details ?? data.error ?? "Upload failed");
-      if (!data.url) throw new Error("Upload failed");
-      onChange(data.url);
+      const url = await uploadPhotoToCloudinary(file);
+      onChange(url);
     } catch (err) {
       console.error("AdminPhotoUpload error:", err);
       alert(err instanceof Error ? err.message : "Upload failed");

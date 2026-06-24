@@ -58,7 +58,7 @@ export default function BookHomePage() {
         <div className="pointer-events-none absolute inset-0" aria-hidden>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/gc.jpg"
+            src="/g2.jpg"
             alt=""
             className="h-full w-full scale-105 object-cover object-[center_30%] blur-xl"
           />
